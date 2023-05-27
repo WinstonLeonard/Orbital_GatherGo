@@ -1,7 +1,26 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 
-export default function CustomButton({text, onPress}) {
+export default function CustomButton({text, buttonColor, textColor, onPress, cornerRadius}) {
+    const styles = StyleSheet.create({
+        button: {
+            marginTop: 15,
+            borderRadius: cornerRadius,
+            width: 155,
+            height: 60,
+            alignContent: 'center',
+            justifyContent: 'center',
+            backgroundColor: buttonColor
+        },
+        buttonText: {
+            color: textColor,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            fontFamily: 'Nunito-Sans',
+            fontSize: 18,
+        }
+    })
+    
     return (
         <TouchableOpacity
             onPress = {onPress}>
@@ -12,19 +31,3 @@ export default function CustomButton({text, onPress}) {
     )
 }
 
-const styles = StyleSheet.create({
-    button: {
-        marginTop: 15,
-        borderRadius: 8,
-        paddingVertical: 14,
-        paddingHorizontal: 50,
-        backgroundColor: '#4DAAB3'
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        textAlign: 'center',
-        fontSize: 16,
-    }
-})

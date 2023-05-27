@@ -90,7 +90,7 @@ export default function Login({navigation}) {
                 ></TextInput> 
             </View>
 
-            <CustomButton text = 'Login' onPress = {handleLogin}></CustomButton>
+            <CustomButton text = 'Login' buttonColor = 'pink' textColor = 'white' onPress = {handleLogin}></CustomButton>
             <CustomButton text = 'Sign Up' onPress = {handleSignUp}></CustomButton>
         </ScrollView>
         </KeyboardAvoidingView>
