@@ -10,7 +10,7 @@ export default function  Home({navigation}) {
     const handleLogout = () => {
         authentication.signOut()
         .then(() => {
-            navigation.replace('Login')
+            navigation.replace('NewLogin')
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -27,12 +27,6 @@ export default function  Home({navigation}) {
             <Text style = {styles.title}> {authentication.currentUser?.email} </Text>
             <Text style = {styles.title}> Home screen to be continued... </Text>
             <CustomButton text = "Logout" onPress={handleLogout}></CustomButton>
-
-            <View style = {styles.imageContainer}>
-            <Image style={{width: 300, height: 400}}
-                   source={require('../assets/pictures/TARIWIGGLE.gif')}
-                   resizeMode= 'contain'/>
-            </View>
         </View>
     )
 
