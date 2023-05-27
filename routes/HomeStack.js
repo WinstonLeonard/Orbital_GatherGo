@@ -3,7 +3,7 @@ import { NavigationContainer} from "@react-navigation/native";
 import Home from '../screens/Home.js';
 import Login from '../screens/Login.js';
 import Welcome from '../screens/Welcome.js';
-import onLayoutRootView from '../App.js';
+import NewLogin from '../screens/NewLogin.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +15,11 @@ export default function HomeStack () {
                 <Stack.Screen
                     name = "Welcome"
                     component = {Welcome}
+                    options = {{headerShown: false}}></Stack.Screen>
+
+                <Stack.Screen
+                    name = "NewLogin"
+                    component = {NewLogin}
                     options = {{headerShown: false}}></Stack.Screen>
 
                 <Stack.Screen

@@ -5,7 +5,7 @@ import CustomButton from '../shared/button';
 
 
 export default function Welcome({navigation}) {
-    const pressHandler = () => navigation.navigate('Login')
+    const pressHandler = () => navigation.navigate('NewLogin')
     return (
         <View style = {styles.container}>
 

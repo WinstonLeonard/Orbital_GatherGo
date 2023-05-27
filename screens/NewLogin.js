@@ -6,7 +6,7 @@ import { authentication } from '../firebase/firebase-config';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 
 
-export default function Login({navigation}) {
+export default function NewLogin({navigation}) {
     const [email, setEmail ] = useState('');
     const [password, setPassword] = useState('');
     const [inputValue, setInputValue] = useState('')
@@ -63,10 +63,10 @@ export default function Login({navigation}) {
             <ScrollView
                 contentContainerStyle = {styles.container}>
             <View style = {styles.imageContainer}>
-            <Image source = {require('../assets/pictures/GatherGoGreyBG.png')}
+            <Image source = {require('../assets/pictures/GatherGoWhiteBG.png')}
                    style = {{
-                    height: 300,
-                    width: 400,
+                    height: 146,
+                    width: 229,
                     resizeMode: 'contain'
                    }}></Image> 
             </View>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'flex-start', //center',
         alignItems: 'center',
-        backgroundColor: '#2F2E2F',
+        backgroundColor: 'white',
     },
     imageContainer: {
         marginTop: 80,
