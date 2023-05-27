@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 
-export default function CustomButton({text, buttonColor, textColor, onPress, cornerRadius}) {
+export default function CustomButton({text, buttonColor, textColor, onPress, cornerRadius, width, height, fontSize}) {
     const styles = StyleSheet.create({
         button: {
             marginTop: 15,
             borderRadius: cornerRadius,
-            width: 155,
-            height: 60,
+            width: width,
+            height: height,
             alignContent: 'center',
             justifyContent: 'center',
             backgroundColor: buttonColor
@@ -17,7 +17,7 @@ export default function CustomButton({text, buttonColor, textColor, onPress, cor
             fontWeight: 'bold',
             textAlign: 'center',
             fontFamily: 'Nunito-Sans',
-            fontSize: 18,
+            fontSize: fontSize,
         }
     })
     

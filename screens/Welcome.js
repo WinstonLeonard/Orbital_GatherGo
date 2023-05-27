@@ -24,6 +24,9 @@ export default function Welcome({navigation}) {
                           buttonColor= "#39A5BD" 
                           textColor='white' 
                           onPress = {pressHandler}
+                          width = {155}
+                          height = {60}
+                          fontSize = {18}
                           cornerRadius= {26} ></CustomButton>
 
 

@@ -3,47 +3,48 @@ import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Ale
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../shared/button';
 import { authentication } from '../firebase/firebase-config';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 
-export default function NewLogin({navigation}) {
+export default function SignUp({navigation}) {
     const [email, setEmail ] = useState('');
     const [password, setPassword] = useState('');
     const [inputValue, setInputValue] = useState('')
     const[passwordInputValue, setPasswordInputValue] = useState('')
 
-    
-    const handleLogin = () => {
-        signInWithEmailAndPassword(authentication, email, password)
+
+    const handleSignUp = () => {
+        createUserWithEmailAndPassword(authentication, email, password)
         .then((userCredential) => {
             // Signed in 
-            const user = userCredential.user;
+            const user = userCredential.user;z
             setInputValue('')
             setPasswordInputValue('')
-            navigation.navigate("Home")
+            Alert.alert('Account Created', 'Thank you for creating a GatherGo account', 
+            [{text: 'Understood.'}])
             // ...
-        })
-        .catch((error) => {
-            setInputValue('')
-            setPasswordInputValue('')
+          })
+          .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             Alert.alert('ERROR!', errorMessage, [{text: 'Understood.'}])
-        });
+            setInputValue('')
+            setPasswordInputValue('')
+            // ..
+          });
+
     }
 
-    const handleNewAcc = () => navigation.navigate('SignUp')
-    
+    const handleBackToLogin = () => navigation.navigate('NewLogin')
+
     return (
           <KeyboardAvoidingView
               style = {styles.keyboardAvoidContainer}
               enableOnAndroid = {true}
               keyboardVerticalOffset = {-400}
               behavior = "padding">
-          
-          <ScrollView
+            <ScrollView
                 contentContainerStyle = {styles.container}>
-            
             <View style = {styles.imageContainer}>
             <Image source = {require('../assets/pictures/GatherGoWhiteBG.png')}
                    style = {{
@@ -52,9 +53,8 @@ export default function NewLogin({navigation}) {
                     resizeMode: 'contain'
                    }}></Image> 
             </View>
-            
             <View style = {styles.inputContainer}> 
-                <Text style = {styles.login}>Login</Text>
+                <Text style = {styles.singup}>Sign Up</Text>
                 <TextInput
                     autoComplete = 'email'
                     placeholder= 'Enter your email'
@@ -73,18 +73,18 @@ export default function NewLogin({navigation}) {
                     secureTextEntry
                 ></TextInput> 
             </View>
-            
-            <CustomButton text = 'Login' 
+
+            <CustomButton text = 'Sign Up' 
                           buttonColor = '#2F2E2F' 
                           textColor = 'white'
                           cornerRadius= {10} 
                           width = {320}
                           height = {45}
                           fontSize= {18}
-                          onPress = {handleLogin}></CustomButton>
+                          onPress = {handleSignUp}></CustomButton>
             
             <Text style = {styles.text}>-------- or sign in with --------</Text>
-            
+
             <View style = {styles.signInOptions}>
                 <TouchableOpacity
                         style={styles.button}
@@ -101,32 +101,22 @@ export default function NewLogin({navigation}) {
                         onPress={() => console.log("Button pressed")}
                     >
                     <Image
-                    source={require('../assets/pictures/facebook.png')}
-                    style={styles.image}
+                        source={require('../assets/pictures/facebook.png')}
+                        style={styles.image}
                     />
                 </TouchableOpacity> 
             </View>
-
-            <View style = {styles.createAcc}>
-                <CustomButton text = 'Create Account' 
-                          buttonColor = '#2F2E2F' 
-                          textColor = 'white'
-                          cornerRadius= {10} 
-                          width = {120}
-                          height = {35}
-                          fontSize = {12}
-                          onPress = {handleNewAcc}></CustomButton>
-                <CustomButton text = 'Forgot Password?' 
-                          buttonColor = 'white' 
-                          textColor = '#2F2E2F'
-                          cornerRadius= {10} 
-                          width = {120}
-                          height = {35}
-                          fontSize = {12}
-                          onPress = {() => console.log("forgot password button pressed")}></CustomButton>
+            <View style = {styles.backtologin}>
+                <CustomButton text = 'Already have an account?' 
+                        buttonColor = 'white' 
+                        textColor = '#2F2E2F'
+                        cornerRadius= {10} 
+                        width = {300}
+                        height = {35}
+                        fontSize = {18}
+                        onPress = {handleBackToLogin}></CustomButton>
             </View>
-
-          </ScrollView>
+        </ScrollView>
         </KeyboardAvoidingView>
     )
 
@@ -168,7 +158,7 @@ const styles = StyleSheet.create({
         },
         paddingHorizontal: 10,
     },
-    login: {
+    singup: {
         fontFamily: "Nunito-Sans-Bold",
         textAlign: 'left',
         color: '#2F2E2F',
@@ -203,10 +193,7 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
-    createAcc: {
-        marginTop: 90,
-        flexDirection: 'row', // Arrange buttons horizontally
-        justifyContent: 'space-evenly' , // Add equal spacing between buttons
-        width: '80%', // Take full width of the container      
-    },
+    backtologin: {
+        marginTop: 90
+    }
 })
