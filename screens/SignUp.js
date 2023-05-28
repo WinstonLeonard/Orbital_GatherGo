@@ -17,7 +17,7 @@ export default function SignUp({navigation}) {
         createUserWithEmailAndPassword(authentication, email, password)
         .then((userCredential) => {
             // Signed in 
-            const user = userCredential.user;z
+            const user = userCredential.user;
             setInputValue('')
             setPasswordInputValue('')
             Alert.alert('Account Created', 'Thank you for creating a GatherGo account', 
