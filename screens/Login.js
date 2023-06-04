@@ -90,7 +90,7 @@ export default function Login({navigation}) {
                 ></TextInput> 
             </View>
 
-            <CustomButton text = 'Login' onPress = {handleLogin}></CustomButton>
+            <CustomButton text = 'Login' buttonColor = 'pink' textColor = 'white' onPress = {handleLogin}></CustomButton>
             <CustomButton text = 'Sign Up' onPress = {handleSignUp}></CustomButton>
         </ScrollView>
         </KeyboardAvoidingView>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'flex-start', //center',
         alignItems: 'center',
-        backgroundColor: '#2f2e2f',
+        backgroundColor: '#2F2E2F',
     },
     imageContainer: {
         marginTop: 80,
