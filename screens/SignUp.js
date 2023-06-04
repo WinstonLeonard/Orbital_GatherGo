@@ -22,6 +22,7 @@ export default function SignUp({navigation}) {
             setPasswordInputValue('')
             Alert.alert('Account Created', 'Thank you for creating a GatherGo account', 
             [{text: 'Understood.'}])
+            navigation.navigate('NamePage');
             // ...
           })
           .catch((error) => {
@@ -54,7 +55,7 @@ export default function SignUp({navigation}) {
                    }}></Image> 
             </View>
             <View style = {styles.inputContainer}> 
-                <Text style = {styles.singup}>Sign Up</Text>
+                <Text style = {styles.signup}>Sign Up</Text>
                 <TextInput
                     autoComplete = 'email'
                     placeholder= 'Enter your email'
@@ -150,15 +151,20 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        shadowOpacity: 0.3, 
-        shadowRadius: 5, 
-        shadowOffset: {
-          width: 2, 
-          height: 4,
-        },
+        ...Platform.select({
+            android: {
+              elevation: 2,
+            },
+            ios: {
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 2,
+            },
+        }),
         paddingHorizontal: 10,
     },
-    singup: {
+    signup: {
         fontFamily: "Nunito-Sans-Bold",
         textAlign: 'left',
         color: '#2F2E2F',
@@ -180,12 +186,17 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        shadowOpacity: 0.3, 
-        shadowRadius: 5, 
-        shadowOffset: {
-          width: 1, 
-          height: 2,
-        },
+        ...Platform.select({
+            android: {
+              elevation: 2,
+            },
+            ios: {
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 2,
+            },
+        }),
         paddingHorizontal: 10,
     },
     image: {
@@ -194,6 +205,6 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     backtologin: {
-        marginTop: 90
+        marginTop: 60
     }
 })
