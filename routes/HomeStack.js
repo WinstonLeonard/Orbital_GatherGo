@@ -8,6 +8,7 @@ import SignUp from '../screens/SignUp.js';
 import NamePage from '../screens/NamePage.js';
 import UsernamePage from '../screens/UsernamePage.js';
 import Birthday from '../screens/Birthday.js';
+import Gender from '../screens/Gender.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ export default function HomeStack () {
                 <Stack.Screen
                     name = "Birthday"
                     component = {Birthday}
+                    options = {{headerShown: false}}></Stack.Screen>
+
+                <Stack.Screen
+                    name = "Gender"
+                    component = {Gender}
                     options = {{headerShown: false}}></Stack.Screen>
 
                 <Stack.Screen
