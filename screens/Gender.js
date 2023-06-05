@@ -1,9 +1,18 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import CustomButton from '../shared/button';
+import { SelectList } from 'react-native-dropdown-select-list'
+
 
 export default function Gender({navigation}) {
 
+    const [gender, setGender] = useState("");
+
+    const choices = [
+        {key:'1', value:'Male'},
+        {key:'2', value:'Female'},
+        {key:'3', value:'Prefer Not To Say'},
+    ]
 
     const next = () => console.log('next');
 
@@ -20,12 +29,23 @@ export default function Gender({navigation}) {
 
             <View style = {styles.inputContainer}>
 
-                <Text style = {styles.textInput}> Male </Text>
-
-                <View style={styles.line} /> 
+            <SelectList
+                arrowicon={
+                    <Text> </Text>
+                }
+                inputStyles = {styles.selectListInput}
+                boxStyles= {styles.selectListBox}
+                search = {false} 
+                setSelected={(val) => setGender(val)} 
+                data={choices}
+                placeholder='Choose your gender' 
+                fontFamily='Nunito-Sans-Bold'
+                alignItems= 'center'
+                save="value"/>
             
             </View>
 
+            <View style = {styles.buttonContainer}>
             <CustomButton text = 'Next' 
                           buttonColor = '#2F2E2F' 
                           textColor = 'white'
@@ -34,6 +54,7 @@ export default function Gender({navigation}) {
                           height = {45}
                           fontSize = {16}
                           onPress = {next}></CustomButton>
+            </View>
 
 
         </View>
@@ -59,7 +80,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: 275,
         marginTop: 60,
-        marginBottom: 440,
     },
     textInput: {
         fontFamily: 'Nunito-Sans',
@@ -76,4 +96,24 @@ const styles = StyleSheet.create({
         backgroundColor: 'grey',
         elevation: 3, // Adjust the elevation value as needed
       },
+      selectListInput: {
+        fontSize: 20,
+        textAlign: 'justify'
+      },
+      selectListBox: {
+        borderTopWidth: 0,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
+        borderBottomWidth: 3,
+        borderRadius: 0,
+        borderColor: 'grey',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        zIndex: 1,
+      },
+      buttonContainer: {
+        position: 'absolute',
+        bottom: 70,
+      }
 })
