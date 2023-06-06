@@ -26,7 +26,7 @@ export default function Uploadpfp({navigation}) {
 
             <View style = {styles.imageContainer}>
             <TouchableOpacity>
-            <Image source = {require('../assets/pictures/Upload pfp logo.png')}
+            <Image source = {require('../assets/pictures/upload pfp logo.png')}
                     style = {styles.imageStyle}
                     resizeMode='contain'
                    ></Image>
