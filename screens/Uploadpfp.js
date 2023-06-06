@@ -6,7 +6,6 @@ import { collection, addDoc, doc, setDoc} from "firebase/firestore";
 
 export default function Uploadpfp({navigation}) {
 
-    const [pfp, setPfp] = useState(require('../assets/pictures/Upload profile pic logo.png'));
 
     const next = () => {
         console.log('next');
@@ -26,10 +25,12 @@ export default function Uploadpfp({navigation}) {
 
 
             <View style = {styles.imageContainer}>
-            <Image source = {require('../assets/pictures/new profile pic logo.png')}
+            <TouchableOpacity>
+            <Image source = {require('../assets/pictures/Upload pfp logo.png')}
                     style = {styles.imageStyle}
                     resizeMode='contain'
-                   ></Image> 
+                   ></Image>
+            </TouchableOpacity> 
             </View>
 
 
@@ -73,13 +74,13 @@ const styles = StyleSheet.create({
 
     },
     imageContainer: {
-        marginTop: 10,
-        backgroundColor: 'red',
-        marginBottom: 10,
+        marginTop: 125,
+        //backgroundColor: 'red',
+        marginBottom: 130,
     },
     imageStyle: {
-        width: 300,
-        height: 400,
+        width: 250,
+        height: 250,
     },
       buttonContainer: {
         position: 'absolute',
