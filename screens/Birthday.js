@@ -2,11 +2,21 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import CustomButton from '../shared/button';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { authentication, db } from '../firebase/firebase-config';
+import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
 
 
 export default function Birthday({navigation}) {
 
-    const next = () => navigation.navigate('Gender');
+    const next = () => {
+      const docID = authentication.currentUser.uid;
+      const userRef = doc(db, 'users', docID);
+
+      setDoc(userRef, {
+          birthday: stringDate,
+      }, { merge: true });
+      navigation.navigate('Gender')
+  }
 
     const [date, setDate] = useState(new Date(2004, 3, 12));
 

@@ -1,12 +1,22 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import CustomButton from '../shared/button';
+import { authentication, db } from '../firebase/firebase-config';
+import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
 
 export default function UsernamePage({navigation}) {
 
     const [username, setUsername] = useState('');
 
-    const next = () => navigation.navigate('Birthday') 
+    const next = () => {
+        const docID = authentication.currentUser.uid;
+        const userRef = doc(db, 'users', docID);
+
+        setDoc(userRef, {
+            username: username,
+        }, { merge: true });
+        navigation.navigate('Birthday')
+    }
 
     return(
         <KeyboardAvoidingView 

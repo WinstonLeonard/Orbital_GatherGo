@@ -1,28 +1,15 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import CustomButton from '../shared/button';
-import { SelectList } from 'react-native-dropdown-select-list'
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
 
-export default function Gender({navigation}) {
+export default function Uploadpfp({navigation}) {
 
-    const [gender, setGender] = useState("");
-
-    const choices = [
-        {key:'1', value:'Male'},
-        {key:'2', value:'Female'},
-        {key:'3', value:'Prefer Not To Say'},
-    ]
+    const [pfp, setPfp] = useState("");
 
     const next = () => {
-        const docID = authentication.currentUser.uid;
-        const userRef = doc(db, 'users', docID);
-  
-        setDoc(userRef, {
-            gender: gender,
-        }, { merge: true });
-        navigation.navigate('Uploadpfp')
+        console.log('next');
     }
   
 
@@ -35,27 +22,23 @@ export default function Gender({navigation}) {
         <View style = {styles.container}>
 
 
-            <Text style = {styles.header}> What's your gender? </Text>
+            <Text style = {styles.header}> Upload a profile picture </Text>
 
             <View style = {styles.inputContainer}>
 
-            <SelectList
-                arrowicon={
-                    <Text> </Text>
-                }
-                inputStyles = {styles.selectListInput}
-                boxStyles= {styles.selectListBox}
-                search = {false} 
-                setSelected={(val) => setGender(val)} 
-                data={choices}
-                placeholder='Choose your gender' 
-                fontFamily='Nunito-Sans-Bold'
-                alignItems= 'center'
-                save="value"/>
             
             </View>
 
-            <View style = {styles.buttonContainer}>
+
+            <CustomButton text = 'Skip for now' 
+                          buttonColor = '#39A5BD' 
+                          textColor = 'white'
+                          cornerRadius= {10} 
+                          width = {330}
+                          height = {45}
+                          fontSize = {16}
+                          onPress = {next}></CustomButton>
+
             <CustomButton text = 'Next' 
                           buttonColor = '#2F2E2F' 
                           textColor = 'white'
@@ -64,7 +47,6 @@ export default function Gender({navigation}) {
                           height = {45}
                           fontSize = {16}
                           onPress = {next}></CustomButton>
-            </View>
 
 
         </View>

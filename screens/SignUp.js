@@ -4,6 +4,9 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../shared/button';
 import { authentication } from '../firebase/firebase-config';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from '../firebase/firebase-config';
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+
 
 
 export default function SignUp({navigation}) {
@@ -12,16 +15,23 @@ export default function SignUp({navigation}) {
     const [inputValue, setInputValue] = useState('')
     const[passwordInputValue, setPasswordInputValue] = useState('')
 
-
     const handleSignUp = () => {
         createUserWithEmailAndPassword(authentication, email, password)
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
+            const UID = authentication.currentUser.uid;
+            const userEmail = authentication.currentUser.email;
             setInputValue('')
             setPasswordInputValue('')
             Alert.alert('Account Created', 'Thank you for creating a GatherGo account', 
             [{text: 'Understood.'}])
+
+            setDoc(doc(db, "users", UID), {
+                email: userEmail
+              });
+
+
             navigation.navigate('NamePage');
             // ...
           })
