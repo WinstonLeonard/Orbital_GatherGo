@@ -6,7 +6,7 @@ import { collection, addDoc, doc, setDoc} from "firebase/firestore";
 
 export default function Uploadpfp({navigation}) {
 
-    const [pfp, setPfp] = useState("");
+    const [pfp, setPfp] = useState(require('../assets/pictures/Upload profile pic logo.png'));
 
     const next = () => {
         console.log('next');
@@ -24,9 +24,12 @@ export default function Uploadpfp({navigation}) {
 
             <Text style = {styles.header}> Upload a profile picture </Text>
 
-            <View style = {styles.inputContainer}>
 
-            
+            <View style = {styles.imageContainer}>
+            <Image source = {require('../assets/pictures/new profile pic logo.png')}
+                    style = {styles.imageStyle}
+                    resizeMode='contain'
+                   ></Image> 
             </View>
 
 
@@ -69,41 +72,15 @@ const styles = StyleSheet.create({
         paddingTop: 100,
 
     },
-    inputContainer: {
-        width: 275,
-        marginTop: 60,
+    imageContainer: {
+        marginTop: 10,
+        backgroundColor: 'red',
+        marginBottom: 10,
     },
-    textInput: {
-        fontFamily: 'Nunito-Sans',
-        textAlign: 'center',    
-        fontSize: 16,
-        paddingVertical: 8,
-      },
-      line: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 3,
-        backgroundColor: 'grey',
-        elevation: 3, // Adjust the elevation value as needed
-      },
-      selectListInput: {
-        fontSize: 20,
-        textAlign: 'justify'
-      },
-      selectListBox: {
-        borderTopWidth: 0,
-        borderRightWidth: 0,
-        borderLeftWidth: 0,
-        borderBottomWidth: 3,
-        borderRadius: 0,
-        borderColor: 'grey',
-        alignItems: 'center',
-        alignContent: 'center',
-        justifyContent: 'center',
-        zIndex: 1,
-      },
+    imageStyle: {
+        width: 300,
+        height: 400,
+    },
       buttonContainer: {
         position: 'absolute',
         bottom: 70,
