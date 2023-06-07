@@ -12,10 +12,15 @@ export default function UsernamePage({navigation}) {
         const docID = authentication.currentUser.uid;
         const userRef = doc(db, 'users', docID);
 
-        setDoc(userRef, {
-            username: username,
-        }, { merge: true });
-        navigation.navigate('Birthday')
+        if (username == '') {
+            Alert.alert('Error!', 'You have not specified your username yet.', 
+            [{text: 'Understood.'}])
+        } else {
+            setDoc(userRef, {
+                username: username,
+            }, { merge: true });
+            navigation.navigate('Birthday')
+        }
     }
 
     return(

@@ -12,10 +12,15 @@ export default function NamePage({navigation}) {
         const docID = authentication.currentUser.uid;
         const userRef = doc(db, 'users', docID);
 
-        setDoc(userRef, {
-            name: name,
-        }, { merge: true });
-        navigation.navigate('UsernamePage')
+        if (name == '') {
+            Alert.alert('Error!', 'You have not specified your name yet.', 
+            [{text: 'Understood.'}])
+        } else {
+            setDoc(userRef, {
+                name: name,
+            }, { merge: true });
+            navigation.navigate('UsernamePage')
+        }
     }
 
     return(
