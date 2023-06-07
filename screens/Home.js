@@ -7,7 +7,7 @@ import CustomButton from '../shared/button';
 
 export default function  Home({navigation}) {
 
-    const image = require("../assets/pictures/Homescreen.png")
+    const image = require("../assets/pictures/HomescreenBackground.png")
 
     // const handleLogout = () => {
     //     authentication.signOut()
@@ -31,7 +31,6 @@ export default function  Home({navigation}) {
 
             <View style = {styles.signInOptions}>
                 <TouchableOpacity
-                        style={styles.button}
                         onPress={() => console.log("Button pressed")}
                     >
                     <Image
@@ -41,7 +40,6 @@ export default function  Home({navigation}) {
                 </TouchableOpacity> 
 
                 <TouchableOpacity
-                        style={styles.button}
                         onPress={() => console.log("Button pressed")}
                     >
                     <Image
@@ -55,6 +53,9 @@ export default function  Home({navigation}) {
                     <Text style = {styles.title}> Up-coming Events: </Text>
             </View>
 
+            <TouchableOpacity style = {styles.users} onPress={() => console.log("Button pressed")}>
+                <Text style = {styles.dummy}>  Evan's Birthday</Text>
+            </TouchableOpacity> 
         </ImageBackground>
     )
 
@@ -77,9 +78,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    button: {
-
-    },
     signInOptions: {
         flexDirection: 'row', // Arrange buttons horizontally
         justifyContent: 'space-evenly' , // Add equal spacing between buttons
@@ -91,8 +89,17 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     UpcomingEvents: {
-        marginTop: 190,
-        marginBottom: 50,
+        marginTop: 170,
+        marginBottom: 15,
         width: '80%'
+    },
+    users: {
+        width: 310,
+        height: 140,
+        backgroundColor: '#AEE9F6',
+        borderRadius: 15
+    },
+    dummy: {
+        marginTop: 20
     }
 })

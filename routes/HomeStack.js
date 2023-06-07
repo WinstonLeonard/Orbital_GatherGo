@@ -5,6 +5,7 @@ import Login from '../screens/Login.js';
 import Welcome from '../screens/Welcome.js';
 import NewLogin from '../screens/NewLogin.js';
 import SignUp from '../screens/SignUp.js';
+import BottomTabNavigator from './BottomTabNavigator.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +37,7 @@ export default function HomeStack () {
                                 headerShown: false}}></Stack.Screen>
                 <Stack.Screen
                     name = "Home"
-                    component = {Home}
+                    component = {BottomTabNavigator}
                     options = {{
                         title: 'Home Page',
                         headerShown: false}}></Stack.Screen>
