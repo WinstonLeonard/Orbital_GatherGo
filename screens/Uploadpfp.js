@@ -4,21 +4,21 @@ import CustomButton from '../shared/button';
 import * as ImagePicker from 'expo-image-picker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
+import { LogBox } from 'react-native';
 
 export default function Uploadpfp({navigation}) {
+    LogBox.ignoreLogs(['Key "cancelled" in the image picker result is deprecated and will be removed in SDK 48, use "canceled" instead']);
     const [image, setImage] = useState(require('../assets/pictures/uploadPfp.jpg'));
 
-    const next = () => {
-        console.log('next');
-    }
+    const next = () => console.log('next');
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
+          aspect: [4, 4],
+          quality: 0.8,
         });
     
         console.log(result);
