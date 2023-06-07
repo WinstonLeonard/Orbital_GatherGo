@@ -19,10 +19,15 @@ export default function Gender({navigation}) {
         const docID = authentication.currentUser.uid;
         const userRef = doc(db, 'users', docID);
   
-        setDoc(userRef, {
-            gender: gender,
-        }, { merge: true });
-        navigation.navigate('Uploadpfp')
+        if (gender == '') {
+            Alert.alert('Error!', 'You have not specified your gender yet.', 
+            [{text: 'Understood.'}])
+        } else {
+            setDoc(userRef, {
+                gender: gender,
+            }, { merge: true });
+            navigation.navigate('Uploadpfp')
+        }
     }
   
 

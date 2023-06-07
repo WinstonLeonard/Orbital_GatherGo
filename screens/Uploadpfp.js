@@ -5,23 +5,67 @@ import * as ImagePicker from 'expo-image-picker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
 import { LogBox } from 'react-native';
+import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
+import { storage } from '../firebase/firebase-config';
+import * as FileSystem from 'expo-file-system';
+
 
 export default function Uploadpfp({navigation}) {
     LogBox.ignoreLogs(['Key "cancelled" in the image picker result is deprecated and will be removed in SDK 48, use "canceled" instead']);
     const [image, setImage] = useState(require('../assets/pictures/uploadPfp.jpg'));
 
-    const next = () => console.log('next');
+    const skipNext= () => {
+        uploadImageFromLocalAsync();
+    }
+    
+    const next = () => {
+        uploadImageAsync(image);
+    }
+
+    const metadata = {
+        contentType: 'image/jpeg',
+      };
+
+    async function uploadImageFromLocalAsync() {
+        const storageRef = ref(storage, 'Profile Pictures');
+        const fileRef = ref(storageRef, 'uploadPfp.jpg');
+
+        getDownloadURL(fileRef)
+        .then((url) => {
+            uploadImageAsync({uri: url});
+
+        })
+        .catch((error) => {
+          // Handle any errors
+        });
+    }
+
+    async function uploadImageAsync(image) {
+        if (!image.uri) {
+            Alert.alert('ERROR!', 'You have not uploaded a profile picture.', 
+            [{text: 'Understood.'}])
+            return;
+        }
+        const response = await fetch(image.uri);
+        const blob = await response.blob();
+        const storageRef = ref(storage, 'Profile Pictures');
+        const fileName = authentication.currentUser.uid;
+        const fileRef = ref(storageRef, fileName);
+
+        uploadBytes(fileRef, blob, metadata).then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+          });
+    }
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsMultipleSelection: false,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4, 4],
-          quality: 0.8,
+          quality: 1,
         });
-    
-        console.log(result);
     
         if (!result.canceled) {
             setImage({ uri: result.assets[0].uri });
@@ -50,7 +94,6 @@ export default function Uploadpfp({navigation}) {
             </TouchableOpacity> 
             </View>
 
-
             <CustomButton text = 'Skip for now' 
                           buttonColor = '#39A5BD' 
                           textColor = 'white'
@@ -58,7 +101,7 @@ export default function Uploadpfp({navigation}) {
                           width = {330}
                           height = {45}
                           fontSize = {16}
-                          onPress = {next}></CustomButton>
+                          onPress = {skipNext}></CustomButton>
 
             <CustomButton text = 'Next' 
                           buttonColor = '#2F2E2F' 
@@ -104,5 +147,13 @@ const styles = StyleSheet.create({
       buttonContainer: {
         position: 'absolute',
         bottom: 70,
+      },
+      secondImageContainer: {
+        margin: 10,
+        backgroundColor: 'red',
+      },
+      secondImage: {
+        width: 40,
+        height: 40,
       }
 })
