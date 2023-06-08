@@ -160,8 +160,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        shadowOpacity: 0.3, 
-        shadowRadius: 5, 
+        ...Platform.select({
+            android: {
+                elevation: 4,
+            },
+            ios: {
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
+        }),
         shadowOffset: {
           width: 2, 
           height: 4,
@@ -190,8 +197,15 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        shadowOpacity: 0.3, 
-        shadowRadius: 5, 
+        ...Platform.select({
+            android: {
+                elevation: 4,
+            },
+            ios: {
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
+        }),
         shadowOffset: {
           width: 1, 
           height: 2,
