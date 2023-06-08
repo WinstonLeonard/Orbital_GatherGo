@@ -24,9 +24,7 @@ export default function SignUp({navigation}) {
             const userEmail = authentication.currentUser.email;
             setInputValue('')
             setPasswordInputValue('')
-            Alert.alert('Account Created', 'Thank you for creating a GatherGo account', 
-            [{text: 'Understood.'}])
-
+            
             setDoc(doc(db, "users", UID), {
                 email: userEmail
               });
