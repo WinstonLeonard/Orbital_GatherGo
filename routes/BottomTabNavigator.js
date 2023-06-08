@@ -36,10 +36,10 @@ const NewEventButton = ({children, onPress}) => (
 function BottomTabNavigator() {
   return (
     <Tab.Navigator
-        tabBarOptions = {{
-            showLabel: false,
+        screenOptions = {{
+            tabBarShowLabel: false,
         }}>
-        <Tab.Screen name="Home" component={Home} options = {{
+        <Tab.Screen name="HomeScreen" component={Home} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View style = {{top: 2}}>
@@ -47,7 +47,7 @@ function BottomTabNavigator() {
                 </View>
             ),
         }}/>
-        <Tab.Screen name="Events" component={Events} options = {{
+        <Tab.Screen name="EventsScreen" component={Events} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
@@ -55,7 +55,7 @@ function BottomTabNavigator() {
                 </View>
             ),
         }} />
-        <Tab.Screen name="NewEvent" component={NewEvent} options = {{
+        <Tab.Screen name="NewEventScreen" component={NewEvent} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <Image
@@ -71,7 +71,7 @@ function BottomTabNavigator() {
                 <NewEventButton {...props} />
             )
         }}/>
-        <Tab.Screen name="Inbox" component={Inbox} options = {{
+        <Tab.Screen name="InboxScreen" component={Inbox} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
@@ -79,7 +79,7 @@ function BottomTabNavigator() {
                 </View>
             ),
         }}/>
-         <Tab.Screen name="Profile" component={Profile} options = {{
+         <Tab.Screen name="ProfileScreen" component={Profile} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
