@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Image, View } from 'react-native'
+import { TouchableOpacity, Image, View, StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign } from '@expo/vector-icons'; 
 import { SimpleLineIcons } from '@expo/vector-icons'; 
@@ -18,6 +18,7 @@ const NewEventButton = ({children, onPress}) => (
         top: -25,
         justifyContent: 'center',
         alignItems: 'center',
+        ...styles.shadow
     }}
     onPress = {onPress}
     >
@@ -89,5 +90,18 @@ function BottomTabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+    shadow: {
+        shadowColro: '#2F2E2F',
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.5,
+        elevation: 5
+    }
+})
 
 export default BottomTabNavigator;
