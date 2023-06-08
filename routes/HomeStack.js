@@ -11,39 +11,36 @@ const Stack = createNativeStackNavigator();
 
 export default function HomeStack () {
     return (
-        <NavigationContainer>
-            <Stack.Navigator>
+        <Stack.Navigator>
 
-                <Stack.Screen
-                    name = "Welcome"
-                    component = {Welcome}
-                    options = {{headerShown: false}}></Stack.Screen>
+            <Stack.Screen
+                name = "Welcome"
+                component = {Welcome}
+                options = {{headerShown: false}}></Stack.Screen>
 
-                <Stack.Screen
-                    name = "NewLogin"
-                    component = {NewLogin}
-                    options = {{headerShown: false}}></Stack.Screen>
+            <Stack.Screen
+                name = "NewLogin"
+                component = {NewLogin}
+                options = {{headerShown: false}}></Stack.Screen>
 
-                <Stack.Screen
-                    name = "SignUp"
-                    component = {SignUp}
-                    options = {{headerShown: false}}></Stack.Screen>
+            <Stack.Screen
+                name = "SignUp"
+                component = {SignUp}
+                options = {{headerShown: false}}></Stack.Screen>
 
-                <Stack.Screen
-                    header
-                    name = "Login"
-                    component = {Login}
-                    options = {{title: 'Login Page',
-                                headerShown: false}}></Stack.Screen>
-                <Stack.Screen
-                    name = "Home"
-                    component = {BottomTabNavigator}
-                    options = {{
-                        title: 'Home Page',
-                        headerShown: false}}></Stack.Screen>
+            <Stack.Screen
+                header
+                name = "Login"
+                component = {Login}
+                options = {{title: 'Login Page',
+                            headerShown: false}}></Stack.Screen>
+            <Stack.Screen
+                name = "Home"
+                component = {BottomTabNavigator}
+                options = {{
+                    title: 'Home Page',
+                    headerShown: false}}></Stack.Screen>
 
-            </Stack.Navigator>
-
-        </NavigationContainer>
+        </Stack.Navigator>
     )
 }

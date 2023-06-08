@@ -4,6 +4,7 @@ import HomeStack from './routes/HomeStack';
 import { useEffect } from 'react';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { NavigationContainer} from "@react-navigation/native";
 
 export default function App() {
 
@@ -26,7 +27,9 @@ export default function App() {
     SplashScreen.hideAsync();
   }
   return (
+    <NavigationContainer>
       <HomeStack></HomeStack>
+    </NavigationContainer>
   );
 }
 

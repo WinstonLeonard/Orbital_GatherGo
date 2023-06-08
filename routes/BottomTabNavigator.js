@@ -43,7 +43,7 @@ function BottomTabNavigator() {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View style = {{top: 2}}>
-                    <AntDesign name="home" size={30} color="black"/>
+                    <AntDesign name="home" size={30} color= {focused ? "#39A5BD" : "black"}/>
                 </View>
             ),
         }}/>
@@ -51,7 +51,7 @@ function BottomTabNavigator() {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                    <SimpleLineIcons name="event" size={28} color="black" />
+                    <SimpleLineIcons name="event" size={28} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }} />
@@ -75,7 +75,7 @@ function BottomTabNavigator() {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                   <Fontisto name="email" size={30} color="black" />
+                   <Fontisto name="email" size={30} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }}/>
@@ -83,7 +83,7 @@ function BottomTabNavigator() {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                    <Ionicons name="person-outline" size={30} color="black" />
+                    <Ionicons name="person-outline" size={30} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }}/>
