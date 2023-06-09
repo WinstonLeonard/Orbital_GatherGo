@@ -34,6 +34,32 @@ export default function HomeStack () {
                 options = {{headerShown: false}}></Stack.Screen>
 
             <Stack.Screen
+                name = "NamePage"
+                component = {NamePage}
+                options = {{headerShown: false}}></Stack.Screen>
+
+            <Stack.Screen
+                name = "Birthday"
+                component = {Birthday}
+                options = {{headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "Gender"
+                component = {Gender}
+                options = {{headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "UsernamePage"
+                component = {UsernamePage}
+                options = {{headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "Uploadpfp"
+                component = {Uploadpfp}
+                options = {{headerShown: false}}></Stack.Screen>
+
+
+            <Stack.Screen
                 name = "Home"
                 component = {BottomTabNavigator}
                 options = {{
