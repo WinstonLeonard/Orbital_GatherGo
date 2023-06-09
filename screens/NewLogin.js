@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     createAcc: {
-        marginTop: 90,
+        marginTop: 60,
         flexDirection: 'row', // Arrange buttons horizontally
         justifyContent: 'space-evenly' , // Add equal spacing between buttons
         width: '80%', // Take full width of the container      

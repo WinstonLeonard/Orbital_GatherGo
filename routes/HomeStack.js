@@ -6,6 +6,12 @@ import Welcome from '../screens/Welcome.js';
 import NewLogin from '../screens/NewLogin.js';
 import SignUp from '../screens/SignUp.js';
 import BottomTabNavigator from './BottomTabNavigator.js';
+import NamePage from '../screens/NamePage.js';
+import UsernamePage from '../screens/UsernamePage.js';
+import Birthday from '../screens/Birthday.js';
+import Gender from '../screens/Gender.js';
+import Uploadpfp from '../screens/Uploadpfp.js';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -42,5 +48,6 @@ export default function HomeStack () {
                     headerShown: false}}></Stack.Screen>
 
         </Stack.Navigator>
+
     )
 }
