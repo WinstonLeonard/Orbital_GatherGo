@@ -161,15 +161,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         ...Platform.select({
             android: {
-              elevation: 2,
+                elevation: 4,
             },
             ios: {
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.8,
-              shadowRadius: 2,
-            },
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
         }),
+        shadowOffset: {
+          width: 2, 
+          height: 4,
+        },
         paddingHorizontal: 10,
     },
     signup: {
@@ -196,15 +198,17 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         ...Platform.select({
             android: {
-              elevation: 2,
+                elevation: 4,
             },
             ios: {
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.8,
-              shadowRadius: 2,
-            },
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
         }),
+        shadowOffset: {
+          width: 1, 
+          height: 2,
+        },
         paddingHorizontal: 10,
     },
     image: {
