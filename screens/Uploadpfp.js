@@ -16,10 +16,25 @@ export default function Uploadpfp({navigation}) {
 
     const skipNext= () => {
         uploadImageFromLocalAsync();
+        navigation.reset({
+          index: 0, // Index of the screen to reset to
+          routes: [{ name: 'NewLogin' }], // Array of screen objects to set as the new stack
+        });
+
+        Alert.alert('Account Created', 'Thank you for creating a GatherGo account. Please sign in using your newly created account', 
+        [{text: 'Understood.'}])
+
     }
     
     const next = () => {
         uploadImageAsync(image);
+        navigation.reset({
+          index: 0, // Index of the screen to reset to
+          routes: [{ name: 'NewLogin' }], // Array of screen objects to set as the new stack
+        });
+
+        Alert.alert('Account Created', 'Thank you for creating a GatherGo account. Please sign in using your newly created account', 
+        [{text: 'Understood.'}])
     }
 
     const metadata = {
