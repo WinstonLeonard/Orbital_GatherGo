@@ -8,7 +8,7 @@ import CustomButton from '../shared/button';
 export default function  Home({navigation}) {
 
     const image = require("../assets/pictures/HomescreenBackground.png")
-
+    
     // const handleLogout = () => {
     //     authentication.signOut()
     //     .then(() => {

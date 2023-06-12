@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '80%',
-        marginBottom: 220
+        marginBottom: 250
     },
     input: {
         textAlign: 'left',

@@ -10,6 +10,7 @@ import UsernamePage from '../screens/UsernamePage.js';
 import Birthday from '../screens/Birthday.js';
 import Gender from '../screens/Gender.js';
 import Uploadpfp from '../screens/Uploadpfp.js';
+import NewEvent from '../screens/NewEvent.js';
 
 
 const Stack = createNativeStackNavigator();
@@ -58,13 +59,15 @@ export default function HomeStack () {
                 component = {Uploadpfp}
                 options = {{headerShown: false}}></Stack.Screen>
 
-
             <Stack.Screen
                 name = "Home"
                 component = {BottomTabNavigator}
-                options = {{
-                    title: 'Home Page',
-                    headerShown: false}}></Stack.Screen>
+                options = {{headerShown: false}}></Stack.Screen>
+
+            <Stack.Screen
+                name = "NewEvent"
+                component = {NewEvent}
+                options = {{headerShown: false}}></Stack.Screen>
 
         </Stack.Navigator>
 

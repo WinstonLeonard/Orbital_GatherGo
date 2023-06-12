@@ -1,5 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, Image, View, StyleSheet } from 'react-native'
+import React, { useRef } from 'react';
+import { TouchableOpacity, Image, View, StyleSheet, Animated, Dimensions } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign } from '@expo/vector-icons'; 
 import { SimpleLineIcons } from '@expo/vector-icons'; 
@@ -13,28 +13,13 @@ import Profile from '../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
-const NewEventButton = ({children, onPress}) => (
-    <TouchableOpacity style  = {{
-        top: -25,
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...styles.shadow
-    }}
-    onPress = {onPress}
-    >
-        <View style = {{
-            width: 70,
-            height: 70,
-            borderRadius: 35,
-            backgroundcColor: '39A5BD'
-        }}>
-            {children}
-        </View>
-    </TouchableOpacity>
-);
-
-function BottomTabNavigator() {
-  return (
+function BottomTabNavigator({navigation}) {
+    
+    const pressHandler = () => navigation.navigate('NewEvent')
+    
+    const tabOffsetValue = useRef(new Animated.Value(0)).current;
+    return (
+    <>
     <Tab.Navigator
         screenOptions = {{
             tabBarShowLabel: false,
@@ -46,7 +31,16 @@ function BottomTabNavigator() {
                     <AntDesign name="home" size={30} color= {focused ? "#39A5BD" : "black"}/>
                 </View>
             ),
-        }}/>
+        }} 
+        listeners = {(navigation, route) => ({
+            tabPress: e => {
+                Animated.spring(tabOffsetValue, {
+                    toValue: 0,
+                    useNativeDriver: true
+                }). start();
+            }
+        })}/>
+
         <Tab.Screen name="EventsScreen" component={Events} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
@@ -54,23 +48,44 @@ function BottomTabNavigator() {
                     <SimpleLineIcons name="event" size={28} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
-        }} />
+        }} 
+        listeners = {(navigation, route) => ({
+            tabPress: e => {
+                Animated.spring(tabOffsetValue, {
+                    toValue: getWidth(),
+                    useNativeDriver: true
+                }). start();
+            }
+        })}/>
+
         <Tab.Screen name="NewEventScreen" component={NewEvent} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-                <Image
-                source = {require('../assets/pictures/plus.png')}
-                resizeMode = "contain"
-                style = {{
-                    width: 65,
-                    height: 65,
-                }}
-                />
-            ),
-            tabBarButton: (props) => (
-                <NewEventButton {...props} />
+                <TouchableOpacity style  = {{
+                    top: -25,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    ...styles.shadow
+                }} onPress = {pressHandler} > 
+                    <View style = {{
+                        width: 70,
+                        height: 70,
+                        borderRadius: 35,
+                        backgroundcColor: '#39A5BD'
+                    }}>
+                        <Image
+                        source = {require('../assets/pictures/plus.png')}
+                        resizeMode = "contain"
+                        style = {{
+                            width: 65,
+                            height: 65,
+                        }}
+                        />
+                    </View>
+                </TouchableOpacity>
             )
         }}/>
+        
         <Tab.Screen name="InboxScreen" component={Inbox} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
@@ -78,7 +93,16 @@ function BottomTabNavigator() {
                    <Fontisto name="email" size={30} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
-        }}/>
+        }}
+        listeners = {(navigation, route) => ({
+            tabPress: e => {
+                Animated.spring(tabOffsetValue, {
+                    toValue: getWidth() * 3,
+                    useNativeDriver: true
+                }). start();
+            }
+        })}/>
+
          <Tab.Screen name="ProfileScreen" component={Profile} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
@@ -86,9 +110,44 @@ function BottomTabNavigator() {
                     <Ionicons name="person-outline" size={30} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
-        }}/>
+        }}listeners = {(navigation, route) => ({
+            tabPress: e => {
+                Animated.spring(tabOffsetValue, {
+                    toValue: getWidth() * 4,
+                    useNativeDriver: true
+                }). start();
+            }
+        })}/>
     </Tab.Navigator>
+
+    <Animated.View style = {{
+        width: getWidth(),
+        height: 4,
+        backgroundColor: '#39A5BD',
+        ...Platform.select({
+            android: {
+                bottom: 50,
+            },
+            ios: {
+                bottom: 80,
+                position: 'aboslute',
+                borderRadius: '50%',
+            }
+        }),
+        transform: [
+            {translateX: tabOffsetValue}
+        ]
+    }}>
+
+    </Animated.View>
+    </>
   );
+}
+
+function getWidth() {
+    let width = Dimensions.get("window").width
+    width = width
+    return width / 5
 }
 
 const styles = StyleSheet.create({
