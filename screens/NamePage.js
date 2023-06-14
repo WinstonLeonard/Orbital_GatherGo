@@ -19,6 +19,15 @@ export default function NamePage({navigation}) {
             setDoc(userRef, {
                 name: name,
             }, { merge: true });
+
+            setDoc(userRef, {
+                friendRequestList: [],
+            }, { merge: true });
+
+            setDoc(userRef, {
+                friendList: [],
+            }, { merge: true });
+
             navigation.navigate('UsernamePage')
         }
     }

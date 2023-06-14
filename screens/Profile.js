@@ -1,15 +1,25 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
 import { authentication, db } from '../firebase/firebase-config';
 import { doc, getDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export default function Profile({navigation}) {
     const [image, setImage] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=87d91cbe-47e8-45fb-a25c-f69cfa3f9654');
     const [username, setUsername] = useState('');
     
+    const editProfileHandler = () => {
+        navigation.navigate('EditProfile');
+    }
+
+    const friendsHandler = () => {
+        navigation.navigate('Friends');
+    }
+
     useEffect(() => {
         async function getUsername() {
             const docID = authentication.currentUser.uid;
@@ -27,10 +37,15 @@ export default function Profile({navigation}) {
         async function getProfilePic() {
             const storageRef = ref(storage, 'Profile Pictures');
             const fileName = authentication.currentUser.uid;
+
+            // const storageRef = ref(storage, 'Icons');
+            // const fileName = 'reject.png'
+            
             const fileRef = ref(storageRef, fileName);
     
             getDownloadURL(fileRef)
             .then((url) => {
+                //console.log(url);
                 setImage(url);
             })
         }
@@ -91,18 +106,18 @@ export default function Profile({navigation}) {
 
             <Text style = {styles.name}> {username} </Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {editProfileHandler}>
             <View style = {styles.button}>
                 <View style = {styles.iconContainer}>
-                <Image source = {require('../assets/pictures/google.png')}
+                <Image source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fperson%20icon.png?alt=media&token=f47fc314-b95f-4957-a2b4-3ede7adaed6a'}}
                        style = {styles.personIconStyle}
                        resizeMode='contain'/>
                 </View>
-                <Text style = {styles.buttonText}> My Account </Text>
+                <Text style = {styles.buttonText}> Edit Profile </Text>
             </View>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {friendsHandler}>
             <View style = {styles.button}>
             <View style = {styles.iconContainer}>
             <Image source = {require('../assets/pictures/user-friends.png')}
@@ -116,7 +131,7 @@ export default function Profile({navigation}) {
             <TouchableOpacity>
             <View style = {styles.button}>
             <View style = {styles.iconContainer}>
-            <Image source = {require('../assets/pictures/google.png')}
+            <Image source = {require('../assets/pictures/history.png')}
                        style = {styles.iconStyle}
                        resizeMode='contain'/>
             </View>
@@ -125,6 +140,7 @@ export default function Profile({navigation}) {
             </TouchableOpacity>
 
         </View>
+
 
     )
 }
@@ -144,12 +160,14 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 40,
-        fontFamily: "Nunito-Sans-Bold",  
+        fontFamily: "Nunito-Sans-Bold",
+        color: 'black',  
     },
     name: {
         fontSize: 40,
         fontFamily: "Nunito-Sans-Bold",
         marginBottom: 25,   
+        color: 'black',
     },     
     imageContainer: {
         //backgroundColor: 'red',
