@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
 import CustomButton from '../shared/button';
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
@@ -14,6 +14,8 @@ export default function AddFriend({navigation}) {
     const [name, setName] = useState('');
     const [myFriendRequestList, setMyFriendRequestList] = useState([]);
     const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
         async function fetchData() {
@@ -45,10 +47,54 @@ export default function AddFriend({navigation}) {
                 const myData = docSnapshot.data();
                 const friendUsername = myData.username;
                 const friendName = myData.name;
-                const acceptHandler = () => {
+                const acceptHandler = async () => {
+                    const myDocID = authentication.currentUser.uid;
+                    const myDocPromise = getDoc(doc(db, "users", myDocID));
+                    const friendDocPromise = getDoc(doc(db, "users", friendUid));
+                    const [myDocSnapshot, friendDocSnapshot] = await Promise.all([myDocPromise, friendDocPromise]);
+
+                    const myData = myDocSnapshot.data();
+                    const friendData = friendDocSnapshot.data();
+                    
+                    const myCurrentFriendRequestList = myData.friendRequestList;
+                    const myFriendList = myData.friendList;
+                    const friendFriendList = friendData.friendList;
+
+                    const myNewFriendRequestList = myCurrentFriendRequestList.filter(item => item != friendUid);
+                    const myNewFriendList = [...myFriendList, friendUid];
+                    const friendNewFriendList = [...friendFriendList, myDocID];
+
+                    const friendRef = doc(db, 'users', friendUid);
+                    const myRef = doc(db, 'users', myDocID);
+                    
+                    setDoc(myRef, {
+                        friendRequestList: myNewFriendRequestList,
+                        friendList: myNewFriendList,
+                    }, { merge: true });
+
+                    setDoc(friendRef, {
+                        friendList: friendNewFriendList,
+                    }, { merge: true });
+
+                    setMyFriendRequestList(myNewFriendRequestList);
                     console.log(friendUsername + ' Accepted');
                 }
-                const rejectHandler = () => {
+                const rejectHandler = async () => {
+                    const myDocID = authentication.currentUser.uid;
+                    const myDocPromise = getDoc(doc(db, "users", myDocID));
+                    const [myDocSnapshot] = await Promise.all([myDocPromise]);
+
+                    const myData = myDocSnapshot.data();
+                    
+                    const myCurrentFriendRequestList = myData.friendRequestList;
+                    const myNewFriendRequestList = myCurrentFriendRequestList.filter(item => item != friendUid);
+
+                    const myRef = doc(db, 'users', myDocID);
+                    setDoc(myRef, {
+                        friendRequestList: myNewFriendRequestList,
+                    }, { merge: true });
+
+                    setMyFriendRequestList(myNewFriendRequestList);
                     console.log(friendUsername + ' Rejected');
                 }
             
@@ -66,6 +112,7 @@ export default function AddFriend({navigation}) {
             }
     
             setData(temp);
+            setIsLoading(false);
         };
     
         fetchData();
@@ -93,6 +140,7 @@ export default function AddFriend({navigation}) {
             if (name == myUsername) {
                 Alert.alert('Error!', 'You cannot add yourself.', 
                 [{text: 'Understood.'}])
+                setInputValue('');
                 return;
             }
         
@@ -110,6 +158,14 @@ export default function AddFriend({navigation}) {
                     Alert.alert('Error!', 'A Friend Request has already been sent to ' + friendUsername + 
                     '. Wait until your friend accepts your friend request.', 
                     [{text: 'Understood.'}]);
+                    setInputValue('');
+                    return;
+                }
+
+                if (friendFriendList.includes(myDocID)) {
+                    Alert.alert('Error!', friendUsername + ' is already your friend.', 
+                    [{text: 'Understood.'}]);
+                    setInputValue('');
                     return;
                 }
 
@@ -119,13 +175,15 @@ export default function AddFriend({navigation}) {
 
                 Alert.alert('Request Sent!', 'A Friend Request has been sent to ' + friendUsername, 
                 [{text: 'Understood.'}])
+                setInputValue('');
 
                 //console.log(friendFriendRequestList);
-                console.log('Found documents:', friend);
+                //console.log('Found documents:', friend);
             } else {
                 // Handle case when no documents are found
                 Alert.alert('Error!', 'That username does not exist.', 
                 [{text: 'Understood.'}])
+                setInputValue('');
                 return;
             }
         } catch (error) {
@@ -133,6 +191,15 @@ export default function AddFriend({navigation}) {
             console.error('Error searching for documents:', error);
         }
       };
+
+
+    if (isLoading) {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        );
+    }
 
 
     return(
@@ -151,8 +218,9 @@ export default function AddFriend({navigation}) {
             <TextInput
                 style={styles.textInput}
                 placeholder="Enter your friend's username..."
-                value={name}
-                onChangeText={text => setName(text)}>
+                value={inputValue}
+                onChangeText={text => {setName(text)
+                                       setInputValue(text)}}>
                 
             </TextInput>
             <View style={styles.line} /> 
@@ -171,12 +239,6 @@ export default function AddFriend({navigation}) {
             <View style = {styles.secondHeaderContainer}>
                 <Text style = {styles.secondHeader}>Incoming Friend Requests</Text>
             </View>
-            
-            {/* <FriendRequestBox
-                image = 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'
-                username = 'Chronal'
-                name = 'Winston'
-            /> */}
 
             <FlatList
             data = {data}
