@@ -1,25 +1,78 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { authentication, db } from '../firebase/firebase-config';
+import { storage } from '../firebase/firebase-config';
+import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
+import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+
 import FriendBox from '../shared/friendBox';
 
 export default function Friends({navigation}) {
+
+    const [myFriendList, setMyFriendList] = useState([]);
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const addFriendHandler = () => {
         navigation.navigate('AddFriend');
     }
 
-    const [friendList, setFriendList] = useState([
-        {username: 'Chronal', name: 'Winston', key: 1, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'Chronixel', name: 'Jason', key: 2, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'C', name: 'C', key: 3, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'D', name: 'D', key: 4, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'E', name: 'E', key: 5, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'F', name: 'F', key: 6, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'G', name: 'G', key: 7, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'H', name: 'H', key: 8, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'H', name: 'H', key: 9, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-        {username: 'H', name: 'H', key: 10, image:'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2Fsi2hdFR0vUXybZXA2S8pRHCit3F3?alt=media&token=01f7330f-ec9c-4ce9-9d11-97f073e65d64'},
-    ])
+    useEffect(() => {
+        async function fetchData() {
+            const myDocID = authentication.currentUser.uid;
+            const myDocRef = doc(db, "users", myDocID);
+            const myDocSnap = await getDoc(myDocRef);
+    
+            const myData = myDocSnap.data();
+            setMyFriendList(myData.friendList);
+        }
+        fetchData();
+    },[]);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const temp = [];
+    
+            for (let i = 0; i < myFriendList.length; i++) {
+                const friendUid = myFriendList[i];
+                const storageRef = ref(storage, 'Profile Pictures');
+                const fileName = friendUid;
+                const fileRef = ref(storageRef, fileName);
+    
+                const urlPromise = getDownloadURL(fileRef);
+                const docPromise = getDoc(doc(db, "users", friendUid));
+    
+                const [url, docSnapshot] = await Promise.all([urlPromise, docPromise]);
+    
+                const friendData = docSnapshot.data();
+                const friendUsername = friendData.username;
+                const friendName = friendData.name;
+                
+                const object = {
+                    username: friendUsername,
+                    name: friendName,
+                    image: url,
+                    key: i,
+                };
+                
+                temp.push(object);
+            }
+    
+            setData(temp);
+            setIsLoading(false);
+        };
+    
+        fetchData();
+    }, [myFriendList]);
+
+    if (isLoading) {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        );
+    }
 
     return (
       <View style={styles.container}>
@@ -37,7 +90,7 @@ export default function Friends({navigation}) {
         </View>
 
         <FlatList
-            data = {friendList}
+            data = {data}
             renderItem= {({item}) => (
                 <FriendBox
                     image = {item.image}
@@ -45,7 +98,6 @@ export default function Friends({navigation}) {
                     name = {item.name}    
                 />
             )}
-            
             />
 
 
