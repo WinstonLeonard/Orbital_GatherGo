@@ -3,11 +3,10 @@ import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Ale
 import CustomButton from '../shared/button';
 import * as ImagePicker from 'expo-image-picker';
 import { authentication, db } from '../firebase/firebase-config';
-import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
 import { LogBox } from 'react-native';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
-import * as FileSystem from 'expo-file-system';
+
 
 
 export default function Uploadpfp({navigation}) {
