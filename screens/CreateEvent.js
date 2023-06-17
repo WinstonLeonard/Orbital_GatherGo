@@ -9,13 +9,8 @@ export default function CreateEvent({navigation}) {
     
     const [eventName, setEventName] = useState('');
     const [category, setCategory] = useState("");
-    
-    const [date, setDate] = useState(new Date(2004, 3, 12));
-    const[stringDate, setStringDate] = useState('12 April 2004');
 
-    const [time, setTime] = useState(new Date());
-    
-    //selecting a gender
+    //selecting a category
     const choices = [
         {key:'1', value:'Sports'},
         {key:'2', value:'Eat'},
@@ -23,6 +18,9 @@ export default function CreateEvent({navigation}) {
     ]
 
     //selecting a date
+    const [date, setDate] = useState(new Date(2004, 3, 12));
+    const[stringDate, setStringDate] = useState('12 April 2004');
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setDate(currentDate);
@@ -43,8 +41,36 @@ export default function CreateEvent({navigation}) {
     };
 
     const formatDate = (date) => {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return date.toLocaleDateString('en-UK', options);
+        const optionsDate = { day: 'numeric', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('en-UK', optionsDate);
+    };
+
+    //selecting a Time
+    const [time, setTime] = useState(new Date(2004, 12, 4, 22));
+    const[stringTime, setStringTime] = useState('11:00');
+
+    const onChangeTime = (event, selectedTime) => {
+        const currentTime = selectedTime;
+        setTime(currentTime);
+        setStringTime(formatTime(currentTime));
+      };
+    
+    const showModeTime = (currentMode) => {
+    DateTimePickerAndroid.open({
+        value: time,
+        onChangeTime,
+        mode: currentMode,
+        is24Hour: false,
+    });
+    };
+
+    const showTimepicker = () => {
+    showModeTime('time');
+    };
+
+    const formatTime = (time) => {
+        const optionsTime = { hour: 'numeric', minutes: 'numeric'};
+        return time.toLocaleTimeString('en-UK', optionsTime);
     };
 
 
@@ -86,18 +112,27 @@ export default function CreateEvent({navigation}) {
                 <TextInput
                     placeholder= 'Location'
                     //value = {inputValue}
-                    onChangeText = {text => {setEmail(text)
-                                            setInputValue(text)}}
+                    onChangeText = {console.log('location')}
                     style = {styles.input}
                 ></TextInput> 
                 
-                <TouchableOpacity style = {styles.datePicker} onPress = {showDatepicker}>
-                    <Text style = {styles.selectListInput}>Date</Text>
+                <TouchableOpacity 
+                    style = {styles.datePicker} 
+                    onPress = {showDatepicker}
+                    placeholder = 'date'>
+                    <Text style = {styles.textInput}>
+                        {formatDate(date)}
+                    </Text>
                 </TouchableOpacity>
                 
                 
-                <TouchableOpacity style = {styles.datePicker} onPress = {showDatepicker}>
-                    <Text style = {styles.selectListInput}>Time</Text>
+                <TouchableOpacity 
+                    style = {styles.datePicker} 
+                    onPress = {showTimepicker}
+                    placeholder = 'time'>
+                    <Text style = {styles.textInput}>
+                        {formatTime(time)}
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -167,7 +202,6 @@ const styles = StyleSheet.create({
     },
     selectListInput: {
         fontWeight: 50,
-        color: '#bbbebf',
         fontFamily: "Nunito-Sans-Bold",
     },
     selectListBox: {
