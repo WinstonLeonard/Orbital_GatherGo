@@ -7,7 +7,7 @@ import { Fontisto } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Home from '../screens/Home';
 import Events from '../screens/Events';
-import NewEvent from '../screens/NewEvent';
+import CreateEvent from '../screens/CreateEvent';
 import Inbox from '../screens/Inbox';
 import Profile from '../screens/Profile';
 
@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 
 function BottomTabNavigator({navigation}) {
     
-    const pressHandler = () => navigation.navigate('NewEvent')
+    const pressHandler = () => navigation.navigate('CreateEvent')
     
     const tabOffsetValue = useRef(new Animated.Value(0)).current;
     return (
@@ -58,7 +58,7 @@ function BottomTabNavigator({navigation}) {
             }
         })}/>
 
-        <Tab.Screen name="NewEventScreen" component={NewEvent} options = {{
+        <Tab.Screen name="CreateEventScreen" component={CreateEvent} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <TouchableOpacity style  = {{
