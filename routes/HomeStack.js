@@ -11,7 +11,9 @@ import Birthday from '../screens/Birthday.js';
 import Gender from '../screens/Gender.js';
 import Uploadpfp from '../screens/Uploadpfp.js';
 import NewEvent from '../screens/NewEvent.js';
-
+import EditProfile from '../screens/EditProfile.js';
+import Friends from '../screens/Friends.js';
+import AddFriend from '../screens/AddFriend.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +70,36 @@ export default function HomeStack () {
                 name = "NewEvent"
                 component = {NewEvent}
                 options = {{headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "EditProfile"
+                component = {EditProfile}
+                options = {{
+                    title: 'Edit Profile',
+                    headerTitleAlign: 'center',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    //headerTransparent: true,
+                    headerTitleStyle: {
+                        fontFamily: 'Nunito-Sans-Bold',
+                        color: 'white'
+                    },
+                    headerStyle: {
+                        backgroundColor: '#39A5BD',
+                    }
+                }}></Stack.Screen>
+
+            <Stack.Screen
+                name = "Friends"
+                component = {Friends}
+                options = {{
+                    headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "AddFriend"
+                component = {AddFriend}
+                options = {{
+                    headerShown: false}}></Stack.Screen>
 
         </Stack.Navigator>
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, doc, getDoc } from 'firebase/firestore';
@@ -8,7 +8,22 @@ import CustomButton from '../shared/button';
 export default function  Home({navigation}) {
 
     const image = require("../assets/pictures/HomescreenBackground.png")
-    
+
+    const [username, setUsername] = useState('')
+
+    useEffect(() => {
+        async function getUsername() {
+            const docID = authentication.currentUser.uid;
+            const docRef = doc(db, "users", docID);
+            const docSnap = await getDoc(docRef);
+
+            const data = docSnap.data();
+            setUsername(data.username);
+               
+        }
+        getUsername();
+      }, []);
+
     // const handleLogout = () => {
     //     authentication.signOut()
     //     .then(() => {
@@ -26,7 +41,7 @@ export default function  Home({navigation}) {
         <ImageBackground source={image} resizeMode = 'cover' style={styles.image}>
             <View style = {styles.container}> 
                     <Text style = {styles.title}> Hello, </Text>
-                    <Text style = {styles.title}> Evan Wijaya </Text>
+                    <Text style = {styles.title}> {username} </Text>
             </View>
 
             <View style = {styles.signInOptions}>
