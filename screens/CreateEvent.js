@@ -18,7 +18,7 @@ export default function CreateEvent({navigation}) {
     ]
 
     //selecting location
-    
+
 
     //selecting a date and time
     const [date, setDate] = useState(new Date());
