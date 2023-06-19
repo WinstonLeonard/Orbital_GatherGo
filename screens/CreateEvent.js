@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomButton from '../shared/button';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function CreateEvent({navigation}) {
     
@@ -17,63 +17,36 @@ export default function CreateEvent({navigation}) {
         {key:'3', value:'Study'},
     ]
 
-    //selecting a date
-    const [date, setDate] = useState(new Date(2004, 3, 12));
-    const[stringDate, setStringDate] = useState('12 April 2004');
+    //selecting location
+    
 
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
+    //selecting a date and time
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [dateText, setDateText] = useState('Date');
+    const [timeText, setTimeText] = useState('Time');
+
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(false);
         setDate(currentDate);
-        setStringDate(formatDate(currentDate));
-      };
-    
+        
+        let tempDate = new Date(currentDate);
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear() ;
+        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+        setDateText(fDate);
+        setTimeText(fTime);
+
+        console.log("test")
+        console.log(fDate + ' (' + fTime + ')')
+    }
+
     const showMode = (currentMode) => {
-    DateTimePickerAndroid.open({
-        value: date,
-        onChange,
-        mode: currentMode,
-        is24Hour: false,
-    });
-    };
+        setShow(true);
+        setMode(currentMode);
 
-    const showDatepicker = () => {
-    showMode('date');
-    };
-
-    const formatDate = (date) => {
-        const optionsDate = { day: 'numeric', month: 'long', year: 'numeric' };
-        return date.toLocaleDateString('en-UK', optionsDate);
-    };
-
-    //selecting a Time
-    const [time, setTime] = useState(new Date(2004, 12, 4, 22));
-    const[stringTime, setStringTime] = useState('11:00');
-
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime;
-        setTime(currentTime);
-        setStringTime(formatTime(currentTime));
-      };
-    
-    const showModeTime = (currentMode) => {
-    DateTimePickerAndroid.open({
-        value: time,
-        onChangeTime,
-        mode: currentMode,
-        is24Hour: false,
-    });
-    };
-
-    const showTimepicker = () => {
-    showModeTime('time');
-    };
-
-    const formatTime = (time) => {
-        const optionsTime = { hour: 'numeric', minutes: 'numeric'};
-        return time.toLocaleTimeString('en-UK', optionsTime);
-    };
-
-
+    }
     
     return (
         <KeyboardAvoidingView
@@ -88,6 +61,8 @@ export default function CreateEvent({navigation}) {
             
             <View style = {styles.inputContainer}> 
                 <Text style = {styles.title}>Create New Event</Text>
+                
+                <Text style = {styles.text}>Please enter the name of the event:</Text>
                 <TextInput
                     style = {styles.input}
                     placeholder= 'Event Name'
@@ -95,11 +70,12 @@ export default function CreateEvent({navigation}) {
                     onChangeText = {text => setEventName(text)}
                 ></TextInput> 
                 
+                <Text style = {styles.text}>Please select the event category:</Text>
                 <SelectList
                     arrowicon={
                         <Text> </Text>
                     }
-                    inputStyles = {styles.selectListInput}
+                    inputStyles = {styles.placeholder}
                     boxStyles= {styles.selectListBox}
                     search = {false} 
                     setSelected={(val) => setCategory(val)} 
@@ -109,31 +85,42 @@ export default function CreateEvent({navigation}) {
                     alignItems= 'center'
                     save="value"/>
 
+                <Text style = {styles.text}>Please enter the event location:</Text>
                 <TextInput
                     placeholder= 'Location'
                     //value = {inputValue}
-                    onChangeText = {console.log('location')}
                     style = {styles.input}
                 ></TextInput> 
                 
+                <Text style = {styles.text}>Please enter the date of the event:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
-                    onPress = {showDatepicker}
+                    onPress = {() => showMode('date')}
                     placeholder = 'date'>
-                    <Text style = {styles.textInput}>
-                        {formatDate(date)}
+                    <Text style = {styles.placeholder}>
+                        {dateText}
                     </Text>
                 </TouchableOpacity>
                 
-                
+                <Text style = {styles.text}>Please enter the time of the event:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
-                    onPress = {showTimepicker}
+                    onPress = {() => showMode('time')}
                     placeholder = 'time'>
-                    <Text style = {styles.textInput}>
-                        {formatTime(time)}
+                    <Text style = {styles.placeholder}>
+                        {timeText}
                     </Text>
                 </TouchableOpacity>
+
+                {show && 
+                    (<DateTimePicker
+                    testID = 'dateTimePicker'
+                    value = {date}
+                    onChange = {onChangeDate}
+                    mode = {mode}
+                    is24Hour = {true}
+                    dispaly ='default'
+                />)}
             </View>
 
             <View style = {styles.buttonContainer}>
@@ -147,6 +134,7 @@ export default function CreateEvent({navigation}) {
                             //onPress = {handleLogin}
                             ></CustomButton>
             </View>
+
 
             </ScrollView>
         </KeyboardAvoidingView>
@@ -172,7 +160,7 @@ const styles = StyleSheet.create({
         fontFamily: "Nunito-Sans-Bold",
         backgroundColor: 'white',
         paddingHorizontal: 15,
-        paddingVertical: 12,
+        paddingVertical: 10,
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
@@ -200,8 +188,11 @@ const styles = StyleSheet.create({
         marginTop: 80,
         marginBottom: 25,
     },
-    selectListInput: {
-        fontWeight: 50,
+    text: {
+        marginTop: 10,
+        fontFamily: "Nunito-Sans-Bold",
+    },
+    placeholder: {
         fontFamily: "Nunito-Sans-Bold",
     },
     selectListBox: {
