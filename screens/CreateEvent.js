@@ -2,13 +2,51 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomButton from '../shared/button';
 import { SelectList } from 'react-native-dropdown-select-list';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { authentication, db } from '../firebase/firebase-config';
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+import uuid from 'react-native-uuid';
+//import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function CreateEvent({navigation}) {
     
+        
+    const next = () => {
+
+        const userRef = collection(db, 'events');
+        const hostID = authentication.currentUser.uid;
+
+        if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' ) {
+            Alert.alert('Error!', 'You have not specified all fields yet.', 
+            [{text: 'Understood.'}])
+        } else {
+            const newDocumentRef = doc(userRef); // Generate a new document with an auto-generated ID
+            const eventID = newDocumentRef.id; // Get the randomly generated document ID
+
+            addDoc(userRef, {
+                name: eventName,
+                category: category,
+                location: location,
+                date: dateText,
+                time: timeText,
+                hostID: hostID,
+                eventID: eventID
+              })
+              .then(() => {
+                navigation.navigate('ChooseAttendees');
+              })
+              .catch((error) => {
+                console.log('Error creating event:', error);
+              });
+
+            navigation.navigate('ChooseAttendees');
+        }
+    } 
+  
+
     const [eventName, setEventName] = useState('');
     const [category, setCategory] = useState("");
+    const [location, setLocation] = useState('');
 
     //selecting a category
     const choices = [
@@ -17,15 +55,12 @@ export default function CreateEvent({navigation}) {
         {key:'3', value:'Study'},
     ]
 
-    //selecting location
-
-
     //selecting a date and time
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [dateText, setDateText] = useState('Date');
-    const [timeText, setTimeText] = useState('Time');
+    const [dateText, setDateText] = useState('Add Date');
+    const [timeText, setTimeText] = useState('Add Time');
 
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -87,10 +122,28 @@ export default function CreateEvent({navigation}) {
 
                 <Text style = {styles.text}>Please enter the event location:</Text>
                 <TextInput
-                    placeholder= 'Location'
-                    //value = {inputValue}
                     style = {styles.input}
+                    placeholder= 'Add location'
+                    value = {location}
+                    onChangeText = {text => setLocation(text)}
                 ></TextInput> 
+                {/* <GooglePlacesAutocomplete
+                    placeholder='Search'
+                    fetchDetails = {true}
+                    GooglePlacesSearchQuery={{
+                        rankby: "distance"
+                    }}
+                    onPress={(data, details = null) => {
+                        // 'details' is provided when fetchDetails = true
+                        console.log(data, details);
+                        setLocation(details.formatted_address);
+                    }}
+                    query={{
+                        key: "AIzaSyCVTzQ7OPdB-otBcXZiKcZsNOhtjk2lkoU",
+                        language: 'en',
+                    }}
+                    styles = {styles.input}
+                /> */}
                 
                 <Text style = {styles.text}>Please enter the date of the event:</Text>
                 <TouchableOpacity 
@@ -121,6 +174,7 @@ export default function CreateEvent({navigation}) {
                     is24Hour = {true}
                     dispaly ='default'
                 />)}
+
             </View>
 
             <View style = {styles.buttonContainer}>
@@ -131,7 +185,7 @@ export default function CreateEvent({navigation}) {
                             width = {320}
                             height = {45}
                             fontSize= {18}
-                            //onPress = {handleLogin}
+                            onPress = {next}
                             ></CustomButton>
             </View>
 
@@ -144,6 +198,8 @@ export default function CreateEvent({navigation}) {
 const styles = StyleSheet.create({
     keyboardAvoidContainer: {
         flex: 1,
+        //justifyContent: 'center', (if change scrollview to view)
+        //paddingHorizontal: 35
     },
     container: {
         flexGrow: 1,
@@ -244,5 +300,9 @@ const styles = StyleSheet.create({
           height: 2,
         },
         paddingHorizontal: 10,
-    }
+    },
+    // textevent: {
+    //     marginTop: 60,
+    //     fontFamily: "Nunito-Sans-Bold",
+    // }
 })
