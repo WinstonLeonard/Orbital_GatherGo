@@ -11,7 +11,9 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     'Nunito-Bold': require('./assets/fonts/Nunito-Bold.ttf'),
     'Nunito-Sans-Bold': require('./assets/fonts/NunitoSans_10pt-Bold.ttf'),
-    'Nunito-Sans': require('./assets/fonts/NunitoSans_10pt-Regular.ttf')
+    'Nunito-Sans': require('./assets/fonts/NunitoSans_10pt-Regular.ttf'),
+    'Helvetica': require('./assets/fonts/Helvetica.ttf'),
+    'Helvetica-Bold': require('./assets/fonts/Helvetica-Bold.ttf'),
   });
 
   useEffect(() => {
