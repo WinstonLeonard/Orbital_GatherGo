@@ -1,15 +1,14 @@
-import Reactm, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import {GiftedChat} from 'react-native-gifted-chat';
-import { View, Text, KeyboardAvoidingView, SafeAreaView, Platform, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Platform, Keyboard } from 'react-native';
 import { collection, query, addDoc, orderBy, onSnapshot, getDocs, getDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import { storage } from '../firebase/firebase-config';
 import { ref, getDownloadURL  } from "firebase/storage";
 import { Avatar, Bubble, SystemMessage, Message, MessageText, Time } from 'react-native-gifted-chat';
+import moment from 'moment';
 
-
-
-export default function GroupChat() {
+export default function GroupChat({eventID}) {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState('');
   const [pfpUrl, setPfpUrl] = useState('');
@@ -102,7 +101,6 @@ export default function GroupChat() {
 
     const renderTime = ({currentMessage}) => {
       const createdAt = (currentMessage.createdAt);
-      console.log(createdAt);
       const timestamp = createdAt.toDate();
 
       const hours = timestamp.getHours();
@@ -127,54 +125,42 @@ export default function GroupChat() {
           );
       }
     }
-    
+
     const renderDay = (props) => {
-      const currentMessage = props.currentMessage;
-      const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
-          
-      const currentcreatedAt = currentMessage.createdAt;
-      const currenttimestamp = currentcreatedAt.toDate();
-      const currentdate = currenttimestamp.getDate();
-      const currentmonthIndex = currenttimestamp.getMonth();
-      const currentyear = currenttimestamp.getFullYear();
-  
-      const currentmonth = monthNames[currentmonthIndex];
-      const currentDate = currentdate + " " + currentmonth + " " + currentyear;
-  
-      if (messages.length >= 2) {
-        const lastMessage = messages[1];
-        
-        const lastcreatedAt = lastMessage.createdAt;
-        const lasttimestamp = lastcreatedAt.toDate();
-        const lastdate = lasttimestamp.getDate();
-        const lastmonthIndex = lasttimestamp.getMonth();
-        const lastyear = lasttimestamp.getFullYear();
-        const lastmonth = monthNames[lastmonthIndex];
-        const lastDate = lastdate + " " + lastmonth + " " + lastyear;
-        if (currentDate !== lastDate) {
+      const { currentMessage, previousMessage } = props;
+    
+      if (currentMessage && currentMessage.createdAt && previousMessage && previousMessage.createdAt) {
+        const currentTimestamp = currentMessage.createdAt.toDate();
+        const previousTimestamp = previousMessage.createdAt.toDate();
+        const currentDay = moment(currentTimestamp).format('YYYY-MM-DD');
+        const previousDay = moment(previousTimestamp).format('YYYY-MM-DD');
+    
+        if (currentDay !== previousDay) {
           return (
-            <View style={{ alignItems: 'center', marginTop: 10 }}>
-              <Text style={{ color: 'grey' }}>{currentDate}</Text>
-            </View>
-          );
-        } else {
-          return (
-            <View style={{ alignItems: 'center', marginTop: 3 }}>
+            <View style={styles.dayContainer}>
+              <Text style={styles.dayText}>
+                {moment(currentTimestamp).format('MMM DD, YYYY')}
+              </Text>
             </View>
           );
         }
-      } else {
+      } else if (currentMessage && currentMessage.createdAt) {
+        // Render the date for the first message
+        const currentTimestamp = currentMessage.createdAt.toDate();
         return (
-          <View style={{ alignItems: 'center', marginTop: 10 }}>
-          <Text style={{ color: 'grey' }}> {currentDate}</Text>
-        </View>
-        )
-      } 
+          <View style={styles.dayContainer}>
+            <Text style={styles.dayText}>
+              {moment(currentTimestamp).format('MMM DD, YYYY')}
+            </Text>
+          </View>
+        );
+      }
+    
+      return null; // Return null for other messages within the same day
     };
     
+    
+
 
     useLayoutEffect(() => {
         const eventID = 'eventID';
@@ -192,20 +178,6 @@ export default function GroupChat() {
         });
         return unsubscribe;    
     }, []);  
-
-    // const onSend = useCallback((messages = []) => {
-
-    //     setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-    //     const {_id, createdAt, text, user} = messages[0];
-    //     const eventID = 'eventID';
-    //     const path = 'groupchats/test/' + eventID;
-    //     addDoc(collection(db, path), {
-    //         _id,
-    //         createdAt,
-    //         text,
-    //         user
-    //     });
-    // }, []);
 
     const onSend = useCallback((messages = []) => {
       const message = messages[0];
@@ -255,3 +227,16 @@ export default function GroupChat() {
             </View>
     )
 }
+
+const styles = StyleSheet.create({
+  dayContainer: {
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 5,
+  },
+  dayText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
+});
