@@ -5,7 +5,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
-import uuid from 'react-native-uuid';
+import uuid from 'uuid-random';
 //import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function CreateEvent({navigation}) {
@@ -13,17 +13,18 @@ export default function CreateEvent({navigation}) {
         
     const next = () => {
 
-        const userRef = collection(db, 'events');
+        const generatedUUID = uuid();
+        const eventID = generatedUUID;
+        const collectionRef = collection(db, 'events');
         const hostID = authentication.currentUser.uid;
+        const newDocumentRef = doc(collectionRef, generatedUUID);
 
         if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' ) {
             Alert.alert('Error!', 'You have not specified all fields yet.', 
             [{text: 'Understood.'}])
         } else {
-            const newDocumentRef = doc(userRef); // Generate a new document with an auto-generated ID
-            const eventID = newDocumentRef.id; // Get the randomly generated document ID
 
-            addDoc(userRef, {
+            setDoc(newDocumentRef, {
                 name: eventName,
                 category: category,
                 location: location,
