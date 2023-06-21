@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import CustomButton from '../shared/button';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -17,7 +17,7 @@ export default function CreateEvent({navigation}) {
         const eventID = generatedUUID;
         const collectionRef = collection(db, 'events');
         const hostID = authentication.currentUser.uid;
-        const newDocumentRef = doc(collectionRef, generatedUUID);
+        const newDocumentRef = doc(collectionRef, generatedUUID);   
 
         if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' ) {
             Alert.alert('Error!', 'You have not specified all fields yet.', 
@@ -31,16 +31,16 @@ export default function CreateEvent({navigation}) {
                 date: dateText,
                 time: timeText,
                 hostID: hostID,
-                eventID: eventID
+                eventID: eventID,
+                InvitationList: [],
+                Participants: []
               })
               .then(() => {
-                navigation.navigate('ChooseAttendees');
+                navigation.navigate('ChooseParticipants', {data: eventID});
               })
               .catch((error) => {
                 console.log('Error creating event:', error);
               });
-
-            navigation.navigate('ChooseAttendees');
         }
     } 
   
@@ -179,7 +179,7 @@ export default function CreateEvent({navigation}) {
             </View>
 
             <View style = {styles.buttonContainer}>
-            <CustomButton text = 'Choose Attendees' 
+            <CustomButton text = 'Choose Participants' 
                             buttonColor = '#2F2E2F' 
                             textColor = 'white'
                             cornerRadius= {10} 

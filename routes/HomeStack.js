@@ -14,7 +14,7 @@ import CreateEvent from '../screens/CreateEvent.js';
 import EditProfile from '../screens/EditProfile.js';
 import Friends from '../screens/Friends.js';
 import AddFriend from '../screens/AddFriend.js';
-import ChooseAttendees from '../screens/ChooseAttendees.js';
+import ChooseParticipants from '../screens/ChooseParticipants.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -73,8 +73,8 @@ export default function HomeStack () {
                 options = {{headerShown: false}}></Stack.Screen>
 
             <Stack.Screen
-                name = "ChooseAttendees"
-                component = {ChooseAttendees}
+                name = "ChooseParticipants"
+                component = {ChooseParticipants}
                 options = {{headerShown: false}}></Stack.Screen>
             
             <Stack.Screen
