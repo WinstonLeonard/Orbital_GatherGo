@@ -4,7 +4,9 @@ import GroupChat from '../shared/groupChat';
 
 export default function TestGroupChat({navigation}) {
     return (
-        <GroupChat></GroupChat>
+        <GroupChat
+            navigation = {navigation}
+        ></GroupChat>
 
     )
 }

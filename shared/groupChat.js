@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import {GiftedChat} from 'react-native-gifted-chat';
-import { View, Text, StyleSheet, SafeAreaView, Platform, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Keyboard } from 'react-native';
 import { collection, query, addDoc, orderBy, onSnapshot, getDocs, getDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import { storage } from '../firebase/firebase-config';
@@ -8,11 +8,14 @@ import { ref, getDownloadURL  } from "firebase/storage";
 import { Avatar, Bubble, SystemMessage, Message, MessageText, Time } from 'react-native-gifted-chat';
 import moment from 'moment';
 
-export default function GroupChat({eventID}) {
+export default function GroupChat({eventID, navigation}) {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState('');
   const [pfpUrl, setPfpUrl] = useState('');
 
+  const backHandler = () => {
+    navigation.pop();
+  }
 
   const getPfp = async() => {
       const storageRef = ref(storage, 'Profile Pictures');
@@ -158,9 +161,7 @@ export default function GroupChat({eventID}) {
     
       return null; // Return null for other messages within the same day
     };
-    
-    
-
+        
 
     useLayoutEffect(() => {
         const eventID = 'eventID';
@@ -204,7 +205,37 @@ export default function GroupChat({eventID}) {
     
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style = {styles.headerContainer}>
+          
+          <TouchableOpacity onPress = {backHandler}>
+          <View style = {styles.backContainer}>
+          <Image
+            source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fback%20icon.png?alt=media&token=b8666160-3975-41f7-a11b-ce8920233555'}}
+            style = {styles.backIconStyle}
+            resizeMode = 'contain'/>
+          </View>
+          </TouchableOpacity>
+
+          <View style = {styles.pfpContainer}>
+          <Image
+            source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd'}}
+            style = {styles.pfpStyle}
+            resizeMode = 'contain'/>
+          </View>
+
+          <View style = {styles.infoContainer}>
+            <TouchableOpacity>
+            <Image
+              source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8'}}
+              style = {styles.infoStyle}
+              resizeMode = 'contain'
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Text style = {styles.headerTitle}>Event Name</Text>
+        </View>
         <GiftedChat 
             messages = {messages}
             onSend = {messages => onSend(messages)}
@@ -224,15 +255,73 @@ export default function GroupChat({eventID}) {
             //renderMessage = {renderMessage}
             //renderSystemMessage={renderSystemMessage} 
             />
-            </View>
+      </View>
     )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  headerContainer: {
+    backgroundColor: 'white',
+    width: 400,
+    height: 80,
+    alignItems: 'center',
+    alignContent: 'center',
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4, // Android-specific property for elevation
+  },
+  headerTitle: {
+    textAlign: 'center',
+    fontSize: 23,
+    fontFamily: 'Nunito-Sans-Bold',
+    marginTop: 25,
+  },
+  backContainer: {
+    flexDirection: 'row',
+    marginLeft: 15,
+    marginTop: 25,
+  },
+  backIconStyle: {
+    width: 28,
+    height: 28,
+    alignSelf: 'flex-start',
+  },
+  pfpContainer: {
+    width: 35,
+    height: 35,
+    marginRight: 5,
+    marginTop: 25,
+},
+pfpStyle: {
+    width: 35,
+    height: 35,
+    borderColor: 'black',
+    borderWidth: 1.8,
+    borderRadius: 1000, 
+},
+infoContainer: {
+  position: 'absolute',
+  left: 330,
+  top: 35,
+},
+infoStyle: {
+  width: 35,
+  height: 35,
+},
   dayContainer: {
     alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 5,
+    marginTop: 10,
+    marginBottom: 10,
   },
   dayText: {
     fontSize: 12,
