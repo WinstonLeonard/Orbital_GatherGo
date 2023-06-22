@@ -4,6 +4,7 @@ import { authentication, db } from '../firebase/firebase-config';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../shared/button';
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
 
 export default function ChooseParticipants({navigation, route}) {
@@ -12,6 +13,7 @@ export default function ChooseParticipants({navigation, route}) {
     const [myFriendList, setMyFriendList] = useState([]);
     const [friendData, setFriendData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [invitationList, setInvitationList] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
@@ -63,11 +65,74 @@ export default function ChooseParticipants({navigation, route}) {
         );
     }
 
-    //adding to invitedList
-    const {data} = route.params;
-    const eventID = data;
-    const eventRef = doc(db, 'events', eventID);
+    const updateMyEvents = async (eventID) => {
+        const myID = authentication.currentUser.uid;
+        const myPromise = getDoc(doc(db, 'users', myID));
+        const [myDocSnapshot] = await Promise.all([myPromise]);
+        
+        const myData = myDocSnapshot.data();
+        const currentMyEvents = myData.myEvents;
+        const newMyEvents = [...currentMyEvents, eventID];
 
+        const myRef = doc(db, 'users', myID);
+        setDoc(myRef, {
+            myEvents: newMyEvents,
+        }, { merge: true });
+    }
+
+    const updateMyUpcomingEvents = async (eventID) => {
+        const myID = authentication.currentUser.uid;
+        const myPromise = getDoc(doc(db, 'users', myID));
+        const [myDocSnapshot] = await Promise.all([myPromise]);
+        
+        const myData = myDocSnapshot.data();
+        const currentupcomingEvents = myData.upcomingEvents;
+        const newupcomingEvents = [...currentupcomingEvents, eventID];
+
+        const myRef = doc(db, 'users', myID);
+        setDoc(myRef, {
+            upcomingEvents: newupcomingEvents,
+        }, { merge: true });
+    }
+
+    const next = async () => {
+        const {data} = route.params;
+        const eventID = data;
+        console.log(1);
+        console.log(invitationList[0]);
+        console.log(invitationList[1]);
+        console.log(invitationList[2]);
+        //sending invitations by adding eventID to eventInvitations property of users
+        for (let i = 0; i < invitationList.length; i++) {
+            console.log(invitationList.length);
+            const userID = invitationList[i];
+            const myUserPromise = getDoc(doc(db, 'users', userID));
+            const [userDocSnapshot] = await Promise.all([myUserPromise]);
+
+            const userData = userDocSnapshot.data();
+            const currentEventInvitationList = userData.eventInvitations;
+            const newEventsInvitationList = [...currentEventInvitationList, eventID]
+            
+            
+            const userRef = doc(db, 'users', userID);
+
+            setDoc(userRef, {
+                eventInvitations: newEventsInvitationList,
+            }, { merge: true });
+        }
+
+        //setting events invited list
+        const eventRef = doc(db, 'events', eventID);
+        setDoc(eventRef, {
+            invitationList: invitationList,
+        }, { merge: true });
+
+        //adding eventID to myEvents property
+        updateMyEvents(eventID);
+        updateMyUpcomingEvents(eventID);
+        
+        navigation.navigate("Home");
+    }
     
     return (
         <KeyboardAvoidingView
@@ -90,12 +155,12 @@ export default function ChooseParticipants({navigation, route}) {
                     inputStyles = {styles.placeholder}
                     boxStyles= {styles.selectListBox}
                     search = {true} 
-                    //setSelected={(val) => setCategory(val)} 
+                    setSelected={(val) => setInvitationList(val)} 
                     data={friendData}
                     placeholder='Choose Participates' 
                     fontFamily='Nunito-Sans-Bold'
                     alignItems= 'center'
-                    save="value"/>
+                    save="key"/>
 
             </View>
 
@@ -107,7 +172,7 @@ export default function ChooseParticipants({navigation, route}) {
                             width = {320}
                             height = {45}
                             fontSize= {18}
-                            onPress = {console.log('data')}
+                            onPress = {next}
                             ></CustomButton>
             </View>
 

@@ -32,8 +32,8 @@ export default function CreateEvent({navigation}) {
                 time: timeText,
                 hostID: hostID,
                 eventID: eventID,
-                InvitationList: [],
-                Participants: [],
+                invitationList: [],
+                participants: [],
               })
               .then(() => {
                 navigation.navigate('ChooseParticipants', {data: eventID});
