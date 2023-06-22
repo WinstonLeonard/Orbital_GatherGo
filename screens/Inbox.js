@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 35,
         alignItems: 'center',
+        marginBottom: 10,
     },
     headerText: {
         fontSize: 40,
