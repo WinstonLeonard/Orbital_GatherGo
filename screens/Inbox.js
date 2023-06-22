@@ -4,6 +4,10 @@ import GroupChatContainer from '../shared/GroupChatContainer';
 import GroupChat from '../shared/groupChat';
 
 export default function Inbox({navigation}) {
+    const incomingInvitationHandler = () => {
+        navigation.navigate('EventInvitations');
+    }
+
     return (
 
         <View style = {styles.container}>
@@ -11,7 +15,7 @@ export default function Inbox({navigation}) {
             <View style = {styles.headerContainer}> 
                 <Text style = {styles.headerText}>Inbox</Text>
                 <View style = {styles.envelopContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress = {incomingInvitationHandler}>
                     <Image source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fenvelope.png?alt=media&token=16c56aa8-83ec-4734-8136-9e6800f1a2d2'}}
                             style  = {styles.envelopStyle}
                             resizeMode= 'contain'/>
