@@ -189,6 +189,27 @@ useEffect(() => {
     
       return null; // Return null for other messages within the same day
     };
+
+
+    const renderTick = (props) => {
+      const { currentMessage } = props;
+      console.log(1);
+      console.log(currentMessage);
+      const status = props.status;
+      //console.log(status);
+    
+      // Check the status to determine the appropriate tick component
+      if (status === 'sent') {
+        return <Text>&#10004;</Text>; // Render a checkmark
+      } else if (status === 'delivered') {
+        return <Text>&#10004;&#10004;</Text>; // Render double checkmarks
+      } else if (status === 'pending') {
+        return <Text>&#8987;</Text>; // Render a clock symbol
+      }
+    
+      return null; // Return null for other cases or if the status is undefined
+    };
+    
         
 
     useLayoutEffect(() => {
@@ -280,6 +301,8 @@ useEffect(() => {
             renderCustomView = {renderCustomView}
             renderTime = {renderTime}
             renderDay = {renderDay}
+            isTyping = {true}
+            //renderTicks = {renderTick}
             //renderMessage = {renderMessage}
             //renderSystemMessage={renderSystemMessage} 
             />

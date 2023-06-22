@@ -1,13 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, setDoc, orderBy, onSnapshot, limit } from 'firebase/firestore';
 
 export default function GroupChatContainer({navigation, eventID}) {
 
     const [eventName, setEventName] = useState('')
     const [imageUrl, setImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=d19c79af-4d10-4400-825e-88578818fef9');
     const [lastMessage, setLastMessage] = useState('');
+    const [displayLastMessage, setDisplayLastMessage] = useState('')
+    const [myUsername, setMyUsername] = useState('');
 
     const openGroupChat = () => {
         navigation.navigate('TestGroupChat', { eventID: eventID });
@@ -21,6 +23,19 @@ export default function GroupChatContainer({navigation, eventID}) {
             'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
         }
     }
+
+    useEffect(() => {
+        async function getUsername() {
+            const docID = authentication.currentUser.uid;
+            const docRef = doc(db, "users", docID);
+            const docSnap = await getDoc(docRef);
+
+            const data = docSnap.data();
+            setMyUsername(data.username);
+               
+        }
+        getUsername();
+      }, []);
 
     useEffect(() => {
         async function fetchEventData() {
@@ -39,6 +54,51 @@ export default function GroupChatContainer({navigation, eventID}) {
         fetchEventData();
     }, []);
 
+    useLayoutEffect(() => {
+        // const eventID = 'eventID';
+        const path = 'groupchats/test/' + eventID;
+        const collectionRef = collection(db, path);
+        const q = query(collectionRef, orderBy('createdAt', 'desc'), limit(1)); // Add limit(1) to retrieve only the newest message
+      
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          snapshot.docs.map((doc) => {
+            setLastMessage(
+              {
+                _id: doc.id,
+                createdAt: doc.data().createdAt,
+                text: doc.data().text,
+                user: doc.data().user,
+              },
+            );
+          });
+        });
+      
+        unsubscribe;
+      }, []);
+
+      useEffect(() => {
+        if (!lastMessage) {
+            return;
+        } else {
+            const last = lastMessage.text;
+            const senderObject = lastMessage.user;
+            const sender = senderObject.username;
+            let formatLastMessage = '';
+            
+            if (sender == myUsername) {
+                formatLastMessage = "You: " + last;
+                if (formatLastMessage.length >= 35) {
+                    formatLastMessage = formatLastMessage.slice(0, 35);
+                    formatLastMessage = formatLastMessage + "...";
+                }
+            } else {
+                formatLastMessage = sender + ": " + last;
+            }
+            setDisplayLastMessage(formatLastMessage);
+        }
+      }, [lastMessage]);
+      
+
     return(
     <TouchableOpacity onPress = {openGroupChat}>
     <View style = {styles.groupContainer}>
@@ -52,7 +112,7 @@ export default function GroupChatContainer({navigation, eventID}) {
         <View style = {styles.nameContainer}>
             <Text style = {styles.nameStyle}> {eventName} </Text>
 
-            <Text style = {styles.chatStyle}> {eventID} </Text>
+            <Text style = {styles.chatStyle}> {displayLastMessage} </Text>
 
         </View>
 
@@ -91,14 +151,15 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     nameStyle: {
-        fontFamily: 'Nunito-Sans-Bold',
-        fontSize: 24,
+        fontFamily: 'Popins-Bold',
+        fontSize: 16,
         textAlign: 'left',
     },
     chatStyle: {
-        fontFamily: 'Nunito-Sans',
-        fontSize: 16,
+        fontFamily: 'Popins',
+        fontSize: 14,
+        color: 'grey',
         textAlign: 'left',
-        marginLeft: 5,
+        marginLeft: 0,
     }
 })
