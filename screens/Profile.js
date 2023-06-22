@@ -5,7 +5,8 @@ import { storage } from '../firebase/firebase-config';
 import { authentication, db } from '../firebase/firebase-config';
 import { doc, getDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 export default function Profile({navigation}) {
@@ -33,59 +34,20 @@ export default function Profile({navigation}) {
         getUsername();
       }, []);
 
-    useEffect(() => {
-        async function getProfilePic() {
+      useFocusEffect(
+        React.useCallback(() => {
+          async function getProfilePic() {
             const storageRef = ref(storage, 'Profile Pictures');
             const fileName = authentication.currentUser.uid;
-
-            // const storageRef = ref(storage, 'Icons');
-            // const fileName = 'reject.png'
-            
             const fileRef = ref(storageRef, fileName);
     
-            getDownloadURL(fileRef)
-            .then((url) => {
-                //console.log(url);
-                setImage(url);
-            })
-        }
-        getProfilePic();
-      }, []);
-
-      const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-          allowsMultipleSelection: false,
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [4, 4],
-          quality: 1,
-        });
-    
-        if (!result.canceled) {
-            //console.log(result.assets[0].uri);
-            //setImage({ uri: result.assets[0].uri });
-            setImage( result.assets[0].uri );
-            uploadImageAsync(result.assets[0].uri);
-        }
-      };
-    
-    const metadata = {
-        contentType: 'image/jpeg',
-    };
-
-    async function uploadImageAsync(image) {
-        const response = await fetch(image);
-        const blob = await response.blob();
-        const storageRef = ref(storage, 'Profile Pictures');
-        const fileName = authentication.currentUser.uid;
-        const fileRef = ref(storageRef, fileName);
-
-        uploadBytes(fileRef, blob, metadata).then((snapshot) => {
-            console.log('Uploaded a blob or file!');
-          });
-    }
-
+            getDownloadURL(fileRef).then((url) => {
+              setImage(url);
+            });
+          }
+          getProfilePic();
+        }, [])
+      );
 
     return (
 
@@ -96,13 +58,11 @@ export default function Profile({navigation}) {
                 <Text style = {styles.title}> Profile</Text>
             </View>
 
-            <TouchableOpacity onPress = {pickImage}> 
             <View style = {styles.imageContainer}>
                 <Image source = {{uri: image}}
                         style = {styles.imageStyle}
                         resizeMode='contain'/>
             </View>
-            </TouchableOpacity>
 
             <Text style = {styles.name}> {username} </Text>
 
