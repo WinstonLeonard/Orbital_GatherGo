@@ -115,6 +115,12 @@ export default function HomeStack () {
                 component = {EventInvitations}
                 options = {{
                     headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "TestGroupChat"
+                component = {TestGroupChat}
+                options = {{
+                    headerShown: false}}></Stack.Screen>
 
         </Stack.Navigator>
 

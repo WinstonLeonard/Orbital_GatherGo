@@ -12,10 +12,38 @@ export default function GroupChat({eventID, navigation}) {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState('');
   const [pfpUrl, setPfpUrl] = useState('');
+  const [eventName, setEventName] = useState('')
+  const [imageUrl, setImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=d19c79af-4d10-4400-825e-88578818fef9');
 
   const backHandler = () => {
     navigation.pop();
   }
+
+  const images = {
+    categories: {
+        'Sports' :"https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd",
+        'Eat' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Feat%20icon.png?alt=media&token=ee7bf011-8772-45ef-8555-5ba95fbe0aca",
+        'Study' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fstudy%20icon.png?alt=media&token=4af22023-a081-4303-a054-251eaedfe35e",
+        'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
+    }
+}
+
+useEffect(() => {
+    async function fetchEventData() {
+        const docPromise = getDoc(doc(db, "events", eventID));
+    
+        const [docSnapshot] = await Promise.all([docPromise]);
+
+        const eventData = docSnapshot.data();
+        const eventName = eventData.name;
+        const eventCategory = eventData.category;
+
+
+        setEventName(eventName);
+        setImageUrl(images.categories[eventCategory]);
+    };
+    fetchEventData();
+}, []);
 
   const getPfp = async() => {
       const storageRef = ref(storage, 'Profile Pictures');
@@ -164,7 +192,7 @@ export default function GroupChat({eventID, navigation}) {
         
 
     useLayoutEffect(() => {
-        const eventID = 'eventID';
+        //const eventID = 'eventID';
         const path = 'groupchats/test/' + eventID;
         const collectionRef = collection(db, path);
         const q = query(collectionRef, orderBy('createdAt', 'desc'));
@@ -198,7 +226,7 @@ export default function GroupChat({eventID, navigation}) {
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [newMessage]));
     
       // Add the message to the Firestore collection
-      const eventID = 'eventID';
+      //const eventID = 'eventID';
       const path = 'groupchats/test/' + eventID;
       addDoc(collection(db, path), newMessage);
     }, []);
@@ -219,7 +247,7 @@ export default function GroupChat({eventID, navigation}) {
 
           <View style = {styles.pfpContainer}>
           <Image
-            source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd'}}
+            source = {{uri: imageUrl}}
             style = {styles.pfpStyle}
             resizeMode = 'contain'/>
           </View>
@@ -227,14 +255,14 @@ export default function GroupChat({eventID, navigation}) {
           <View style = {styles.infoContainer}>
             <TouchableOpacity>
             <Image
-              source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8'}}
+              source = {{uri: "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8"}}
               style = {styles.infoStyle}
               resizeMode = 'contain'
               />
             </TouchableOpacity>
           </View>
 
-          <Text style = {styles.headerTitle}>Event Name</Text>
+          <Text style = {styles.headerTitle}>{eventName}</Text>
         </View>
         <GiftedChat 
             messages = {messages}
