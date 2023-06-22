@@ -98,13 +98,10 @@ export default function ChooseParticipants({navigation, route}) {
     const next = async () => {
         const {data} = route.params;
         const eventID = data;
-        console.log(1);
-        console.log(invitationList[0]);
-        console.log(invitationList[1]);
-        console.log(invitationList[2]);
+
         //sending invitations by adding eventID to eventInvitations property of users
         for (let i = 0; i < invitationList.length; i++) {
-            console.log(invitationList.length);
+            
             const userID = invitationList[i];
             const myUserPromise = getDoc(doc(db, 'users', userID));
             const [userDocSnapshot] = await Promise.all([myUserPromise]);
