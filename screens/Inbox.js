@@ -1,12 +1,62 @@
-import * as React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import GroupChatContainer from '../shared/GroupChatContainer';
+import { authentication, db } from '../firebase/firebase-config';
+import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import GroupChat from '../shared/groupChat';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function Inbox({navigation}) {
+
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+
     const incomingInvitationHandler = () => {
         navigation.navigate('EventInvitations');
+        console.log(upcomingEvents);
     }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            async function fetchUpcomingEvents() {
+                const myDocID = authentication.currentUser.uid;
+                const myDocRef = doc(db, "users", myDocID);
+                const myDocSnap = await getDoc(myDocRef);  
+                const myData = myDocSnap.data();
+                const events = myData.upcomingEvents;
+                const temp = [];
+                for (let i = 0; i < events.length; i++) {
+                    const object = {
+                        key: i,
+                        eventID: events[i], 
+                    }
+                    temp.push(object);
+                }
+                setUpcomingEvents(temp);
+            }
+            fetchUpcomingEvents();
+        }, [])
+    );
+
+    // useEffect(() => {
+    //     async function fetchUpcomingEvents() {
+    //         const myDocID = authentication.currentUser.uid;
+    //         const myDocRef = doc(db, "users", myDocID);
+    //         const myDocSnap = await getDoc(myDocRef);  
+    //         const myData = myDocSnap.data();
+    //         const events = myData.upcomingEvents;
+    //         const temp = [];
+    //         for (let i = 0; i < events.length; i++) {
+    //             const object = {
+    //                 key: i,
+    //                 eventID: events[i], 
+    //             }
+    //             temp.push(object);
+    //         }
+    //         setUpcomingEvents(temp);
+    //     }
+    //     fetchUpcomingEvents();
+    // },[]);
 
     return (
 
@@ -22,8 +72,18 @@ export default function Inbox({navigation}) {
                     </TouchableOpacity>
                 </View>
             </View>
+
+            <FlatList
+            data = {upcomingEvents}
+            renderItem= {({item}) => (
+                <GroupChatContainer
+                    navigation = {navigation}
+                    eventID = {item.eventID}   
+                />
+            )}
+            />
             
-            <GroupChatContainer></GroupChatContainer>
+            {/* <GroupChatContainer></GroupChatContainer> */}
 
             {/* <View>
                 <Text onPress = {() => navigation.navigate('TestGroupChat')}
@@ -47,7 +107,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 35,
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     headerText: {
         fontSize: 40,
