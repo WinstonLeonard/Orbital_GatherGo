@@ -1,15 +1,25 @@
 import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 
-export default function eventRequestBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
+export default function EventRequestBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
+    // const images = {
+    //     categories: {
+    //         'Sports' : require('../assets/pictures/sports_icon'),
+    //         'Eat' : require('../assets/pcitures/eat_icon.png'),
+    //         'Study' : require('../assets/pcitures/study_icon.png'),
+    //         'Others' : require('../assets/pcitures/others_icon.png')
+    //     }
+    // }
+
     const images = {
         categories: {
-            'Sports' : require('../assets/pcitures/sports_icon.png'),
-            'Eat' : require('../assets/pcitures/eat_icon.png'),
-            'Study' : require('../assets/pcitures/study_icon.png'),
-            'Others' : require('../assets/pcitures/others_icon.png')
+            'Sports' :"https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd",
+            'Eat' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Feat%20icon.png?alt=media&token=8436af79-4fb4-4e2e-8673-03bfcf311f25",
+            'Study' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fstudy%20icon.png?alt=media&token=bcb2ccbe-9c13-48ae-a344-b2e328b6762e",
+            'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
         }
     }
+
 
     const styles = StyleSheet.create({
         friendContainer: {
@@ -75,7 +85,7 @@ export default function eventRequestBox({ name, category, location, date, time, 
         <View style = {styles.friendContainer}>
 
         <View style = {styles.pfpContainer}>
-        <Image source = {images.categories[category]}
+        <Image source = {{uri: images.categories[category]}}
                     style = {styles.pfpStyle}
                     resizeMode='contain' />
         </View>

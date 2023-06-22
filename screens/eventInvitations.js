@@ -3,14 +3,15 @@ import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, A
 import CustomButton from '../shared/button';
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
-import eventRequestBox from '../shared/eventRequestBox';
+import EventRequestBox from '../shared/eventRequestBox';
 
 
-export default function eventInvitations({navigation}) {
+export default function EventInvitations({navigation}) {
 
     const [myEventInvitations, setMyEventInvitations] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [myUpcomingEvents, setMyUpcomingEvents] = useState([]);
+    const [data, setData] = useState([]);
 
 
     useEffect(() => {
@@ -103,7 +104,8 @@ export default function eventInvitations({navigation}) {
                 temp.push(object);
             }
     
-            setMyEventInvitations(temp);
+            //setMyEventInvitations(temp);
+            setData(temp);
             setIsLoading(false);
         };
     
@@ -129,9 +131,10 @@ export default function eventInvitations({navigation}) {
         <View style = {styles.container}>
 
             <FlatList
-            data = {myEventInvitations}
+            // data = {myEventInvitations}
+            data = {data}
             renderItem= {({item}) => (
-                <eventRequestBox
+                <EventRequestBox
                     name = {item.name}
                     category = {item.category}
                     location = {item.location}
@@ -144,6 +147,9 @@ export default function eventInvitations({navigation}) {
 
         </View>
         </KeyboardAvoidingView>
+        // <View style = {styles.container}>
+        //     <Text>Hello fucking worldd</Text>
+        // </View>
     )
   
 }
