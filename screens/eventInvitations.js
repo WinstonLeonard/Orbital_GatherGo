@@ -55,15 +55,23 @@ export default function EventInvitations({navigation}) {
                     
                     const currentEventInvitations = myData.eventInvitations;
                     const currentUpcomingEvents = myData.upcomingEvents;
+                    const currentParticipants = eventData.participants;
 
                     const newEventsInvitations = currentEventInvitations.filter(item => item != eventID);
                     const newUpcomingEvents = [...currentUpcomingEvents, eventID];
+                    const newParticipants = [...currentParticipants, myDocID];
 
                     const myRef = doc(db, 'users', myDocID);
                     
                     setDoc(myRef, {
                         eventInvitations: newEventsInvitations,
                         upcomingEvents: newUpcomingEvents,
+                    }, { merge: true });
+
+                    const eventRef = doc(db, 'events', eventID);
+                    
+                    setDoc(eventRef, {
+                        participants: newParticipants,
                     }, { merge: true });
 
                     setMyEventInvitations(newEventsInvitations);
@@ -124,34 +132,36 @@ export default function EventInvitations({navigation}) {
 
     return(
         <KeyboardAvoidingView 
-            style = {styles.keyboardAvoidContainer}
-            enableOnAndroid = {true}
-            keyboardVerticalOffset = {-400}
-            behavior = "padding">
+        style = {styles.keyboardAvoidContainer}
+        enableOnAndroid = {true}
+        keyboardVerticalOffset = {-400}
+        behavior = "padding">
+            
         <View style = {styles.container}>
+            <Text style = {styles.title}>Event Invitations</Text>
+            
+            <View style = {styles.inputContainer}> 
+            
 
-            <FlatList
-            // data = {myEventInvitations}
-            data = {data}
-            renderItem= {({item}) => (
-                <EventRequestBox
-                    name = {item.name}
-                    category = {item.category}
-                    location = {item.location}
-                    date = {item.date}
-                    time = {item.time}
-                    acceptHandler= {item.acceptHandler}
-                    rejectHandler= {item.rejectHandler}    
-                />
+                <FlatList
+                data = {data}
+                renderItem= {({item}) => (
+                    <EventRequestBox
+                        name = {item.name}
+                        category = {item.category}
+                        location = {item.location}
+                        date = {item.date}
+                        time = {item.time}
+                        acceptHandler= {item.acceptHandler}
+                        rejectHandler= {item.rejectHandler}    
+                    />
             )}/>
-
+            
+            </View>
         </View>
+
         </KeyboardAvoidingView>
-        // <View style = {styles.container}>
-        //     <Text>Hello fucking worldd</Text>
-        // </View>
     )
-  
 }
 
 const styles = StyleSheet.create({
@@ -160,41 +170,22 @@ const styles = StyleSheet.create({
     },
     container: {
         flexGrow: 1,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         backgroundColor: 'white',
     },
-    header: {
+    title: {
         fontFamily: "Nunito-Sans-Bold",
-        fontSize: 20,
-        marginTop: 70,
-        marginBottom: 45,
+        textAlign: 'left',
+        color: '#2F2E2F',
+        fontWeight: 'bold',
+        fontSize: 30,
+        marginTop: 80,
+        marginBottom: 25,
+        marginLeft: 40
     },
     inputContainer: {
-        width: 275,
-        marginBottom: 40,
-    },
-    textInput: {
-        fontFamily: 'Nunito-Sans',
-        textAlign: 'center',    
-        fontSize: 16,
-        paddingVertical: 8,
-      },
-    line: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 3,
-        backgroundColor: 'grey',
-        elevation: 3, // Adjust the elevation value as needed
-    },
-    secondHeaderContainer: {
-        marginTop: 110,
-        marginBottom: 30,
-        textAlign: 'center',
-    },
-    secondHeader: {
-        fontFamily: "Nunito-Sans-Bold",
-        fontSize: 20,
+        width: '100%',
+        marginBottom: 250,
+
     },
 })

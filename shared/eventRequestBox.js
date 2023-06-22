@@ -2,14 +2,6 @@ import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 
 export default function EventRequestBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
-    // const images = {
-    //     categories: {
-    //         'Sports' : require('../assets/pictures/sports_icon'),
-    //         'Eat' : require('../assets/pcitures/eat_icon.png'),
-    //         'Study' : require('../assets/pcitures/study_icon.png'),
-    //         'Others' : require('../assets/pcitures/others_icon.png')
-    //     }
-    // }
 
     const images = {
         categories: {
@@ -25,24 +17,28 @@ export default function EventRequestBox({ name, category, location, date, time, 
         friendContainer: {
             flexDirection: 'row',
             alignSelf: 'flex-start',
-            marginLeft: 20,
+            marginLeft: 10,
             marginTop: 10,
-            width: 350,
+            width: 370,
+            height: 110,
             alignContent: 'center',
-            //borderColor: 'black',
-            //borderWidth: 2,
+            backgroundColor: '#DEF5FF',
+            borderRadius: 10,
+            // borderColor: 'black',
+            // borderWidth: 2,
         }, 
         pfpContainer: {
-            //backgroundColor: 'red',
-            width: 60,
-            height: 60,
+            // backgroundColor: 'red',
+            marginTop: 15,
+            marginLeft: 10,
+            width: 70,
+            height: 80,
         },
         pfpStyle: {
-            width: 60,
-            height: 60,
+            width: 70,
+            height: 70,
             borderColor: 'black',
             borderWidth: 0,
-            // borderRadius: 1000, 
         },
         nameContainer: {
             //backgroundColor: 'red',
@@ -52,14 +48,13 @@ export default function EventRequestBox({ name, category, location, date, time, 
         },
         usernameStyle: {
             fontFamily: 'Nunito-Sans-Bold',
-            fontSize: 24,
+            fontSize: 18,
             textAlign: 'left',
         },
         nameStyle: {
             fontFamily: 'Nunito-Sans',
-            fontSize: 16,
+            fontSize: 14,
             textAlign: 'left',
-            marginLeft: 5,
         },
         buttonContainer: {
             //backgroundColor: 'red',
@@ -67,8 +62,8 @@ export default function EventRequestBox({ name, category, location, date, time, 
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            left: 220,
-            top: 10,
+            left: 240,
+            top: 25,
         },
         buttonStyle: {
             width: 50,
@@ -92,8 +87,6 @@ export default function EventRequestBox({ name, category, location, date, time, 
 
         <View style = {styles.nameContainer}>
             <Text style = {styles.usernameStyle}> {name} </Text>
-
-            <Text style = {styles.nameStyle}> {category} </Text>
             <Text style = {styles.nameStyle}> {location} </Text>
             <Text style = {styles.nameStyle}> {date} </Text>
             <Text style = {styles.nameStyle}> {time} </Text>
