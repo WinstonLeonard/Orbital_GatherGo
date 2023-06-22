@@ -10,11 +10,13 @@ import UsernamePage from '../screens/UsernamePage.js';
 import Birthday from '../screens/Birthday.js';
 import Gender from '../screens/Gender.js';
 import Uploadpfp from '../screens/Uploadpfp.js';
-import NewEvent from '../screens/NewEvent.js';
+import CreateEvent from '../screens/CreateEvent.js';
 import EditProfile from '../screens/EditProfile.js';
 import Friends from '../screens/Friends.js';
 import AddFriend from '../screens/AddFriend.js';
+import ChooseParticipants from '../screens/ChooseParticipants.js';
 import TestGroupChat from '../screens/testGroupchat.js';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -66,10 +68,15 @@ export default function HomeStack () {
                 name = "Home"
                 component = {BottomTabNavigator}
                 options = {{headerShown: false}}></Stack.Screen>
+                
+            <Stack.Screen
+                name = "CreateEvent"
+                component = {CreateEvent}
+                options = {{headerShown: false}}></Stack.Screen>
 
             <Stack.Screen
-                name = "NewEvent"
-                component = {NewEvent}
+                name = "ChooseParticipants"
+                component = {ChooseParticipants}
                 options = {{headerShown: false}}></Stack.Screen>
             
             <Stack.Screen

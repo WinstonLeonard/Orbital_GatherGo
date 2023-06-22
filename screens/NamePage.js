@@ -28,6 +28,18 @@ export default function NamePage({navigation}) {
                 friendList: [],
             }, { merge: true });
 
+            setDoc(userRef, {
+                eventInvitations: [],
+            }, { merge: true });
+
+            setDoc(userRef, {
+                upcomingEvents: [],
+            }, { merge: true });
+
+            setDoc(userRef, {
+                myEvents: [],
+            }, { merge: true });
+
             navigation.navigate('UsernamePage')
         }
     }
