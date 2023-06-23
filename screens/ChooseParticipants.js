@@ -110,6 +110,7 @@ export default function ChooseParticipants({navigation, route}) {
             time: eventData.time,
             hostID: hostID,
             eventID: eventID,
+            description: eventData.description,
             invitationList: [],
             participants: [],
           })

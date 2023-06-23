@@ -13,7 +13,7 @@ export default function CreateEvent({navigation}) {
         
     const next = () => {
 
-        if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' ) {
+        if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' || description == '') {
             Alert.alert('Error!', 'You have not specified all fields yet.', 
             [{text: 'Understood.'}])
         } else {
@@ -24,6 +24,7 @@ export default function CreateEvent({navigation}) {
                 location: location,
                 date: dateText,
                 time: timeText,
+                description: description
               };
             
             navigation.navigate('ChooseParticipants', {eventData: eventData});
@@ -34,6 +35,8 @@ export default function CreateEvent({navigation}) {
     const [eventName, setEventName] = useState('');
     const [category, setCategory] = useState("");
     const [location, setLocation] = useState('');
+    const [description, setDescription] = useState('');
+    const [inputHeight, setInputHeight] = useState(50); 
 
     //selecting a category
     const choices = [
@@ -67,7 +70,17 @@ export default function CreateEvent({navigation}) {
         setMode(currentMode);
 
     }
+
+    const handleDescription = (newText) => {
+        setDescription(newText);
+      };
     
+    const handleContentSizeChange = (event) => {
+        const { contentSize } = event.nativeEvent;
+        const newInputHeight = contentSize.height;
+        setInputHeight(newInputHeight);
+    };
+
     return (
         <KeyboardAvoidingView
         style = {styles.keyboardAvoidContainer}
@@ -82,7 +95,7 @@ export default function CreateEvent({navigation}) {
             <View style = {styles.inputContainer}> 
                 <Text style = {styles.title}>Create New Event</Text>
                 
-                <Text style = {styles.text}>Please enter the name of the event:</Text>
+                <Text style = {styles.text}>Enter event name:</Text>
                 <TextInput
                     style = {styles.input}
                     placeholder= 'Event Name'
@@ -90,7 +103,7 @@ export default function CreateEvent({navigation}) {
                     onChangeText = {text => setEventName(text)}
                 ></TextInput> 
                 
-                <Text style = {styles.text}>Please select the event category:</Text>
+                <Text style = {styles.text}>Select event category:</Text>
                 <SelectList
                     arrowicon={
                         <Text> </Text>
@@ -105,7 +118,7 @@ export default function CreateEvent({navigation}) {
                     alignItems= 'center'
                     save="value"/>
 
-                <Text style = {styles.text}>Please enter the event location:</Text>
+                <Text style = {styles.text}>Enter event location:</Text>
                 <TextInput
                     style = {styles.input}
                     placeholder= 'Add location'
@@ -130,25 +143,32 @@ export default function CreateEvent({navigation}) {
                     styles = {styles.input}
                 /> */}
                 
-                <Text style = {styles.text}>Please enter the date of the event:</Text>
+                <Text style = {styles.text}>Select event date:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
-                    onPress = {() => showMode('date')}
-                    placeholder = 'date'>
+                    onPress = {() => showMode('date')}>
                     <Text style = {styles.placeholder}>
                         {dateText}
                     </Text>
                 </TouchableOpacity>
                 
-                <Text style = {styles.text}>Please enter the time of the event:</Text>
+                <Text style = {styles.text}>Select event time:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
-                    onPress = {() => showMode('time')}
-                    placeholder = 'time'>
+                    onPress = {() => showMode('time')}>
                     <Text style = {styles.placeholder}>
                         {timeText}
                     </Text>
                 </TouchableOpacity>
+
+                <Text style = {styles.text}>Enter event description</Text>
+                <TextInput
+                    multiline
+                    style={[styles.inputDescription, { height: inputHeight }]}
+                    placeholder='Event Description'
+                    value = {description}
+                    onChangeText = {handleDescription}
+                    onContentSizeChange={handleContentSizeChange}></TextInput>
 
                 {show && 
                     (<DateTimePicker
@@ -286,8 +306,28 @@ const styles = StyleSheet.create({
         },
         paddingHorizontal: 10,
     },
-    // textevent: {
-    //     marginTop: 60,
-    //     fontFamily: "Nunito-Sans-Bold",
-    // }
+    inputDescription: {
+        textAlign: 'left',
+        fontFamily: "Nunito-Sans-Bold",
+        backgroundColor: 'white',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5,
+        marginBottom: 10,
+        ...Platform.select({
+            android: {
+                elevation: 4,
+            },
+            ios: {
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
+        }),
+        shadowOffset: {
+          width: 2, 
+          height: 4,
+        },
+        paddingHorizontal: 10,
+    }
 })
