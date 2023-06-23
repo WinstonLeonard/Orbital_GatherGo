@@ -5,7 +5,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
-import uuid from 'uuid-random';
+
 //import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function CreateEvent({navigation}) {
@@ -13,34 +13,20 @@ export default function CreateEvent({navigation}) {
         
     const next = () => {
 
-        const generatedUUID = uuid();
-        const eventID = generatedUUID;
-        const collectionRef = collection(db, 'events');
-        const hostID = authentication.currentUser.uid;
-        const newDocumentRef = doc(collectionRef, generatedUUID);   
-
         if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' ) {
             Alert.alert('Error!', 'You have not specified all fields yet.', 
             [{text: 'Understood.'}])
         } else {
 
-            setDoc(newDocumentRef, {
+            const eventData = {
                 name: eventName,
                 category: category,
                 location: location,
                 date: dateText,
                 time: timeText,
-                hostID: hostID,
-                eventID: eventID,
-                invitationList: [],
-                participants: [],
-              })
-              .then(() => {
-                navigation.navigate('ChooseParticipants', {data: eventID});
-              })
-              .catch((error) => {
-                console.log('Error creating event:', error);
-              });
+              };
+            
+            navigation.navigate('ChooseParticipants', {eventData: eventData});
         }
     } 
   
