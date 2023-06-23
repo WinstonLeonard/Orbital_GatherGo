@@ -7,6 +7,7 @@ import { storage } from '../firebase/firebase-config';
 import { ref, getDownloadURL  } from "firebase/storage";
 import { Avatar, Bubble, SystemMessage, Message, MessageText, Time } from 'react-native-gifted-chat';
 import moment from 'moment';
+import EventPopUp from './EventPopup';
 
 export default function GroupChat({eventID, navigation}) {
   const [messages, setMessages] = useState([]);
@@ -14,9 +15,21 @@ export default function GroupChat({eventID, navigation}) {
   const [pfpUrl, setPfpUrl] = useState('');
   const [eventName, setEventName] = useState('')
   const [imageUrl, setImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=d19c79af-4d10-4400-825e-88578818fef9');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [infoIconPressed, setInfoIconPressed] = useState(() => {});
 
   const backHandler = () => {
     navigation.pop();
+  }
+
+  const openModal = () => {
+    console.log('modal openned');
+    setModalVisible(true);
+  }
+
+  const closeModal = () => {
+    console.log('modal closed');
+    setModalVisible(false);
   }
 
   const images = {
@@ -30,6 +43,10 @@ export default function GroupChat({eventID, navigation}) {
 
 useEffect(() => {
     async function fetchEventData() {
+      if (eventID == 'GLOBAL') {
+        setEventName('Global Chat');
+        setImageUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FgatherGo%20circle.png?alt=media&token=d7572fdb-d549-4eab-950f-4dca85f9e42b');
+      } else {
         const docPromise = getDoc(doc(db, "events", eventID));
     
         const [docSnapshot] = await Promise.all([docPromise]);
@@ -41,6 +58,9 @@ useEffect(() => {
 
         setEventName(eventName);
         setImageUrl(images.categories[eventCategory]);
+        setInfoIconPressed(openModal)
+      }
+
     };
     fetchEventData();
 }, []);
@@ -255,6 +275,7 @@ useEffect(() => {
 
     return (
       <View style={styles.container}>
+        <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
         <View style = {styles.headerContainer}>
           
           <TouchableOpacity onPress = {backHandler}>
@@ -274,7 +295,7 @@ useEffect(() => {
           </View>
 
           <View style = {styles.infoContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {openModal}>
             <Image
               source = {{uri: "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8"}}
               style = {styles.infoStyle}
