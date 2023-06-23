@@ -73,6 +73,10 @@ export default function Inbox({navigation}) {
                 </View>
             </View>
 
+            <GroupChatContainer
+                navigation = {navigation}
+                eventID = {'GLOBAL'} />
+
             <FlatList
             data = {upcomingEvents}
             renderItem= {({item}) => (

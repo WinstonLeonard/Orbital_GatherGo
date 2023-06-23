@@ -39,17 +39,22 @@ export default function GroupChatContainer({navigation, eventID}) {
 
     useEffect(() => {
         async function fetchEventData() {
-            const docPromise = getDoc(doc(db, "events", eventID));
+            if (eventID == 'GLOBAL') {
+                setEventName('Global Chat');
+                setImageUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FgatherGo%20circle.png?alt=media&token=d7572fdb-d549-4eab-950f-4dca85f9e42b');
+            } else {
+                const docPromise = getDoc(doc(db, "events", eventID));
         
-            const [docSnapshot] = await Promise.all([docPromise]);
-
-            const eventData = docSnapshot.data();
-            const eventName = eventData.name;
-            const eventCategory = eventData.category;
-
-
-            setEventName(eventName);
-            setImageUrl(images.categories[eventCategory]);
+                const [docSnapshot] = await Promise.all([docPromise]);
+    
+                const eventData = docSnapshot.data();
+                const eventName = eventData.name;
+                const eventCategory = eventData.category;
+    
+    
+                setEventName(eventName);
+                setImageUrl(images.categories[eventCategory]);
+            }
         };
         fetchEventData();
     }, []);
@@ -83,17 +88,24 @@ export default function GroupChatContainer({navigation, eventID}) {
             const last = lastMessage.text;
             const senderObject = lastMessage.user;
             const sender = senderObject.username;
+
+            function sliceMessage(string) {
+                if (string.length >= 35) {
+                    slicedString = string.slice(0,35);
+                    slicedString = slicedString + "...";
+                    return slicedString;
+                } else {
+                    return string;
+                }
+            }
             let formatLastMessage = '';
             
             if (sender == myUsername) {
                 formatLastMessage = "You: " + last;
-                if (formatLastMessage.length >= 35) {
-                    formatLastMessage = formatLastMessage.slice(0, 35);
-                    formatLastMessage = formatLastMessage + "...";
-                }
             } else {
                 formatLastMessage = sender + ": " + last;
             }
+            formatLastMessage = sliceMessage(formatLastMessage);
             setDisplayLastMessage(formatLastMessage);
         }
       }, [lastMessage]);
