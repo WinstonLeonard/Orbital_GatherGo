@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         marginLeft: 40
     },
-    inputContainer: {
+    eventsContainer: {
         width: '100%',
         marginBottom: 250,
 
