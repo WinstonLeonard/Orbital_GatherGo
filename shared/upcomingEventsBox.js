@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Text, View } from 'react-native';
 
 export default function UpcomingEventsBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
 

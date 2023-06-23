@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../shared/button';
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
-import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { collection, getDoc, doc, setDoc } from 'firebase/firestore';
 import uuid from 'uuid-random';
 
 export default function ChooseParticipants({navigation, route}) {

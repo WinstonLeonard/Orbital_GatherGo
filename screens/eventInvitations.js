@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
-import CustomButton from '../shared/button';
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { StyleSheet, Text, View, FlatList, KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import EventRequestBox from '../shared/eventRequestBox';
 
