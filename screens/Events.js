@@ -4,7 +4,7 @@ import CustomButton from '../shared/button';
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import UpcomingEventsBox from '../shared/upcomingEventsBox';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Events({navigation}) {
 
@@ -13,17 +13,19 @@ export default function Events({navigation}) {
     const [data, setData] = useState([]);
 
 
-    useEffect(() => {
-        async function fetchData() {
-            const myDocID = authentication.currentUser.uid;
-            const myDocRef = doc(db, "users", myDocID);
-            const myDocSnap = await getDoc(myDocRef);
-    
-            const myData = myDocSnap.data();
-            setMyUpcomingEvents(myData.upcomingEvents)
-        }
-        fetchData();
-    },[]);  
+    useFocusEffect(
+        React.useCallback(() => {
+            async function fetchData() {
+                const myDocID = authentication.currentUser.uid;
+                const myDocRef = doc(db, "users", myDocID);
+                const myDocSnap = await getDoc(myDocRef);
+        
+                const myData = myDocSnap.data();
+                setMyUpcomingEvents(myData.upcomingEvents)
+            }
+            fetchData();
+        },[])
+    );  
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +51,7 @@ export default function Events({navigation}) {
                     location : eventLocation,
                     date : eventDate,
                     time : eventTime,
+                    eventID: eventID,
                 };
                 
                 temp.push(object);
@@ -69,7 +72,7 @@ export default function Events({navigation}) {
         behavior = "padding">
             
         <View style = {styles.container}>
-            <Text style = {styles.title}>Event Invitations</Text>
+            <Text style = {styles.title}>Events</Text>
             
             <View style = {styles.inputContainer}> 
             
@@ -83,6 +86,7 @@ export default function Events({navigation}) {
                         location = {item.location}
                         date = {item.date}
                         time = {item.time}
+                        eventID = {item.eventID}
                     />
             )}/>
             
@@ -99,12 +103,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flexGrow: 1,
-        alignItems: 'flex-start',
+        alignItems: 'center',
         backgroundColor: 'white',
     },
     title: {
         fontFamily: "Nunito-Sans-Bold",
-        textAlign: 'left',
+        alignSelf: 'flex-start',
         color: '#2F2E2F',
         fontWeight: 'bold',
         fontSize: 30,

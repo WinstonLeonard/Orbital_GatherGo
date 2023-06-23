@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import EventRequestPopUp from './EventRequestPopUp';
 
-export default function EventRequestBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
+export default function EventRequestBox({ name, category, location, date, time, eventID, acceptHandler, rejectHandler}) {
+    const [modalVisible, setModalVisible] = useState(false);
 
     const images = {
         categories: {
@@ -11,6 +13,32 @@ export default function EventRequestBox({ name, category, location, date, time, 
             'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
         }
     }
+
+    const openModal = () => {
+        if (eventID == 'GLOBAL') {
+          setModalVisible(false);
+        } else {
+          console.log('modal openned');
+          setModalVisible(true);
+        }
+      }
+    
+      const closeModal = () => {
+        console.log('modal closed');
+        setModalVisible(false);
+      }
+
+      const newAcceptHandler = () => {
+        console.log('newAccept');
+        acceptHandler();
+        closeModal();
+      }
+
+      const newRejectHandler = () => {
+        console.log('newReject');
+        rejectHandler();
+        closeModal();
+      }
 
 
     const styles = StyleSheet.create({
@@ -77,6 +105,8 @@ export default function EventRequestBox({ name, category, location, date, time, 
     })
     
     return (
+        <TouchableOpacity onPress = {openModal}>
+        <EventRequestPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} acceptHandler = {newAcceptHandler} rejectHandler = {newRejectHandler}/>
         <View style = {styles.friendContainer}>
 
         <View style = {styles.pfpContainer}>
@@ -109,6 +139,7 @@ export default function EventRequestBox({ name, category, location, date, time, 
         </View>
 
         </View>
+        </TouchableOpacity>
     )
 }
 
