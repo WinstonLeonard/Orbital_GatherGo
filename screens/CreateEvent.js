@@ -60,9 +60,6 @@ export default function CreateEvent({navigation}) {
         let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
         setDateText(fDate);
         setTimeText(fTime);
-
-        console.log("test")
-        console.log(fDate + ' (' + fTime + ')')
     }
 
     const showMode = (currentMode) => {
