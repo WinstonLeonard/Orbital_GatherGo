@@ -5,8 +5,9 @@ import { authentication, db } from '../firebase/firebase-config';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
 import FriendBoxForPopUp from './FriendBoxForPopUp';
+import CustomButton from './button';
 
-export default function EventPopUp({ modalVisible, closeModal, eventID }) {
+export default function EventRequestPopUp({ modalVisible, closeModal, eventID, acceptHandler, rejectHandler }) {
 
     const [eventName, setEventName] = useState('');
     const [imageUrl, setImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=d19c79af-4d10-4400-825e-88578818fef9');
@@ -191,6 +192,27 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
                       />
                   )}/>
 
+                <View style = {styles.buttonsContainer}>
+                <CustomButton text = 'Accept' 
+                          buttonColor = '#39A5BD' 
+                          textColor = 'white'
+                          cornerRadius= {10} 
+                          width = {140}
+                          height = {35}
+                          fontSize = {18}
+                          onPress = {acceptHandler}></CustomButton>
+                
+                <CustomButton text = 'Reject' 
+                          buttonColor = '#2F2E2F' 
+                          textColor = 'white'
+                          cornerRadius= {10} 
+                          width = {140}
+                          height = {35}
+                          fontSize = {18}
+                          onPress = {rejectHandler}></CustomButton>
+
+                </View>
+
             </ScrollView>
         </View>
         </View>
@@ -266,5 +288,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'justify',
     lineHeight: 20,
+  },
+  buttonsContainer: {
+    width: 320,
+    marginLeft: 15,
+    marginBottom: 15,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    flexDirection: 'row',
   }
 });

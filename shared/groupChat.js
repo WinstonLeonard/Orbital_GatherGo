@@ -16,15 +16,19 @@ export default function GroupChat({eventID, navigation}) {
   const [eventName, setEventName] = useState('')
   const [imageUrl, setImageUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=d19c79af-4d10-4400-825e-88578818fef9');
   const [modalVisible, setModalVisible] = useState(false);
-  const [infoIconPressed, setInfoIconPressed] = useState(() => {});
+  const [infoUrl, setInfoUrl] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8');
 
   const backHandler = () => {
     navigation.pop();
   }
 
   const openModal = () => {
-    console.log('modal openned');
-    setModalVisible(true);
+    if (eventID == 'GLOBAL') {
+      setModalVisible(false);
+    } else {
+      console.log('modal openned');
+      setModalVisible(true);
+    }
   }
 
   const closeModal = () => {
@@ -46,6 +50,7 @@ useEffect(() => {
       if (eventID == 'GLOBAL') {
         setEventName('Global Chat');
         setImageUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FgatherGo%20circle.png?alt=media&token=d7572fdb-d549-4eab-950f-4dca85f9e42b');
+        setInfoUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fwhite%20bg.jpg?alt=media&token=16ecb272-81b2-4ea4-9db2-078777e3f62f');
       } else {
         const docPromise = getDoc(doc(db, "events", eventID));
     
@@ -58,7 +63,6 @@ useEffect(() => {
 
         setEventName(eventName);
         setImageUrl(images.categories[eventCategory]);
-        setInfoIconPressed(openModal)
       }
 
     };
@@ -297,7 +301,7 @@ useEffect(() => {
           <View style = {styles.infoContainer}>
             <TouchableOpacity onPress = {openModal}>
             <Image
-              source = {{uri: "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Finfo%20icon.png?alt=media&token=ee48a39d-834f-472b-80b7-df69bf13c7e8"}}
+              source = {{uri: infoUrl}}
               style = {styles.infoStyle}
               resizeMode = 'contain'
               />

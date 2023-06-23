@@ -1,7 +1,23 @@
-import React from 'react';
-import { StyleSheet, Image, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import EventPopUp from './EventPopup';
 
-export default function UpcomingEventsBox({ name, category, location, date, time, acceptHandler, rejectHandler}) {
+export default function UpcomingEventsBox({ name, category, location, date, time, eventID}) {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const openModal = () => {
+        if (eventID == 'GLOBAL') {
+          setModalVisible(false);
+        } else {
+          console.log('modal openned');
+          setModalVisible(true);
+        }
+      }
+    
+      const closeModal = () => {
+        console.log('modal closed');
+        setModalVisible(false);
+      }
 
     const images = {
         categories: {
@@ -16,10 +32,9 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     const styles = StyleSheet.create({
         friendContainer: {
             flexDirection: 'row',
-            alignSelf: 'flex-start',
-            marginLeft: 10,
+            alignSelf: 'center',
             marginTop: 10,
-            width: 370,
+            width: 330,
             height: 110,
             alignContent: 'center',
             backgroundColor: '#DEF5FF',
@@ -59,6 +74,8 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     })
     
     return (
+        <TouchableOpacity onPress = {openModal}>
+        <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
         <View style = {styles.friendContainer}>
 
         <View style = {styles.pfpContainer}>
@@ -75,6 +92,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         </View>
 
         </View>
+        </TouchableOpacity>
     )
 }
 

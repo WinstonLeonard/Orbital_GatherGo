@@ -104,6 +104,7 @@ export default function EventInvitations({navigation}) {
                     location : eventLocation,
                     date : eventDate,
                     time : eventTime,
+                    eventID : eventID,
                     acceptHandler : acceptHandler,
                     rejectHandler : rejectHandler,
                 };
@@ -151,6 +152,7 @@ export default function EventInvitations({navigation}) {
                         location = {item.location}
                         date = {item.date}
                         time = {item.time}
+                        eventID = {item.eventID}
                         acceptHandler= {item.acceptHandler}
                         rejectHandler= {item.rejectHandler}    
                     />
