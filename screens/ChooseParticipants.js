@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../shared/button';
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
-import { initialWindowMetrics } from 'react-native-safe-area-context';
-
+import { collection, getDoc, doc, setDoc } from 'firebase/firestore';
+import uuid from 'uuid-random';
 
 export default function ChooseParticipants({navigation, route}) {
     
@@ -96,8 +95,27 @@ export default function ChooseParticipants({navigation, route}) {
     }
 
     const next = async () => {
-        const {data} = route.params;
-        const eventID = data;
+        const {eventData} = route.params;
+        const generatedUUID = uuid();
+        const eventID = generatedUUID;
+        const collectionRef = collection(db, 'events');
+        const hostID = authentication.currentUser.uid;
+        const newDocumentRef = doc(collectionRef, generatedUUID); 
+
+        setDoc(newDocumentRef, {
+            name: eventData.name,
+            category: eventData.category,
+            location: eventData.location,
+            date: eventData.date,
+            time: eventData.time,
+            hostID: hostID,
+            eventID: eventID,
+            invitationList: [],
+            participants: [],
+          })
+          .catch((error) => {
+            console.log('Error creating event:', error);
+          });
 
         //sending invitations by adding eventID to eventInvitations property of users
         for (let i = 0; i < invitationList.length; i++) {
