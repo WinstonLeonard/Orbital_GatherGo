@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import CustomButton from '../shared/button';
 import { authentication, db } from '../firebase/firebase-config';
-import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, query, where, getDocs, } from "firebase/firestore";
+
 
 export default function UsernamePage({navigation}) {
 
     const [username, setUsername] = useState('');
 
-    const next = () => {
+    const next = async () => {
         const docID = authentication.currentUser.uid;
         const userRef = doc(db, 'users', docID);
 
@@ -16,12 +17,35 @@ export default function UsernamePage({navigation}) {
             Alert.alert('Error!', 'You have not specified your username yet.', 
             [{text: 'Understood.'}])
         } else {
-            setDoc(userRef, {
-                username: username,
-            }, { merge: true });
-            navigation.navigate('Birthday')
+            const exists = await searchDocuments('users', 'username', username);
+            console.log(exists)
+            if (exists) {
+                Alert.alert('Error!', 'That username is already taken.', 
+                [{text: 'Understood.'}])
+            } else {
+                setDoc(userRef, {
+                    username: username,
+                }, { merge: true });
+                navigation.navigate('Birthday')
+            }
         }
     }
+
+    const searchDocuments = async (collectionPath, field, value) => {
+        try {
+            const q = query(collection(db, collectionPath), where(field, '==', value));
+            const querySnapshot = await getDocs(q);
+        
+            if (querySnapshot.empty) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (error) {
+            // Handle errors
+            console.error('Error searching for documents:', error);
+        }
+      };
 
     return(
         <KeyboardAvoidingView 
