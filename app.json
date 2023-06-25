@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "FirebaseAuth",
-    "slug": "FirebaseAuth",
+    "name": "GatherGo",
+    "slug": "GatherGo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FGatherGo%20logo%201024x1024.png?alt=media&token=13a722c4-2759-47f1-b0cd-80c4a79fad69",
     "userInterfaceStyle": "light",
     "plugins": [
       [
