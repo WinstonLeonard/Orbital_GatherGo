@@ -109,24 +109,25 @@ const styles = StyleSheet.create({
     headerContainer: {
         backgroundColor: 'white',
         flexDirection: 'row',
+        marginLeft: 35,
+        marginRight: 35,
         marginTop: 35,
         alignItems: 'center',
         marginBottom: 20,
+        //justifyContent: 'center',
     },
     headerText: {
         fontSize: 40,
         fontFamily: 'Nunito-Sans-Bold',
-        marginLeft: 35,
+        flex: 1,
     },
     envelopContainer: {
         //backgroundColor: 'red',
-        width: 50,
-        height: 50,
-        position: 'absolute',
-        left: 305,
+        width: 45,
+        height: 45,
     },
     envelopStyle: {
-        width: 50,
-        height: 50,
+        width: 45,
+        height: 45,
     },
 })

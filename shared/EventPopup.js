@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 15,
-    marginLeft: 15,
+    marginLeft: 10,
     width: 320,
     //backgroundColor: 'red',
   },

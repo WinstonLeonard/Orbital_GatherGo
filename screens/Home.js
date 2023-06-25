@@ -69,9 +69,9 @@ export default function  Home({navigation}) {
             </View>
 
             <TouchableOpacity style = {styles.users} onPress={() => console.log("Button pressed")}>
-                <Text style = {styles.dummy}>    Evan's Birthday🎉</Text>
-                <Text style = {styles.dummy}>   📍Bread Street Kitchen                 12.00 pm</Text>
-                <Text style = {styles.dummy}>    🗓️ 5 August, 2023</Text>
+                <Text style = {styles.dummy}>Evan's Birthday🎉 (please mind that this is filler content)</Text>
+                <Text style = {styles.dummy}>📍Bread Street Kitchen                          12.00 pm</Text>
+                <Text style = {styles.dummy}>🗓️ 5 August, 2023</Text>
             </TouchableOpacity> 
         </ImageBackground>
     )
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
     dummy: {
-        marginTop: 20
+        marginTop: 20,
+        marginLeft: 10,
     }
 })
