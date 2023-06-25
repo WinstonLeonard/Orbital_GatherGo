@@ -220,7 +220,7 @@ export default function EditProfile({navigation}) {
             <Text style = {styles.smallHeader}>Username</Text>
 
             <View style = {styles.inputContainer}>
-            <Text style = {styles.textInput}>{username}</Text>
+            <Text style = {styles.textInputUnchangable}>{username}</Text>
             </View>
         </View>
 
@@ -228,7 +228,7 @@ export default function EditProfile({navigation}) {
             <Text style = {styles.smallHeader}>Email</Text>
 
             <View style = {styles.inputContainer}>
-            <Text style = {styles.textInput}>{email}</Text>
+            <Text style = {styles.textInputUnchangable}>{email}</Text>
             </View>
         </View>
 
@@ -361,6 +361,14 @@ const styles = StyleSheet.create({
         width: 330,
         marginLeft: 5, 
     },
+    textInputUnchangable: {
+        fontFamily: 'Popins',
+        fontSize: 14,
+        color: 'black',
+        width: 330,
+        marginLeft: 5,
+        color: 'grey', 
+    },
     selectListInput: {
         fontFamily: 'Popins',
         fontSize: 14,
@@ -368,12 +376,12 @@ const styles = StyleSheet.create({
         marginTop: - 3,
         maxHeight: 20,
       },
-      selectListBox: {
+    selectListBox: {
         width: 330,
         height: 40,
-        borderColor: 'A9A9A9',
+        borderColor: '#A9A9A9',
         //alignItems: 'flex-start',
         justifyContent: 'flex-start',
         fontFamily: 'Popins',
-      },
+    },
   });
