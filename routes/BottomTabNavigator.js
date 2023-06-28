@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
 import { TouchableOpacity, Image, View, StyleSheet, Animated, Dimensions } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons'; 
-import { SimpleLineIcons } from '@expo/vector-icons'; 
-import { Fontisto } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Foundation } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons';
 import Home from '../screens/Home';
 import Events from '../screens/Events';
@@ -27,8 +26,8 @@ function BottomTabNavigator({navigation}) {
         <Tab.Screen name="HomeScreen" component={Home} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-                <View style = {{top: 2}}>
-                    <AntDesign name="home" size={30} color= {focused ? "#39A5BD" : "black"}/>
+                <View style = {{top: -1}}>
+                    <Foundation name="home" size={24} color= {focused ? "#39A5BD" : "black"}/>
                 </View>
             ),
         }} 
@@ -45,7 +44,7 @@ function BottomTabNavigator({navigation}) {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                    <SimpleLineIcons name="event" size={28} color= {focused ? "#39A5BD" : "black"} />
+                    <MaterialIcons name="event-note" size={24} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }} 
@@ -68,17 +67,17 @@ function BottomTabNavigator({navigation}) {
                     ...styles.shadow
                 }} onPress = {pressHandler} > 
                     <View style = {{
-                        width: 70,
-                        height: 70,
+                        width: 90,
+                        height: 80,
                         borderRadius: 35,
                         backgroundcColor: '#39A5BD'
                     }}>
                         <Image
-                        source = {require('../assets/pictures/plus.png')}
+                        source = {require('../assets/pictures/plus_button.png')}
                         resizeMode = "contain"
                         style = {{
-                            width: 65,
-                            height: 65,
+                            width: 90,
+                            height: 90,
                         }}
                         />
                     </View>
@@ -90,7 +89,7 @@ function BottomTabNavigator({navigation}) {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                   <Fontisto name="email" size={30} color= {focused ? "#39A5BD" : "black"} />
+                   <MaterialIcons name="email" size={24} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }}
@@ -107,7 +106,7 @@ function BottomTabNavigator({navigation}) {
             headerShown: false,
             tabBarIcon: ({focused}) => (
                 <View>
-                    <Ionicons name="person-outline" size={30} color= {focused ? "#39A5BD" : "black"} />
+                    <Ionicons name="person" size={24} color= {focused ? "#39A5BD" : "black"} />
                 </View>
             ),
         }}listeners = {(navigation, route) => ({
