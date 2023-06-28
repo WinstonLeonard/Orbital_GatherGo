@@ -76,8 +76,8 @@ export default function Events({navigation}) {
             <Text style = {styles.title}>Events</Text>
             
             <View style = {styles.input}>
-                <TextInput placeholder= 'Search' style = {{ color: 'red', marginRight: 20}} />
-                <FontAwesome name="search" size={24} color="black" />
+                <TextInput placeholder= 'Search' style = {styles.textInput} />
+                <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
             </View>
             <View style = {styles.eventsContainer}> 
 
@@ -124,8 +124,7 @@ const styles = StyleSheet.create({
         marginBottom: 250,
     },
     input: {
-        textAlign: 'left',
-        fontFamily: "Nunito-Sans-Bold",
+        alignItems: 'center',
         backgroundColor: 'white',
         width: 330,
         paddingVertical: 10,
@@ -134,5 +133,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 15,
         flexDirection: 'row',
+    },
+    textInput: {
+        flex: 1,
+        color: 'red',
+        fontFamily: "Nunito-Sans-Bold",
+      },
+    icon: {
+        marginLeft: 20,
     },
 })
