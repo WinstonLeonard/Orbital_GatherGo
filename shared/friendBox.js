@@ -33,7 +33,7 @@ export default function FriendBox({image, username, name}) {
         },
         usernameStyle: {
             fontFamily: 'Nunito-Sans-Bold',
-            fontSize: 24,
+            fontSize: 22,
             textAlign: 'left',
         },
         nameStyle: {

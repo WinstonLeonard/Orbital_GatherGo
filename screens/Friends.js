@@ -88,7 +88,8 @@ export default function Friends({navigation}) {
                 </TouchableOpacity> 
             </View>
         </View>
-
+        <Text style = {styles.text}> Number of friends: {myFriendList.length}</Text>
+        
         <FlatList
             data = {data}
             renderItem= {({item}) => (
@@ -99,7 +100,7 @@ export default function Friends({navigation}) {
                 />
             )}
             />
-
+            
 
       </View>
     );
@@ -114,28 +115,31 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     title: {
-        fontSize: 40,
+        fontSize: 24,
         fontFamily: 'Nunito-Sans-Bold',
+        flex: 1,
+        textAlign: 'center',
+        paddingLeft: 70,
+        fontWeight: 'bold',
     },
     headerContainer: {
         marginTop: 40,
-        marginLeft: 20,
         marginBottom: 40,
         flexDirection: 'row',
         alignSelf: 'flex-start',
         justifyContent: 'center',
         alignItems: 'center',
         alignContentL: 'center',
-        //backgroundColor: 'blue',
+        // backgroundColor: 'blue',
     },
     iconContainer: {
-        //backgroundColor: 'red',
         width: 40,
         height: 40,
         margin: 10,
-        marginLeft: 135,
+        marginRight: 20,
         alignItems: 'center',
         justifyContent: 'center',
+        //backgroundColor: 'red',
     },
     iconStyle: {
         width: 45,
@@ -176,5 +180,11 @@ const styles = StyleSheet.create({
     nameStyle: {
         fontFamily: 'Nunito-Sans',
         fontSize: 18,
-    }
+    },
+    text: {
+        fontFamily: 'Nunito-Sans-Bold',
+        alignSelf: 'flex-start',
+        marginLeft: 30,
+        fontSize: 20,
+    },
 });

@@ -37,7 +37,7 @@ export default function CreateEvent({navigation}) {
     const [category, setCategory] = useState("");
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
-    const [inputHeight, setInputHeight] = useState(60); 
+    const [inputHeight, setInputHeight] = useState(50); 
 
     //selecting a category
     const choices = [
@@ -166,7 +166,7 @@ export default function CreateEvent({navigation}) {
                 <TextInput
                     multiline
                     style={[styles.inputDescription, { height: inputHeight }]}
-                    placeholder='Event Description'
+                    placeholder='Write a description...'
                     value = {description}
                     onChangeText = {handleDescription}
                     onContentSizeChange={handleContentSizeChange}></TextInput>
