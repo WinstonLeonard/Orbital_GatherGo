@@ -1,9 +1,11 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
 import { storage } from '../firebase/firebase-config';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 import FriendBox from '../shared/friendBox';
 
@@ -18,17 +20,20 @@ export default function Friends({navigation}) {
         navigation.navigate('AddFriend');
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            const myDocID = authentication.currentUser.uid;
-            const myDocRef = doc(db, "users", myDocID);
-            const myDocSnap = await getDoc(myDocRef);
-    
-            const myData = myDocSnap.data();
-            setMyFriendList(myData.friendList);
-        }
+    useFocusEffect(
+        React.useCallback(() => {
+            async function fetchData() {
+                const myDocID = authentication.currentUser.uid;
+                const myDocRef = doc(db, "users", myDocID);
+                const myDocSnap = await getDoc(myDocRef);
+        
+                const myData = myDocSnap.data();
+                setMyFriendList(myData.friendList);
+            }
         fetchData();
-    },[]);
+        console.log('friends');
+    },[])
+    );
     
     useEffect(() => {
         const fetchData = async () => {
@@ -68,8 +73,8 @@ export default function Friends({navigation}) {
 
     if (isLoading) {
         return (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
+          <View>
+            <ActivityIndicator size="large" color="black" />
           </View>
         );
     }

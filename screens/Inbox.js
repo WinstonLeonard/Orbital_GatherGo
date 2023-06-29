@@ -9,11 +9,27 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function Inbox({navigation}) {
 
+    const [searchEvent, setSearchEvent] = useState('');
+
     const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+    const [filteredEvents, setFilteredEvents] = useState('');
+
+    const [data, setData] = useState(upcomingEvents);
+
+    const [isSearchActive, setIsSearchActive] = useState(false);
 
     const incomingInvitationHandler = () => {
         navigation.navigate('EventInvitations');
         console.log(upcomingEvents);
+    }
+    
+
+    const searchHandler = () => {
+        console.log(searchEvent);
+        setIsSearchActive(true);
+        const filtered = upcomingEvents.filter((object) => object.eventName.includes(searchEvent))
+        setFilteredEvents(filtered);
     }
 
     useFocusEffect(
@@ -26,37 +42,38 @@ export default function Inbox({navigation}) {
                 const events = myData.upcomingEvents;
                 const temp = [];
                 for (let i = 0; i < events.length; i++) {
+                    const myEventRef = doc(db, "events", events[i]);
+                    const myEventSnap = await getDoc(myEventRef);
+                    const eventData = myEventSnap.data();
+                    const eventName = eventData.name;
                     const object = {
                         key: i,
-                        eventID: events[i], 
+                        eventID: events[i],
+                        eventName: eventName,
                     }
                     temp.push(object);
                 }
                 setUpcomingEvents(temp);
+                setIsSearchActive(false);
             }
             fetchUpcomingEvents();
         }, [])
     );
 
-    // useEffect(() => {
-    //     async function fetchUpcomingEvents() {
-    //         const myDocID = authentication.currentUser.uid;
-    //         const myDocRef = doc(db, "users", myDocID);
-    //         const myDocSnap = await getDoc(myDocRef);  
-    //         const myData = myDocSnap.data();
-    //         const events = myData.upcomingEvents;
-    //         const temp = [];
-    //         for (let i = 0; i < events.length; i++) {
-    //             const object = {
-    //                 key: i,
-    //                 eventID: events[i], 
-    //             }
-    //             temp.push(object);
-    //         }
-    //         setUpcomingEvents(temp);
-    //     }
-    //     fetchUpcomingEvents();
-    // },[]);
+
+    useEffect(() => {
+        if (isSearchActive) {
+            setData(filteredEvents);
+        } else {
+            setData(upcomingEvents);
+        }
+    }, [isSearchActive, filteredEvents, upcomingEvents]);
+
+    useEffect(() => {
+        if (searchEvent == '') {
+            setData(upcomingEvents);
+        }
+    }, [searchEvent])
 
     return (
 
@@ -74,8 +91,10 @@ export default function Inbox({navigation}) {
             </View>
 
             <View style = {styles.input}>
-                <TextInput placeholder= 'Search' style = {styles.textInput} />
-                <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+                <TextInput placeholder= 'Search' style = {styles.textInput} value = {searchEvent} onChangeText={text => setSearchEvent(text)} />
+                <TouchableOpacity onPress = {searchHandler}>
+                    <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+                </TouchableOpacity>
             </View>
 
             <GroupChatContainer
@@ -83,7 +102,9 @@ export default function Inbox({navigation}) {
                 eventID = {'GLOBAL'} />
 
             <FlatList
-            data = {upcomingEvents}
+            //data = {upcomingEvents}
+            //data = {filteredEvents}
+            data = {data}
             renderItem= {({item}) => (
                 <GroupChatContainer
                     navigation = {navigation}
@@ -91,13 +112,6 @@ export default function Inbox({navigation}) {
                 />
             )}
             />
-            
-            {/* <GroupChatContainer></GroupChatContainer> */}
-
-            {/* <View>
-                <Text onPress = {() => navigation.navigate('TestGroupChat')}
-                    style = {{ fontSize: 26, fontWeight: 'bold' }}>GroupChat</Text>
-            </View> */}
 
          </View>   
         

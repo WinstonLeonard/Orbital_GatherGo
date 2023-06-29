@@ -121,7 +121,9 @@ const styles = StyleSheet.create({
     },
     eventsContainer: {
         width: '100%',
-        marginBottom: 250,
+        //marginBottom: 200,
+        //backgroundColor: 'red',
+        height: 560,
     },
     input: {
         alignItems: 'center',
