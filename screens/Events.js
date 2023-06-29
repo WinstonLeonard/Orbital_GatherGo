@@ -149,11 +149,11 @@ export default function Events({navigation}) {
     }, [myEventsPressed, myEventsObject, otherEventsObject])
 
     return(
-        <KeyboardAvoidingView 
-        style = {styles.keyboardAvoidContainer}
-        enableOnAndroid = {true}
-        keyboardVerticalOffset = {-400}
-        behavior = "padding">
+        // <KeyboardAvoidingView 
+        // style = {styles.keyboardAvoidContainer}
+        // enableOnAndroid = {true}
+        // keyboardVerticalOffset = {-400}
+        // behavior = "padding">
             
         <View style = {styles.container}>
             <View style = {styles.header}>
@@ -186,7 +186,7 @@ export default function Events({navigation}) {
             </View>
         </View>
 
-        </KeyboardAvoidingView>
+        // </KeyboardAvoidingView>
     )
 }
 
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container: {
-        flexGrow: 1,
+        // flex: 1,
         alignItems: 'center',
         backgroundColor: '#DEF5FF',
     },
