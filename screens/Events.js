@@ -66,11 +66,11 @@ export default function Events({navigation}) {
     }, [myUpcomingEvents]);
 
     return(
-        <KeyboardAvoidingView 
-        style = {styles.keyboardAvoidContainer}
-        enableOnAndroid = {true}
-        keyboardVerticalOffset = {-400}
-        behavior = "padding">
+        // <KeyboardAvoidingView 
+        // style = {styles.keyboardAvoidContainer}
+        // enableOnAndroid = {true}
+        // keyboardVerticalOffset = {-400}
+        // behavior = "padding">
             
         <View style = {styles.container}>
             <Text style = {styles.title}>Events</Text>
@@ -80,6 +80,8 @@ export default function Events({navigation}) {
                 <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
             </View>
             <View style = {styles.eventsContainer}> 
+
+           
 
                 <FlatList
                 data = {data}
@@ -97,7 +99,7 @@ export default function Events({navigation}) {
             </View>
         </View>
 
-        </KeyboardAvoidingView>
+        // </KeyboardAvoidingView>
     )
 }
 
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container: {
-        flexGrow: 1,
+        // flex: 1,
         alignItems: 'center',
         backgroundColor: '#DEF5FF',
     },
