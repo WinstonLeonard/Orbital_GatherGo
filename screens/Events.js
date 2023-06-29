@@ -9,11 +9,54 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function Events({navigation}) {
 
-    const [myUpcomingEvents, setMyUpcomingEvents] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [myEventsPressed, setMyEventsPressed] = useState(true);
+    const [otherEventsPressed, setOtherEventsPressed] = useState(false)
+    const [myEvents, setMyEvents] = useState([]);
+    const [otherEvents, setOtherEvents] = useState([]);
+    const [myEventsObject, setMyEventsObject] = useState([]);
+    const [otherEventsObject, setOtherEventsObject] = useState([]);
 
+    const ToggleMyEvents = () => {
+        const handlePressIn = () => {
+            if (myEventsPressed) {
+                return;
+            } else {
+                setMyEventsPressed(!myEventsPressed);
+                setOtherEventsPressed(!otherEventsPressed);
+            }
+        };
+        return (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={handlePressIn}
+            style={[styles.button, myEventsPressed && styles.buttonPressed]}
+          >
+            <Text style={styles.buttonText}>My Events</Text>
+          </TouchableOpacity>
+        );
+    };
 
+    const ToggleOtherEvents = () => {
+        const handlePressIn = () => {
+            if (otherEventsPressed) {
+                return;
+            } else {
+                setMyEventsPressed(!myEventsPressed);
+                setOtherEventsPressed(!otherEventsPressed);
+            }
+        };
+        return (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={handlePressIn}
+            style={[styles.button, otherEventsPressed && styles.buttonPressed]}
+          >
+            <Text style={styles.buttonText}>Other Events</Text>
+          </TouchableOpacity>
+        );
+    };
+    
     useFocusEffect(
         React.useCallback(() => {
             async function fetchData() {
@@ -22,18 +65,22 @@ export default function Events({navigation}) {
                 const myDocSnap = await getDoc(myDocRef);
         
                 const myData = myDocSnap.data();
-                setMyUpcomingEvents(myData.upcomingEvents)
+                const myEvents = myData.myEvents;
+                const upcomingEvents = myData.upcomingEvents;
+                const otherEvents = upcomingEvents.filter(item => !myEvents.includes(item));
+
+                setMyEvents(myEvents);
+                setOtherEvents(otherEvents);
             }
             fetchData();
         },[])
-    );  
-
+    );
+    
     useEffect(() => {
         const fetchData = async () => {
             const temp = [];
-    
-            for (let i = 0; i < myUpcomingEvents.length; i++) {
-                const eventID = myUpcomingEvents[i];
+            for (let i = 0; i < myEvents.length; i++) {
+                const eventID = myEvents[i];
 
                 const docPromise = getDoc(doc(db, "events", eventID));
     
@@ -54,16 +101,52 @@ export default function Events({navigation}) {
                     time : eventTime,
                     eventID: eventID,
                 };
-                
                 temp.push(object);
             }
-    
-            setData(temp);
-            setIsLoading(false);
+            setMyEventsObject(temp);
         };
-    
         fetchData();
-    }, [myUpcomingEvents]);
+    }, [myEvents]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const temp = [];
+            for (let i = 0; i < otherEvents.length; i++) {
+                const eventID = otherEvents[i];
+
+                const docPromise = getDoc(doc(db, "events", eventID));
+    
+                const [docSnapshot] = await Promise.all([docPromise]);
+    
+                const eventData = docSnapshot.data();
+                const eventName = eventData.name;
+                const eventCategory = eventData.category;
+                const eventLocation = eventData.location;
+                const eventDate = eventData.date;
+                const eventTime = eventData.time;
+
+                const object = {
+                    name : eventName,
+                    category : eventCategory,
+                    location : eventLocation,
+                    date : eventDate,
+                    time : eventTime,
+                    eventID: eventID,
+                };
+                temp.push(object);
+            }
+            setOtherEventsObject(temp);
+        };
+        fetchData();
+    }, [otherEvents]);
+
+    useEffect(() => {
+        if (myEventsPressed) {
+            setData(myEventsObject);
+        } else {
+            setData(otherEventsObject);
+        }
+    }, [myEventsPressed, myEventsObject, otherEventsObject])
 
     return(
         <KeyboardAvoidingView 
@@ -73,14 +156,15 @@ export default function Events({navigation}) {
         behavior = "padding">
             
         <View style = {styles.container}>
-            <Text style = {styles.title}>Events</Text>
+            <View style = {styles.header}>
+                <Text style = {styles.title}>Events</Text>
+            </View>
             
             <View style = {styles.input}>
                 <TextInput placeholder= 'Search' style = {styles.textInput} />
                 <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
             </View>
             <View style = {styles.eventsContainer}> 
-
                 <FlatList
                 data = {data}
                 renderItem= {({item}) => (
@@ -92,8 +176,13 @@ export default function Events({navigation}) {
                         time = {item.time}
                         eventID = {item.eventID}
                     />
-            )}/>
             
+            )}/>
+            </View >
+
+            <View style = {styles.buttonContainer}>
+                <ToggleMyEvents></ToggleMyEvents>
+                <ToggleOtherEvents></ToggleOtherEvents>
             </View>
         </View>
 
@@ -116,14 +205,11 @@ const styles = StyleSheet.create({
         color: '#2F2E2F',
         fontWeight: 'bold',
         fontSize: 24,
-        marginTop: 60,
-        marginBottom: 25,
+        //textAlign: 'center',
     },
     eventsContainer: {
         width: '100%',
-        //marginBottom: 200,
-        //backgroundColor: 'red',
-        height: 560,
+        height: 480,
     },
     input: {
         alignItems: 'center',
@@ -144,4 +230,45 @@ const styles = StyleSheet.create({
     icon: {
         marginLeft: 20,
     },
+    header: {
+        marginTop: 60,
+        marginBottom: 25,
+        flexDirection: 'row',
+        width: 330,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonContainer: {
+        width: 330,
+        height: 55,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    button: {
+        backgroundColor: '#E5E5E5',
+        borderRadius: 10,
+        width: 100,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 2,
+        elevation: 3,
+        marginLeft: 10,
+      },
+      buttonPressed: {
+        backgroundColor: '#007AFF',
+      },
+      buttonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 16,
+      },
 })
