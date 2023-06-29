@@ -5,6 +5,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+import { Ionicons } from '@expo/vector-icons'; 
 
 //import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
@@ -92,18 +93,16 @@ export default function CreateEvent({navigation}) {
                 contentContainerStyle = {styles.container}>
 
             
-            <View style = {styles.inputContainer}> 
+            <View style = {styles.formContainer}> 
                 <Text style = {styles.title}>Create New Event</Text>
                 
-                <Text style = {styles.text}>Enter event name:</Text>
                 <TextInput
-                    style = {styles.input}
+                    style = {styles.inputContainer}
                     placeholder= 'Event Name'
                     value = {eventName}
                     onChangeText = {text => setEventName(text)}
                 ></TextInput> 
                 
-                <Text style = {styles.text}>Select event category:</Text>
                 <SelectList
                     arrowicon={
                         <Text> </Text>
@@ -118,13 +117,16 @@ export default function CreateEvent({navigation}) {
                     alignItems= 'center'
                     save="value"/>
 
-                <Text style = {styles.text}>Enter event location:</Text>
-                <TextInput
-                    style = {styles.input}
-                    placeholder= 'Add location'
-                    value = {location}
-                    onChangeText = {text => setLocation(text)}
-                ></TextInput> 
+                <View style = {styles.inputContainer}>                    
+                    <Ionicons name="location-sharp" size={24} color="black" />
+                    <TextInput
+                        style = {styles.textInput}
+                        placeholder= 'Add location'
+                        value = {location}
+                        onChangeText = {text => setLocation(text)}
+                    >    
+                    </TextInput> 
+                </View>
                 {/* <GooglePlacesAutocomplete
                     placeholder='Search'
                     fetchDetails = {true}
@@ -140,32 +142,31 @@ export default function CreateEvent({navigation}) {
                         key: "AIzaSyCVTzQ7OPdB-otBcXZiKcZsNOhtjk2lkoU",
                         language: 'en',
                     }}
-                    styles = {styles.input}
+                    styles = {styles.inputContainer}
                 /> */}
                 
-                <Text style = {styles.text}>Select event date:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
                     onPress = {() => showMode('date')}>
-                    <Text style = {styles.placeholder}>
+                    <Ionicons name="ios-calendar-sharp" size={22} color="black" />
+                    <Text style = {styles.textInput}>
                         {dateText}
                     </Text>
                 </TouchableOpacity>
                 
-                <Text style = {styles.text}>Select event time:</Text>
                 <TouchableOpacity 
                     style = {styles.datePicker} 
                     onPress = {() => showMode('time')}>
-                    <Text style = {styles.placeholder}>
+                    <Ionicons name="time-outline" size={22} color="black" />
+                    <Text style = {styles.textInput}>
                         {timeText}
                     </Text>
                 </TouchableOpacity>
 
-                <Text style = {styles.text}>Enter event description</Text>
                 <TextInput
                     multiline
                     style={[styles.inputDescription, { height: inputHeight }]}
-                    placeholder='Event Description'
+                    placeholder='Write a description...'
                     value = {description}
                     onChangeText = {handleDescription}
                     onContentSizeChange={handleContentSizeChange}></TextInput>
@@ -212,42 +213,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
     },
-    inputContainer: {
+    formContainer: {
         width: '80%',
         marginBottom: 250
     },
-    input: {
+    inputContainer: {
         textAlign: 'left',
+        backgroundColor: '#EDF2FB',
         fontFamily: "Nunito-Sans-Bold",
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowOpacity: 0.3, 
-                shadowRadius: 5,
-            }
-        }),
-        shadowOffset: {
-          width: 2, 
-          height: 4,
-        },
-        paddingHorizontal: 10,
+        flexDirection: 'row'
     },
     title: {
         fontFamily: "Nunito-Sans-Bold",
         textAlign: 'left',
         color: '#2F2E2F',
         fontWeight: 'bold',
-        fontSize: 30,
-        marginTop: 80,
-        marginBottom: 25,
+        fontSize: 24,
+        marginTop: 60,
+        marginBottom: 40,
+        alignSelf: 'center'
     },
     text: {
         marginTop: 10,
@@ -259,26 +248,13 @@ const styles = StyleSheet.create({
     selectListBox: {
         textAlign: 'left',
         fontFamily: "Nunito-Sans-Bold",
-        backgroundColor: 'white',
-        borderColor: 'white',
+        backgroundColor: '#EDF2FB',
+        borderColor: '#EDF2FB',
         paddingHorizontal: 15,
         paddingVertical: 12,
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowOpacity: 0.3, 
-                shadowRadius: 5,
-            }
-        }),
-        shadowOffset: {
-          width: 2, 
-          height: 4,
-        },
         paddingHorizontal: 10,
     },
     buttonContainer: {
@@ -287,47 +263,28 @@ const styles = StyleSheet.create({
     },
     datePicker: {
         padding: 12,
-        backgroundColor: 'white',
+        backgroundColor: '#EDF2FB',
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowOpacity: 0.3, 
-                shadowRadius: 5,
-            }
-        }),
-        shadowOffset: {
-          width: 1, 
-          height: 2,
-        },
         paddingHorizontal: 10,
+        flexDirection: 'row'
     },
     inputDescription: {
         textAlign: 'left',
         fontFamily: "Nunito-Sans-Bold",
-        backgroundColor: 'white',
+        backgroundColor: '#EDF2FB',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
         marginTop: 5,
         marginBottom: 10,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowOpacity: 0.3, 
-                shadowRadius: 5,
-            }
-        }),
-        shadowOffset: {
-          width: 2, 
-          height: 4,
-        },
         paddingHorizontal: 10,
+    },
+    textInput: {
+        marginLeft: 10,
+        fontFamily: "Nunito-Sans-Bold",
+        width: 250,
+        // backgroundColor: 'red'
     }
 })

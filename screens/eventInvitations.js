@@ -179,10 +179,10 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         color: '#2F2E2F',
         fontWeight: 'bold',
-        fontSize: 30,
-        marginTop: 80,
+        fontSize: 24,
+        marginTop: 60,
         marginBottom: 25,
-        marginLeft: 40
+        alignSelf: 'center'
     },
     eventsContainer: {
         width: '100%',

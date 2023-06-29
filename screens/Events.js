@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase
 import { authentication, db } from '../firebase/firebase-config';
 import UpcomingEventsBox from '../shared/upcomingEventsBox';
 import { useFocusEffect } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons'; 
 
 export default function Events({navigation}) {
 
@@ -74,8 +75,13 @@ export default function Events({navigation}) {
         <View style = {styles.container}>
             <Text style = {styles.title}>Events</Text>
             
+            <View style = {styles.input}>
+                <TextInput placeholder= 'Search' style = {styles.textInput} />
+                <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+            </View>
             <View style = {styles.eventsContainer}> 
-            
+
+           
 
                 <FlatList
                 data = {data}
@@ -104,20 +110,40 @@ const styles = StyleSheet.create({
     container: {
         // flex: 1,
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#DEF5FF',
     },
     title: {
         fontFamily: "Nunito-Sans-Bold",
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         color: '#2F2E2F',
         fontWeight: 'bold',
-        fontSize: 30,
-        marginTop: 80,
+        fontSize: 24,
+        marginTop: 60,
         marginBottom: 25,
-        marginLeft: 40
     },
     eventsContainer: {
-        //width: '100%',
-        marginBottom: 295,
+        width: '100%',
+        //marginBottom: 200,
+        //backgroundColor: 'red',
+        height: 560,
+    },
+    input: {
+        alignItems: 'center',
+        backgroundColor: 'white',
+        width: 330,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5,
+        marginBottom: 10,
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+    },
+    textInput: {
+        flex: 1,
+        color: 'red',
+        fontFamily: "Nunito-Sans-Bold",
+      },
+    icon: {
+        marginLeft: 20,
     },
 })

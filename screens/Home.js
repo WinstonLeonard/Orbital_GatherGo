@@ -69,8 +69,8 @@ export default function  Home({navigation}) {
             </View>
 
             <TouchableOpacity style = {styles.users} onPress={() => console.log("Button pressed")}>
-                <Text style = {styles.dummy}>Evan's Birthday🎉 (please mind that this is filler content)</Text>
-                <Text style = {styles.dummy}>📍Bread Street Kitchen                          12.00 pm</Text>
+                <Text style = {styles.dummy}>Evan's Birthday🎉 (filler content) </Text>
+                <Text style = {styles.dummy}>📍Bread Street Kitchen                       12.00 pm</Text>
                 <Text style = {styles.dummy}>🗓️ 5 August, 2023</Text>
             </TouchableOpacity> 
         </ImageBackground>

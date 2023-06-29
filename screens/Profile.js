@@ -6,6 +6,7 @@ import { authentication, db } from '../firebase/firebase-config';
 import { doc, getDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons'; 
 
 
 
@@ -54,17 +55,20 @@ export default function Profile({navigation}) {
         <View style = {styles.container}>
 
             <View style = {styles.titleContainer}> 
-                <Text style = {styles.title}> My</Text>
-                <Text style = {styles.title}> Profile</Text>
+                <Text style = {styles.title}> My Profile</Text>
             </View>
 
-            <View style = {styles.imageContainer}>
-                <Image source = {{uri: image}}
-                        style = {styles.imageStyle}
-                        resizeMode='contain'/>
-            </View>
+            <View style = {styles.profileContainer}>
+                <View style = {styles.imageContainer}>
+                    <Image source = {{uri: image}}
+                            style = {styles.imageStyle}
+                            resizeMode='contain'/>
+                </View>
 
-            <Text style = {styles.name}> {username} </Text>
+                <View style = {{justifyContent: 'space-around'}}>
+                <Text style = {styles.name}> {username} </Text>
+                </View>
+            </View>
 
             <TouchableOpacity onPress = {editProfileHandler}>
             <View style = {styles.button}>
@@ -99,6 +103,15 @@ export default function Profile({navigation}) {
             </View>
             </TouchableOpacity>
 
+            <TouchableOpacity>
+            <View style = {styles.button}>
+            <View style = {styles.iconContainer}>
+            <Entypo name="log-out" size={32} color="black" />
+            </View>
+                <Text style = {styles.buttonText}> Logout </Text>
+            </View>
+            </TouchableOpacity>
+
         </View>
 
 
@@ -110,33 +123,33 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: 'white',
     },
     titleContainer: {
         position: 'absolute',
-        top: 65,
-        left: 40,
+        top: 60,
+        left: 140,
+        alignItems: 'center'
     },
     title: {
-        fontSize: 40,
+        fontSize: 24,
         fontFamily: "Nunito-Sans-Bold",
         color: 'black',  
+        fontWeight: 'bold',
     },
     name: {
-        fontSize: 40,
-        fontFamily: "Nunito-Sans-Bold",
-        marginBottom: 25,   
+        fontSize: 32,
+        fontFamily: "Nunito-Sans-Bold", 
         color: 'black',
     },     
     imageContainer: {
-        //backgroundColor: 'red',
-        marginTop: 190,
+        // backgroundColor: 'red',
+        marginTop: 20,
         marginBottom: 20,
     },
     imageStyle: {
-        width: 180,
-        height: 180,
+        width: 120,
+        height: 120,
         borderRadius: 1000,
         borderWidth: 6,
         borderColor: 'black',
@@ -174,5 +187,11 @@ const styles = StyleSheet.create({
         width: 37,
         height: 37,
         borderColor: 'black',
+    },
+    profileContainer: {
+        flexDirection: 'row',
+        marginTop: 120,
+        marginBottom: 30,
+        // backgroundColor: 'red'
     },
 })

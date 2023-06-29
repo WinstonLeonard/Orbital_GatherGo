@@ -219,9 +219,10 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         color: '#2F2E2F',
         fontWeight: 'bold',
-        fontSize: 30,
-        marginTop: 80,
-        marginBottom: 25,
+        fontSize: 24,
+        marginTop: 60,
+        marginBottom: 40,
+        alignSelf: 'center'
     },
     placeholder: {
         fontFamily: "Nunito-Sans-Bold",

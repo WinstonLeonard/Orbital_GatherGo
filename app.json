@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "GatherGo",
-    "slug": "FirebaseAuth",
+    "slug": "orbital-gathergo",
     "version": "1.0.0",
+    "sdkVersion": "48.0.0",
     "orientation": "portrait",
     "icon": "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FGatherGo%20logo%201024x1024.png?alt=media&token=13a722c4-2759-47f1-b0cd-80c4a79fad69",
     "userInterfaceStyle": "light",
@@ -31,15 +32,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.winstonleonard.FirebaseAuth"
+      "package": "com.winstonleonard.FirebaseAuth",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d1ef7cdc-0bf8-4717-af9a-ac898bd59a0b"
+        "projectId": "4aa5d829-0dbf-473d-961c-30d10a5a97f5"
       }
-    }
+    },
+    "owner": "orbital_gathergo"
   }
 }
