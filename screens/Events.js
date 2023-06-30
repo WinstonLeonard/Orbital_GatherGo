@@ -17,13 +17,22 @@ export default function Events({navigation}) {
     const [myEventsObject, setMyEventsObject] = useState([]);
     const [otherEventsObject, setOtherEventsObject] = useState([]);
 
+    const [searchEvent, setSearchEvent] = useState('');
+    const [filteredMyEvents, setFilteredMyEvents] = useState([]);
+    const [filteredOtherEvents, setFilteredOtherEvents] = useState([]);
+    const [isSearchActive, setIsSearchActive] = useState(false);
+
     const ToggleMyEvents = () => {
         const handlePressIn = () => {
             if (myEventsPressed) {
+                setSearchEvent('');
+                setIsSearchActive(false);
                 return;
             } else {
                 setMyEventsPressed(!myEventsPressed);
                 setOtherEventsPressed(!otherEventsPressed);
+                setSearchEvent('');
+                setIsSearchActive(false);
             }
         };
         return (
@@ -40,10 +49,14 @@ export default function Events({navigation}) {
     const ToggleOtherEvents = () => {
         const handlePressIn = () => {
             if (otherEventsPressed) {
+                setSearchEvent('');
+                setIsSearchActive(false);
                 return;
             } else {
                 setMyEventsPressed(!myEventsPressed);
                 setOtherEventsPressed(!otherEventsPressed);
+                setSearchEvent('');
+                setIsSearchActive(false);
             }
         };
         return (
@@ -56,6 +69,17 @@ export default function Events({navigation}) {
           </TouchableOpacity>
         );
     };
+
+    const searchHandler = () => {
+        console.log(searchEvent);
+        setIsSearchActive(true);
+        const filteredMyEvents = myEventsObject.filter((object) => object.name.includes(searchEvent));
+        const filteredOtherEvents = otherEventsObject.filter((object) => object.name.includes(searchEvent));
+        console.log(filteredMyEvents);
+        console.log(filteredOtherEvents);
+        setFilteredMyEvents(filteredMyEvents);
+        setFilteredOtherEvents(filteredOtherEvents);
+    }
     
     useFocusEffect(
         React.useCallback(() => {
@@ -71,6 +95,7 @@ export default function Events({navigation}) {
 
                 setMyEvents(myEvents);
                 setOtherEvents(otherEvents);
+                setIsSearchActive(false);
             }
             fetchData();
         },[])
@@ -141,12 +166,26 @@ export default function Events({navigation}) {
     }, [otherEvents]);
 
     useEffect(() => {
-        if (myEventsPressed) {
+        if (myEventsPressed && isSearchActive) {
+            setData(filteredMyEvents);
+        } else if (myEventsPressed && !isSearchActive) {
             setData(myEventsObject);
-        } else {
+        } else if (otherEventsPressed && isSearchActive) {
+            setData(filteredOtherEvents);
+        } else if (otherEventsPressed && !isSearchActive) {
             setData(otherEventsObject);
         }
-    }, [myEventsPressed, myEventsObject, otherEventsObject])
+    }, [myEventsPressed, myEventsObject, otherEventsObject, filteredMyEvents, filteredOtherEvents]);
+
+    useEffect(() => {
+        if (searchEvent == '') {
+            if (myEventsPressed) {
+                setData(myEventsObject);
+            } else {
+                setData(otherEventsObject);
+            }
+        }
+    }, [searchEvent]);
 
     return(
         // <KeyboardAvoidingView 
@@ -161,8 +200,10 @@ export default function Events({navigation}) {
             </View>
             
             <View style = {styles.input}>
-                <TextInput placeholder= 'Search' style = {styles.textInput} />
-                <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+                <TextInput placeholder= 'Search' style = {styles.textInput} value = {searchEvent} onChangeText={(text) => setSearchEvent(text)}/>
+                <TouchableOpacity onPress = {searchHandler}>
+                    <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+                </TouchableOpacity>
             </View>
             <View style = {styles.eventsContainer}> 
                 <FlatList
