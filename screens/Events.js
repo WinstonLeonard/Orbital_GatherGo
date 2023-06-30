@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
       },
       buttonPressed: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#39A5BD',
       },
       buttonText: {
         color: 'white',
