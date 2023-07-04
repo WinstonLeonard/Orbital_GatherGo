@@ -11,24 +11,25 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         if (eventID == 'GLOBAL') {
           setModalVisible(false);
         } else {
-          console.log('modal openned');
+          console.log(eventID);
           setModalVisible(true);
         }
       }
     
     const closeModal = () => {
-        console.log('modal closed');
         setModalVisible(false);
     }
     
     const openDeleteEventModal = () => {
-        console.log('delete modal opened');
         setDeleteEventModalVisible(true);
     }
 
     const closeDeleteEventModal = () => {
-        console.log('delete modal closed');
         setDeleteEventModalVisible(false);
+    }
+
+    const editHandler = () => {
+        console.log('edit');
     }
 
     const images = {
@@ -85,15 +86,18 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             textAlign: 'left',
         },
         deleteContainer: {
-            width: 50,
-            height: 50,
+            width: 43,
             alignSelf: 'center',
             marginLeft: 10,
-            //backgroundColor: 'blue',
         },
         deleteStyle: {
-            width: 50,
-            height: 50,
+            width: 43,
+            height: 43,
+        },
+        editStyle: {
+            width: 43,
+            height: 43,
+            marginBottom: 5,
         },
     })
     
@@ -117,6 +121,14 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         </View>
 
         <View style = {styles.deleteContainer}>
+            <TouchableOpacity onPress = {editHandler}>
+            <Image
+                source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
+                style = {styles.editStyle}
+                resizeMode = 'contain'
+                />
+            </TouchableOpacity>
+
             <TouchableOpacity onPress = {openDeleteEventModal}>
             <Image
                 source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
@@ -125,6 +137,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
                 />
             </TouchableOpacity>
         </View>
+
 
         </View>
         </TouchableOpacity>

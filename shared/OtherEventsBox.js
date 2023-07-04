@@ -1,30 +1,35 @@
 import React, {useState} from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import EventPopUp from './EventPopup';
+import DeleteOtherEventPopUp from './DeleteOtherEventPopUp';
 
 export default function OtherEventsBox({ name, category, location, date, time, eventID}) {
     const [modalVisible, setModalVisible] = useState(false);
+    const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
+
+    const openDeleteEventModal = () => {
+        setDeleteEventModalVisible(true);
+    }
+
+    const closeDeleteEventModal = () => {
+        setDeleteEventModalVisible(false);
+    }
 
     const openModal = () => {
         if (eventID == 'GLOBAL') {
           setModalVisible(false);
         } else {
-          console.log('modal openned');
+          console.log(eventID);
           setModalVisible(true);
         }
       }
     
     const closeModal = () => {
-        console.log('modal closed');
         setModalVisible(false);
     }
     
     const editHandler = () => {
         console.log('edit');
-    }
-
-    const deleteHandler = () => {
-        console.log('delete');
     }
 
     const images = {
@@ -99,6 +104,7 @@ export default function OtherEventsBox({ name, category, location, date, time, e
     
     return (
         <TouchableOpacity onPress = {openModal}>
+        <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
         <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
         <View style = {styles.friendContainer}>
 
@@ -116,15 +122,7 @@ export default function OtherEventsBox({ name, category, location, date, time, e
         </View>
 
         <View style = {styles.deleteContainer}>
-            <TouchableOpacity onPress = {editHandler}>
-            <Image
-                source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
-                style = {styles.editStyle}
-                resizeMode = 'contain'
-                />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress = {deleteHandler}>
+            <TouchableOpacity onPress = {openDeleteEventModal}>
             <Image
                 source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
                 style = {styles.deleteStyle}

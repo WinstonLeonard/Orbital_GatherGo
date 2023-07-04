@@ -17,7 +17,11 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
     const [eventDate, setEventDate] = useState('');
     const [eventLocation, setEventLocation] = useState('');
     const [eventInvitationList, setEventInvitationList] = useState('');
-    const [data, setData] = useState('');
+    const [data, setData] = useState([]);
+    const [pendingInvites, setPendingInvites] = useState([]);
+    const [participants, setParticipants] = useState([]);
+    const [pendingInvitesData, setPendingInvitesData] = useState([]);
+    const [participantsData, setParticipantsData] = useState([]);
 
     const images = {
         categories: {
@@ -27,6 +31,11 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
             'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
         }
     }
+
+    useEffect(() => {
+      console.log('event id is: ' + eventID);
+      console.log('========================');
+    }, [])
 
     useEffect(() => {
         async function fetchEventData() {
@@ -47,6 +56,8 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
             const eventTime = eventData.time;
             const eventLocation = eventData.location;
             const eventInvitationList = eventData.invitationList;
+            const eventParticipants = eventData.participants;
+            const eventPendingInvites = eventInvitationList.filter(id => !eventParticipants.includes(id))
             setEventName(eventName);
             setImageUrl(images.categories[eventCategory]);
             setEventDescription(eventDescription);
@@ -54,6 +65,8 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
             setEventDate(formattedDate);
             setEventLocation(eventLocation);
             setEventInvitationList(eventInvitationList);
+            setPendingInvites(eventPendingInvites);
+            setParticipants(eventParticipants);
             fetchHostData(eventHost);
           }
     
@@ -61,40 +74,75 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
         fetchEventData();
     }, []);
 
-    useEffect(() => {
-      const fetchData = async () => {
-          const temp = [];
-  
-          for (let i = 0; i < eventInvitationList.length; i++) {
-              const friendUid = eventInvitationList[i];
-              const storageRef = ref(storage, 'Profile Pictures');
-              const fileName = friendUid;
-              const fileRef = ref(storageRef, fileName);
-  
-              const urlPromise = getDownloadURL(fileRef);
-              const docPromise = getDoc(doc(db, "users", friendUid));
-  
-              const [url, docSnapshot] = await Promise.all([urlPromise, docPromise]);
-  
-              const friendData = docSnapshot.data();
-              const friendUsername = friendData.username;
-              const friendName = friendData.name;
-              
-              const object = {
-                  username: friendUsername,
-                  name: friendName,
-                  image: url,
-                  key: i,
-              };
-              
-              temp.push(object);
-          }
-  
-          setData(temp);
-      };
-  
-      fetchData();
-  }, [eventInvitationList]);
+  useEffect(() => {
+    const fetchData = async () => {
+        const temp = [];
+
+        for (let i = 0; i < participants.length; i++) {
+            const friendUid = participants[i];
+            const storageRef = ref(storage, 'Profile Pictures');
+            const fileName = friendUid;
+            const fileRef = ref(storageRef, fileName);
+
+            const urlPromise = getDownloadURL(fileRef);
+            const docPromise = getDoc(doc(db, "users", friendUid));
+
+            const [url, docSnapshot] = await Promise.all([urlPromise, docPromise]);
+
+            const friendData = docSnapshot.data();
+            const friendUsername = friendData.username;
+            const friendName = friendData.name;
+            
+            const object = {
+                username: friendUsername,
+                name: friendName,
+                image: url,
+                key: i,
+            };
+            
+            temp.push(object);
+        }
+
+        setParticipantsData(temp);
+    };
+
+    fetchData();
+}, [participants]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const temp = [];
+
+        for (let i = 0; i < pendingInvites.length; i++) {
+            const friendUid = pendingInvites[i];
+            const storageRef = ref(storage, 'Profile Pictures');
+            const fileName = friendUid;
+            const fileRef = ref(storageRef, fileName);
+
+            const urlPromise = getDownloadURL(fileRef);
+            const docPromise = getDoc(doc(db, "users", friendUid));
+
+            const [url, docSnapshot] = await Promise.all([urlPromise, docPromise]);
+
+            const friendData = docSnapshot.data();
+            const friendUsername = friendData.username;
+            const friendName = friendData.name;
+            
+            const object = {
+                username: friendUsername,
+                name: friendName,
+                image: url,
+                key: i,
+            };
+            
+            temp.push(object);
+        }
+
+        setPendingInvitesData(temp);
+    };
+
+    fetchData();
+}, [pendingInvites]);
 
     function formatDate(dateString, time) {
       const [day, month, year] = dateString.split('/').map(Number);
@@ -176,13 +224,43 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
                   <Text style = {styles.textBody}>{eventLocation}</Text>
                 </View>
 
-                <View style = {styles.textContainer}>
+                {/* <View style = {styles.textContainer}>
                   <Text style = {styles.textHeader}>Invited</Text>
                 </View>
 
                 <FlatList
                   scrollEnabled = {false} 
                   data = {data}
+                  renderItem= {({item}) => (
+                      <FriendBoxForPopUp
+                          image = {item.image}
+                          username = {item.username}
+                          name = {item.name}    
+                      />
+                  )}/> */}
+
+                <View style = {styles.textContainer}>
+                  <Text style = {styles.textHeader}>Participants</Text>
+                </View>
+
+                <FlatList
+                  scrollEnabled = {false} 
+                  data = {participantsData}
+                  renderItem= {({item}) => (
+                      <FriendBoxForPopUp
+                          image = {item.image}
+                          username = {item.username}
+                          name = {item.name}    
+                      />
+                  )}/>
+
+                <View style = {styles.textContainer}>
+                  <Text style = {styles.textHeader}>Pending Invites</Text>
+                </View>
+
+                <FlatList
+                  scrollEnabled = {false} 
+                  data = {pendingInvitesData}
                   renderItem= {({item}) => (
                       <FriendBoxForPopUp
                           image = {item.image}
