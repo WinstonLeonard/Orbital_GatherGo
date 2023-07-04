@@ -8,6 +8,67 @@ import FriendBoxForPopUp from './FriendBoxForPopUp';
 import CustomButton from './button';
 
 export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, acceptHandler, rejectHandler }) {
+    
+  const [eventHost, setEventHost] = useState('');
+  
+  const deleteHandler = () => {
+    //Deletes the event from the creator's myEvents array and upcomingEvents array inside firestore
+
+    deleteEventFromHost();
+
+    //deletes the event from all the participants' upcomingEvents inside firestore
+
+    //deletes the event from a user's event Invitations if they have not accepted it yet. 
+
+    // event itself is deleted inside firestore
+    closeModal();
+  }
+
+  useEffect(() => {
+    async function fetchEventData() {
+      if (eventID == 'GLOBAL') {
+        setEventName('Global Chat');
+        setImageUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FgatherGo%20circle.png?alt=media&token=d7572fdb-d549-4eab-950f-4dca85f9e42b');
+      } else {
+        const docPromise = getDoc(doc(db, "events", eventID));
+    
+        const [docSnapshot] = await Promise.all([docPromise]);
+
+        const eventData = docSnapshot.data();
+        const eventHost = eventData.hostID;
+        // const eventInvitationList = eventData.invitationList;
+        // const eventParticipants = eventData.participants;
+        // const eventPendingInvites = eventInvitationList.filter(id => !eventParticipants.includes(id))
+
+        setEventHost(eventHost);
+        //fetchHostData(eventHost);
+      }
+
+    };
+    fetchEventData();
+}, []);
+
+  async function deleteEventFromHost() {
+
+    const docRef = doc(db, "users", eventHost);
+    const docSnap = await getDoc(docRef);
+
+    const data = docSnap.data();
+    const hostMyEvents = data.myEvents;
+    const hostUpcomingEvents = data.upcomingEvents;
+
+    const updatedHostMyEvents = hostMyEvents.filter(item => item != eventID);
+    const updatedHostUpcomingEvents = hostUpcomingEvents.filter(item => item != eventID);
+
+    setDoc(docRef, {
+      myEvents: updatedHostMyEvents,
+    }, { merge: true });
+
+    setDoc(docRef, {
+      upcomingEvents: updatedHostUpcomingEvents,
+    }, { merge: true });
+
+  }
 
     return (
         <Modal visible={modalVisible} onRequestClose={closeModal} transparent = {true} animationType='fade'>
@@ -54,7 +115,7 @@ export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, 
                           width = {130}
                           height = {45}
                           fontSize = {16}
-                          onPress = {closeModal}></CustomButton>
+                          onPress = {deleteHandler}></CustomButton>
 
             </View>
 

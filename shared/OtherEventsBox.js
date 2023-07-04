@@ -19,7 +19,6 @@ export default function OtherEventsBox({ name, category, location, date, time, e
         if (eventID == 'GLOBAL') {
           setModalVisible(false);
         } else {
-          console.log(eventID);
           setModalVisible(true);
         }
       }
@@ -102,37 +101,72 @@ export default function OtherEventsBox({ name, category, location, date, time, e
         },
     })
     
-    return (
-        <TouchableOpacity onPress = {openModal}>
-        <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
-        <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
-        <View style = {styles.friendContainer}>
-
-        <View style = {styles.pfpContainer}>
-        <Image source = {{uri: images.categories[category]}}
-                    style = {styles.pfpStyle}
-                    resizeMode='contain' />
-        </View>
-
-        <View style = {styles.nameContainer}>
-            <Text style = {styles.usernameStyle}> {name} </Text>
-            <Text style = {styles.nameStyle}> {location} </Text>
-            <Text style = {styles.nameStyle}> {date} </Text>
-            <Text style = {styles.nameStyle}> {time} </Text>
-        </View>
-
-        <View style = {styles.deleteContainer}>
-            <TouchableOpacity onPress = {openDeleteEventModal}>
-            <Image
-                source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
-                style = {styles.deleteStyle}
-                resizeMode = 'contain'
-                />
+    if (modalVisible) {
+        return (
+            <TouchableOpacity onPress = {openModal}>
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
+            <View style = {styles.friendContainer}>
+    
+            <View style = {styles.pfpContainer}>
+            <Image source = {{uri: images.categories[category]}}
+                        style = {styles.pfpStyle}
+                        resizeMode='contain' />
+            </View>
+    
+            <View style = {styles.nameContainer}>
+                <Text style = {styles.usernameStyle}> {name} </Text>
+                <Text style = {styles.nameStyle}> {location} </Text>
+                <Text style = {styles.nameStyle}> {date} </Text>
+                <Text style = {styles.nameStyle}> {time} </Text>
+            </View>
+    
+            <View style = {styles.deleteContainer}>
+                <TouchableOpacity onPress = {openDeleteEventModal}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
+                    style = {styles.deleteStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+            </View>
+    
+            </View>
             </TouchableOpacity>
-        </View>
-
-        </View>
-        </TouchableOpacity>
-    )
+        )
+    } else {
+        return (
+            <TouchableOpacity onPress = {openModal}>
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <View style = {styles.friendContainer}>
+    
+            <View style = {styles.pfpContainer}>
+            <Image source = {{uri: images.categories[category]}}
+                        style = {styles.pfpStyle}
+                        resizeMode='contain' />
+            </View>
+    
+            <View style = {styles.nameContainer}>
+                <Text style = {styles.usernameStyle}> {name} </Text>
+                <Text style = {styles.nameStyle}> {location} </Text>
+                <Text style = {styles.nameStyle}> {date} </Text>
+                <Text style = {styles.nameStyle}> {time} </Text>
+            </View>
+    
+            <View style = {styles.deleteContainer}>
+                <TouchableOpacity onPress = {openDeleteEventModal}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
+                    style = {styles.deleteStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+            </View>
+    
+            </View>
+            </TouchableOpacity>
+        )
+    }
+    
 }
 

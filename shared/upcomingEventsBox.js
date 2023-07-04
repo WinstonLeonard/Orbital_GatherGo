@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, ScrollView } from 'react-native';
 import EventPopUp from './EventPopup';
 import DeleteMyEventPopUp from './DeleteMyEventPopUp';
 
@@ -11,7 +11,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         if (eventID == 'GLOBAL') {
           setModalVisible(false);
         } else {
-          console.log(eventID);
           setModalVisible(true);
         }
       }
@@ -101,46 +100,89 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         },
     })
     
-    return (
-        <TouchableOpacity onPress = {openModal}>
-        <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
-        <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
-        <View style = {styles.friendContainer}>
-
-        <View style = {styles.pfpContainer}>
-        <Image source = {{uri: images.categories[category]}}
-                    style = {styles.pfpStyle}
-                    resizeMode='contain' />
-        </View>
-
-        <View style = {styles.nameContainer}>
-            <Text style = {styles.usernameStyle}> {name} </Text>
-            <Text style = {styles.nameStyle}> {location} </Text>
-            <Text style = {styles.nameStyle}> {date} </Text>
-            <Text style = {styles.nameStyle}> {time} </Text>
-        </View>
-
-        <View style = {styles.deleteContainer}>
-            <TouchableOpacity onPress = {editHandler}>
-            <Image
-                source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
-                style = {styles.editStyle}
-                resizeMode = 'contain'
-                />
+    if (modalVisible) {
+        return (
+            <TouchableOpacity onPress = {openModal}>
+            <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
+            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <View style = {styles.friendContainer}>
+    
+            <View style = {styles.pfpContainer}>
+            <Image source = {{uri: images.categories[category]}}
+                        style = {styles.pfpStyle}
+                        resizeMode='contain' />
+            </View>
+    
+            <View style = {styles.nameContainer}>
+                <Text style = {styles.usernameStyle}> {name} </Text>
+                <Text style = {styles.nameStyle}> {location} </Text>
+                <Text style = {styles.nameStyle}> {date} </Text>
+                <Text style = {styles.nameStyle}> {time} </Text>
+            </View>
+    
+            <View style = {styles.deleteContainer}>
+                <TouchableOpacity onPress = {editHandler}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
+                    style = {styles.editStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+    
+                <TouchableOpacity onPress = {openDeleteEventModal}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
+                    style = {styles.deleteStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+            </View>
+    
+    
+            </View>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress = {openDeleteEventModal}>
-            <Image
-                source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
-                style = {styles.deleteStyle}
-                resizeMode = 'contain'
-                />
+        )
+    } else {
+        return (
+            <TouchableOpacity onPress = {openModal}>
+            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <View style = {styles.friendContainer}>
+    
+            <View style = {styles.pfpContainer}>
+            <Image source = {{uri: images.categories[category]}}
+                        style = {styles.pfpStyle}
+                        resizeMode='contain' />
+            </View>
+    
+            <View style = {styles.nameContainer}>
+                <Text style = {styles.usernameStyle}> {name} </Text>
+                <Text style = {styles.nameStyle}> {location} </Text>
+                <Text style = {styles.nameStyle}> {date} </Text>
+                <Text style = {styles.nameStyle}> {time} </Text>
+            </View>
+    
+            <View style = {styles.deleteContainer}>
+                <TouchableOpacity onPress = {editHandler}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
+                    style = {styles.editStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+    
+                <TouchableOpacity onPress = {openDeleteEventModal}>
+                <Image
+                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
+                    style = {styles.deleteStyle}
+                    resizeMode = 'contain'
+                    />
+                </TouchableOpacity>
+            </View>
+    
+    
+            </View>
             </TouchableOpacity>
-        </View>
-
-
-        </View>
-        </TouchableOpacity>
-    )
+        )
+    }
 }
 

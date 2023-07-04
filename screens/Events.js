@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 import OtherEventsBox from '../shared/OtherEventsBox';
 
+
 export default function Events({navigation}) {
 
     const [data, setData] = useState([]);
@@ -341,3 +342,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
       },
 })
+

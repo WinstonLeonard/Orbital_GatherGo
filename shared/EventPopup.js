@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { View, FlatList, Modal, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { collection, query, addDoc, orderBy, onSnapshot, getDocs, getDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
-import { authentication, db } from '../firebase/firebase-config';
-import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase/firebase-config';
+import { ref, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
 import FriendBoxForPopUp from './FriendBoxForPopUp';
 
@@ -31,11 +31,6 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
             'Others' : "https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fothers_icon.png?alt=media&token=c59640d4-5f09-44fc-81a3-b4f72a00b241",
         }
     }
-
-    useEffect(() => {
-      console.log('event id is: ' + eventID);
-      console.log('========================');
-    }, [])
 
     useEffect(() => {
         async function fetchEventData() {
@@ -223,21 +218,6 @@ export default function EventPopUp({ modalVisible, closeModal, eventID }) {
                   <Text style = {styles.textHeader}>Location</Text>
                   <Text style = {styles.textBody}>{eventLocation}</Text>
                 </View>
-
-                {/* <View style = {styles.textContainer}>
-                  <Text style = {styles.textHeader}>Invited</Text>
-                </View>
-
-                <FlatList
-                  scrollEnabled = {false} 
-                  data = {data}
-                  renderItem= {({item}) => (
-                      <FriendBoxForPopUp
-                          image = {item.image}
-                          username = {item.username}
-                          name = {item.name}    
-                      />
-                  )}/> */}
 
                 <View style = {styles.textContainer}>
                   <Text style = {styles.textHeader}>Participants</Text>
