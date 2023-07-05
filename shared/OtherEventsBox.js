@@ -1,11 +1,19 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import EventPopUp from './EventPopup';
-import DeleteMyEventPopUp from './DeleteMyEventPopUp';
+import DeleteOtherEventPopUp from './DeleteOtherEventPopUp';
 
-export default function UpcomingEventsBox({ name, category, location, date, time, eventID}) {
+export default function OtherEventsBox({ name, category, location, date, time, eventID}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
+
+    const openDeleteEventModal = () => {
+        setDeleteEventModalVisible(true);
+    }
+
+    const closeDeleteEventModal = () => {
+        setDeleteEventModalVisible(false);
+    }
 
     const openModal = () => {
         if (eventID == 'GLOBAL') {
@@ -19,14 +27,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         setModalVisible(false);
     }
     
-    const openDeleteEventModal = () => {
-        setDeleteEventModalVisible(true);
-    }
-
-    const closeDeleteEventModal = () => {
-        setDeleteEventModalVisible(false);
-    }
-
     const editHandler = () => {
         console.log('edit');
     }
@@ -88,6 +88,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             width: 43,
             alignSelf: 'center',
             marginLeft: 10,
+            //backgroundColor: 'blue',
         },
         deleteStyle: {
             width: 43,
@@ -103,8 +104,8 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     if (modalVisible) {
         return (
             <TouchableOpacity onPress = {openModal}>
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
             <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
-            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
@@ -121,14 +122,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             </View>
     
             <View style = {styles.deleteContainer}>
-                <TouchableOpacity onPress = {editHandler}>
-                <Image
-                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
-                    style = {styles.editStyle}
-                    resizeMode = 'contain'
-                    />
-                </TouchableOpacity>
-    
                 <TouchableOpacity onPress = {openDeleteEventModal}>
                 <Image
                     source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
@@ -137,7 +130,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
                     />
                 </TouchableOpacity>
             </View>
-    
     
             </View>
             </TouchableOpacity>
@@ -145,7 +137,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     } else {
         return (
             <TouchableOpacity onPress = {openModal}>
-            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
@@ -162,14 +154,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             </View>
     
             <View style = {styles.deleteContainer}>
-                <TouchableOpacity onPress = {editHandler}>
-                <Image
-                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
-                    style = {styles.editStyle}
-                    resizeMode = 'contain'
-                    />
-                </TouchableOpacity>
-    
                 <TouchableOpacity onPress = {openDeleteEventModal}>
                 <Image
                     source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
@@ -179,10 +163,10 @@ export default function UpcomingEventsBox({ name, category, location, date, time
                 </TouchableOpacity>
             </View>
     
-    
             </View>
             </TouchableOpacity>
         )
     }
+    
 }
 

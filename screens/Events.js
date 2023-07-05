@@ -6,6 +6,8 @@ import { authentication, db } from '../firebase/firebase-config';
 import UpcomingEventsBox from '../shared/upcomingEventsBox';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
+import OtherEventsBox from '../shared/OtherEventsBox';
+
 
 export default function Events({navigation}) {
 
@@ -187,14 +189,9 @@ export default function Events({navigation}) {
         }
     }, [searchEvent]);
 
-    return(
-        // <KeyboardAvoidingView 
-        // style = {styles.keyboardAvoidContainer}
-        // enableOnAndroid = {true}
-        // keyboardVerticalOffset = {-400}
-        // behavior = "padding">
-            
-        <View style = {styles.container}>
+    if (myEventsPressed) {
+        return (
+            <View style = {styles.container}>
             <View style = {styles.header}>
                 <Text style = {styles.title}>Events</Text>
             </View>
@@ -216,8 +213,7 @@ export default function Events({navigation}) {
                         date = {item.date}
                         time = {item.time}
                         eventID = {item.eventID}
-                    />
-            
+                    />    
             )}/>
             </View >
 
@@ -226,9 +222,42 @@ export default function Events({navigation}) {
                 <ToggleOtherEvents></ToggleOtherEvents>
             </View>
         </View>
-
-        // </KeyboardAvoidingView>
-    )
+        )
+    } else {
+        return(            
+            <View style = {styles.container}>
+                <View style = {styles.header}>
+                    <Text style = {styles.title}>Events</Text>
+                </View>
+                
+                <View style = {styles.input}>
+                    <TextInput placeholder= 'Search' style = {styles.textInput} value = {searchEvent} onChangeText={(text) => setSearchEvent(text)}/>
+                    <TouchableOpacity onPress = {searchHandler}>
+                        <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
+                    </TouchableOpacity>
+                </View>
+                <View style = {styles.eventsContainer}> 
+                    <FlatList
+                    data = {data}
+                    renderItem= {({item}) => (
+                        <OtherEventsBox
+                            name = {item.name}
+                            category = {item.category}
+                            location = {item.location}
+                            date = {item.date}
+                            time = {item.time}
+                            eventID = {item.eventID}
+                        />    
+                )}/>
+                </View >
+    
+                <View style = {styles.buttonContainer}>
+                    <ToggleMyEvents></ToggleMyEvents>
+                    <ToggleOtherEvents></ToggleOtherEvents>
+                </View>
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -313,3 +342,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
       },
 })
+
