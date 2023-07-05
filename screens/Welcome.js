@@ -1,11 +1,27 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image } from 'react-native';
 import CustomButton from '../shared/button';
-
-
+import { authentication } from '../firebase/firebase-config';
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Welcome({navigation}) {
-    const pressHandler = () => navigation.navigate('NewLogin')
+    const pressHandler = () => {
+        //navigation.navigate('NewLogin')
+        onAuthStateChanged(authentication, (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/auth.user
+              navigation.navigate('Home');
+              // ...
+            } else {
+                navigation.navigate('NewLogin');
+              // User is signed out
+              // ...
+            }
+        });
+
+    }
+    
     return (
         <View style = {styles.container}>
 

@@ -20,8 +20,10 @@ export default function NewLogin({navigation}) {
             const user = userCredential.user;
             setInputValue('')
             setPasswordInputValue('')
-            navigation.navigate("Home")
-            // ...
+            navigation.reset({
+                index: 0, // Index of the screen to reset to
+                routes: [{ name: 'Home' }], // Array of screen objects to set as the new stack
+            });
         })
         .catch((error) => {
             setInputValue('')
