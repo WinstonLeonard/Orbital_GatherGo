@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image, Imag
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, doc, getDoc } from 'firebase/firestore';
 import CustomButton from '../shared/button';
+import { onAuthStateChanged } from "firebase/auth";
 
 
 export default function  Home({navigation}) {
@@ -10,6 +11,22 @@ export default function  Home({navigation}) {
     const image = require("../assets/pictures/HomescreenBackground.png")
 
     const [username, setUsername] = useState('')
+
+    onAuthStateChanged(authentication, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/auth.user
+          // ...
+        } else {
+            navigation.reset({
+                index: 0, // Index of the screen to reset to
+                routes: [{ name: 'NewLogin' }], // Array of screen objects to set as the new stack
+            });
+      
+          // User is signed out
+          // ...
+        }
+    });
 
     useEffect(() => {
         async function getUsername() {
