@@ -17,7 +17,8 @@ import AddFriend from '../screens/AddFriend.js';
 import ChooseParticipants from '../screens/ChooseParticipants.js';
 import TestGroupChat from '../screens/testGroupchat.js';
 import EventInvitations from '../screens/eventInvitations.js';
-
+import EditEvent from '../screens/EditEvent.js';
+import UpdateParticipants from '../screens/UpdateParticipants.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +120,18 @@ export default function HomeStack () {
             <Stack.Screen
                 name = "TestGroupChat"
                 component = {TestGroupChat}
+                options = {{
+                    headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "EditEvent"
+                component = {EditEvent}
+                options = {{
+                    headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen
+                name = "UpdateParticipants"
+                component = {UpdateParticipants}
                 options = {{
                     headerShown: false}}></Stack.Screen>
 

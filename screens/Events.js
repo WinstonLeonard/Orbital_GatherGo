@@ -213,6 +213,7 @@ export default function Events({navigation}) {
                         date = {item.date}
                         time = {item.time}
                         eventID = {item.eventID}
+                        navigation = {navigation}
                     />    
             )}/>
             </View >

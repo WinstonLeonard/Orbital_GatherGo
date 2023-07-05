@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, Scrol
 import EventPopUp from './EventPopup';
 import DeleteMyEventPopUp from './DeleteMyEventPopUp';
 
-export default function UpcomingEventsBox({ name, category, location, date, time, eventID}) {
+export default function UpcomingEventsBox({ name, category, location, date, time, eventID, navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
 
@@ -28,7 +28,8 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     }
 
     const editHandler = () => {
-        console.log('edit');
+        console.log(eventID);
+        navigation.navigate('EditEvent', {eventID: eventID});
     }
 
     const images = {

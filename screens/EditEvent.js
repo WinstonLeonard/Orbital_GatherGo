@@ -1,59 +1,64 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import CustomButton from '../shared/button';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
-import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons'; 
 
-//import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-export default function CreateEvent({navigation}) {
+export default function EditEvent({navigation, route}) {
     
-        
-    const next = () => {
-
-        if ( eventName == '' || category == '' || location == '' || dateText == '' || timeText == '' || description == '') {
-            Alert.alert('Error!', 'You have not specified all fields yet.', 
-            [{text: 'Understood.'}])
-        } else {
-
-            const eventData = {
-                name: eventName,
-                category: category,
-                location: location,
-                date: dateText,
-                time: timeText,
-                description: description
-              };
-            
-            navigation.navigate('ChooseParticipants', {eventData: eventData});
-        }
-    } 
-  
-
+    const {eventID} = route.params;
     const [eventName, setEventName] = useState('');
     const [category, setCategory] = useState("");
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
     const [inputHeight, setInputHeight] = useState(50); 
 
-    //selecting a category
     const choices = [
         {key:'1', value:'Sports'},
         {key:'2', value:'Eat'},
         {key:'3', value:'Study'},
         {key:'4', value:'Others'}
     ]
-
-    //selecting a date and time
+    
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Add Date');
     const [timeText, setTimeText] = useState('Add Time');
+    const [isLoading, setIsLoading] = useState(true);
 
+    //fetching the data
+    useEffect(() => {
+        const fetchData = async () => {
+            const docPromise = getDoc(doc(db, "events", eventID));
+
+            const [docSnapshot] = await Promise.all([docPromise]);
+
+            const eventData = docSnapshot.data();
+            setEventName(eventData.name);
+            setCategory(eventData.category);
+            setLocation(eventData.location);
+            setDateText(eventData.date);
+            setTimeText(eventData.time);
+            setDescription(eventData.description);
+
+        };
+        fetchData();
+        setIsLoading(false);
+    }, []);
+
+    if (isLoading) {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        );
+    }
+
+    //change date
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(false);
@@ -82,6 +87,33 @@ export default function CreateEvent({navigation}) {
         setInputHeight(newInputHeight);
     };
 
+    //updating events
+    const update = () => {
+        console.log('update');
+        console.log(eventName);
+        console.log(category);
+        console.log(location);
+        console.log(dateText);
+        console.log(timeText);
+
+        const docRef = doc(db, 'events', eventID);
+        
+        setDoc(docRef, {
+            name: eventName,
+            category: category,
+            location: location,
+            date: dateText,
+            time: timeText,
+            description: description,
+        }, { merge: true });
+
+        navigation.pop();
+    }
+
+    const updateParticipants = () => {
+        navigation.navigate('UpdateParticipants', {eventID: eventID})
+    }
+
     return (
         <KeyboardAvoidingView
         style = {styles.keyboardAvoidContainer}
@@ -92,10 +124,9 @@ export default function CreateEvent({navigation}) {
             <ScrollView
                 contentContainerStyle = {styles.container}>
 
-            
             <View style = {styles.formContainer}> 
-                <Text style = {styles.title}>Create New Event</Text>
-                
+                <Text style = {styles.title}>Edit Event</Text>
+
                 <TextInput
                     style = {styles.inputContainer}
                     placeholder= 'Event Name'
@@ -109,7 +140,6 @@ export default function CreateEvent({navigation}) {
                     }
                     inputStyles = {styles.placeholder}
                     boxStyles= {styles.selectListBox}
-                    dropdownStyles={styles.dropdown}
                     search = {false} 
                     setSelected={(val) => setCategory(val)} 
                     data={choices}
@@ -128,23 +158,6 @@ export default function CreateEvent({navigation}) {
                     >    
                     </TextInput> 
                 </View>
-                {/* <GooglePlacesAutocomplete
-                    placeholder='Search'
-                    fetchDetails = {true}
-                    GooglePlacesSearchQuery={{
-                        rankby: "distance"
-                    }}
-                    onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
-                        setLocation(details.formatted_address);
-                    }}
-                    query={{
-                        key: "AIzaSyCVTzQ7OPdB-otBcXZiKcZsNOhtjk2lkoU",
-                        language: 'en',
-                    }}
-                    styles = {styles.inputContainer}
-                /> */}
                 
                 <TouchableOpacity 
                     style = {styles.datePicker} 
@@ -170,7 +183,8 @@ export default function CreateEvent({navigation}) {
                     placeholder='Write a description...'
                     value = {description}
                     onChangeText = {handleDescription}
-                    onContentSizeChange={handleContentSizeChange}></TextInput>
+                    onContentSizeChange={handleContentSizeChange}
+                    ></TextInput>
 
                 {show && 
                     (<DateTimePicker
@@ -185,22 +199,34 @@ export default function CreateEvent({navigation}) {
             </View>
 
             <View style = {styles.buttonContainer}>
-            <CustomButton text = 'Choose Participants' 
-                            buttonColor = '#2F2E2F' 
-                            textColor = 'white'
-                            cornerRadius= {10} 
-                            width = {320}
-                            height = {45}
-                            fontSize= {18}
-                            onPress = {next}
-                            ></CustomButton>
+            <CustomButton text = 'Update Participants' 
+                    buttonColor = '#39A5BD' 
+                    textColor = 'white'
+                    cornerRadius= {10} 
+                    width = {320}
+                    height = {45}
+                    fontSize= {18}
+                    onPress = {updateParticipants}
+                    ></CustomButton>
+
+            <CustomButton text = 'Update' 
+                    buttonColor = '#2F2E2F' 
+                    textColor = 'white'
+                    cornerRadius= {10} 
+                    width = {320}
+                    height = {45}
+                    fontSize= {18}
+                    onPress = {update}
+                    ></CustomButton>
             </View>
 
 
             </ScrollView>
         </KeyboardAvoidingView>
-)
+    );
+
 }
+
 
 const styles = StyleSheet.create({
     keyboardAvoidContainer: {
@@ -286,28 +312,5 @@ const styles = StyleSheet.create({
         fontFamily: "Nunito-Sans-Bold",
         width: 250,
         // backgroundColor: 'red'
-    },
-    dropdown: {
-        textAlign: 'left',
-        fontFamily: "Nunito-Sans-Bold",
-        backgroundColor: 'white',
-        borderColor: 'white',
-        borderRadius: 10,
-        marginTop: 5,
-        marginBottom: 10,
-        ...Platform.select({
-            android: {
-                elevation: 4,
-            },
-            ios: {
-                shadowOpacity: 0.3, 
-                shadowRadius: 5,
-            }
-        }),
-        shadowOffset: {
-            width: 2, 
-            height: 4,
-        },
-        paddingHorizontal: 10,
     }
 })
