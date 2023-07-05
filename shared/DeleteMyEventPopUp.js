@@ -14,15 +14,7 @@ export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, 
   const [pendingInvites, setPendingInvites] = useState([]);
   
   const deleteHandler = () => {
-    //Deletes the event from the creator's myEvents array and upcomingEvents array inside firestore
-
     deleteFunction(eventID, eventHost, eventParticipants, pendingInvites);
-
-    //deletes the event from all the participants' upcomingEvents inside firestore
-
-    //deletes the event from a user's event Invitations if they have not accepted it yet. 
-
-    // event itself is deleted inside firestore
     closeModal();
   }
 
