@@ -7,14 +7,16 @@ import { storage } from '../firebase/firebase-config';
 import FriendBoxForPopUp from './FriendBoxForPopUp';
 import CustomButton from './button';
 
-export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, acceptHandler, rejectHandler }) {
+export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, deleteFunction }) {
     
   const [eventHost, setEventHost] = useState('');
+  const [eventParticipants, setEventParticipants] = useState([]);
+  const [pendingInvites, setPendingInvites] = useState([]);
   
   const deleteHandler = () => {
     //Deletes the event from the creator's myEvents array and upcomingEvents array inside firestore
 
-    deleteEventFromHost();
+    deleteFunction(eventID, eventHost, eventParticipants, pendingInvites);
 
     //deletes the event from all the participants' upcomingEvents inside firestore
 
@@ -26,49 +28,24 @@ export default function DeleteMyEventPopUp({ modalVisible, closeModal, eventID, 
 
   useEffect(() => {
     async function fetchEventData() {
-      if (eventID == 'GLOBAL') {
-        setEventName('Global Chat');
-        setImageUrl('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2FgatherGo%20circle.png?alt=media&token=d7572fdb-d549-4eab-950f-4dca85f9e42b');
-      } else {
-        const docPromise = getDoc(doc(db, "events", eventID));
-    
-        const [docSnapshot] = await Promise.all([docPromise]);
 
-        const eventData = docSnapshot.data();
-        const eventHost = eventData.hostID;
-        // const eventInvitationList = eventData.invitationList;
-        // const eventParticipants = eventData.participants;
-        // const eventPendingInvites = eventInvitationList.filter(id => !eventParticipants.includes(id))
+      const docPromise = getDoc(doc(db, "events", eventID));
+  
+      const [docSnapshot] = await Promise.all([docPromise]);
 
-        setEventHost(eventHost);
-        //fetchHostData(eventHost);
-      }
+      const eventData = docSnapshot.data();
+      const eventHost = eventData.hostID;
+      const eventInvitationList = eventData.invitationList;
+      const eventParticipants = eventData.participants;
+      const eventPendingInvites = eventInvitationList.filter(id => !eventParticipants.includes(id))
+
+      setEventHost(eventHost);
+      setEventParticipants(eventParticipants);
+      setPendingInvites(eventPendingInvites);
 
     };
     fetchEventData();
 }, []);
-
-  async function deleteEventFromHost() {
-
-    const docRef = doc(db, "users", eventHost);
-    const docSnap = await getDoc(docRef);
-
-    const data = docSnap.data();
-    const hostMyEvents = data.myEvents;
-    const hostUpcomingEvents = data.upcomingEvents;
-
-    const updatedHostMyEvents = hostMyEvents.filter(item => item != eventID);
-    const updatedHostUpcomingEvents = hostUpcomingEvents.filter(item => item != eventID);
-
-    setDoc(docRef, {
-      myEvents: updatedHostMyEvents,
-    }, { merge: true });
-
-    setDoc(docRef, {
-      upcomingEvents: updatedHostUpcomingEvents,
-    }, { merge: true });
-
-  }
 
     return (
         <Modal visible={modalVisible} onRequestClose={closeModal} transparent = {true} animationType='fade'>
