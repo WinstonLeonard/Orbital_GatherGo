@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
-import { collection, doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, getDocs, writeBatch } from 'firebase/firestore';
 import CustomButton from '../shared/button';
 import { onAuthStateChanged } from "firebase/auth";
-
+import { useFocusEffect } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 export default function  Home({navigation}) {
 
@@ -12,6 +13,10 @@ export default function  Home({navigation}) {
 
     const [username, setUsername] = useState('')
 
+    const nearbyHandler = () => {
+        navigation.navigate('Nearby');
+    }
+    
     onAuthStateChanged(authentication, (user) => {
         if (user) {
           // User is signed in, see docs for a list of available properties
@@ -28,31 +33,48 @@ export default function  Home({navigation}) {
         }
     });
 
-    useEffect(() => {
-        async function getUsername() {
-            const docID = authentication.currentUser.uid;
-            const docRef = doc(db, "users", docID);
-            const docSnap = await getDoc(docRef);
+    async function getUsername() {
+        const docID = authentication.currentUser.uid;
+        const docRef = doc(db, "users", docID);
+        const docSnap = await getDoc(docRef);
 
-            const data = docSnap.data();
-            setUsername(data.username);
-               
-        }
+        const data = docSnap.data();
+        setUsername(data.username);     
+    }
+    
+    useEffect(() => {
         getUsername();
       }, []);
 
-    // const handleLogout = () => {
-    //     authentication.signOut()
-    //     .then(() => {
-    //         navigation.replace('NewLogin')
-    //     })
-    //     .catch((error) => {
-    //         const errorCode = error.code;
-    //         const errorMessage = error.message;
-    //         console.log(errorMessage)
-    //         // ..
-    //       })
-    // }
+    useFocusEffect(
+        React.useCallback(() => {
+            const currentTime = new Date();
+
+            async function getTimeAndLocation() {
+                await getUsername();
+                const docID = authentication.currentUser.uid;
+                const userRef = doc(db, 'users', docID);
+
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+        
+                let location = await Location.getCurrentPositionAsync({});
+
+                const geoPoint = { latitude: location.coords.latitude, 
+                                   longitude: location.coords.longitude };
+                setDoc(userRef, {
+                    location: geoPoint,
+                    lastOnline : currentTime,
+                }, { merge: true });
+                };
+            getTimeAndLocation();
+        }, [])
+    );
+
+
 
     return (
         <ImageBackground source={image} resizeMode = 'cover' style={styles.image}>
@@ -63,7 +85,7 @@ export default function  Home({navigation}) {
 
             <View style = {styles.signInOptions}>
                 <TouchableOpacity
-                        onPress={() => console.log("Button pressed")}
+                        onPress={nearbyHandler}
                     >
                     <Image
                     source={require('../assets/pictures/nearby.png')}
