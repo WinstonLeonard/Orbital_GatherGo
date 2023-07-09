@@ -40,6 +40,13 @@ export default function NamePage({navigation}) {
                 myEvents: [],
             }, { merge: true });
 
+            const geoPoint = { latitude: 33.812511, 
+                               longitude: -117.918976};
+
+            setDoc(userRef, {
+                location: geoPoint
+            }, { merge: true });
+
             navigation.navigate('UsernamePage')
         }
     }
