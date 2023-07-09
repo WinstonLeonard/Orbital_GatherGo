@@ -1,22 +1,27 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import * as Location from 'expo-location';
-import {Marker} from 'react-native-maps';
+import {Marker, Callout} from 'react-native-maps';
 import { storage } from '../firebase/firebase-config';
 import { authentication, db } from '../firebase/firebase-config';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import MyMapMarker from '../shared/MyMapMarker';
 import CustomButton from '../shared/button';
-
+import FriendMapMarker from '../shared/FriendMapMarker';
 
 
 export default function Nearby({navigation}) {
     const mapRef = React.createRef();
+    const markerRef = React.createRef();
     const latitudeDelta = 0.01622;
     const longitudeDelta = 0.00821;
     const [region, setRegion] = useState({});
     const [location, setLocation] = useState({});
+    const [friends, setFriends] = useState([]);
+    const [data, setData] = useState([]);
+    const friendMapMarkerRefs = useRef([]);
 
     useEffect(() => {
         (async () => {
@@ -38,6 +43,47 @@ export default function Nearby({navigation}) {
         })();
     }, []);
 
+    async function getFriends() {
+        const docID = authentication.currentUser.uid;
+        const docRef = doc(db, "users", docID);
+        const docSnap = await getDoc(docRef);
+
+        const data = docSnap.data();
+        const friends = data.friendList;
+        setFriends(friends);     
+    }
+    useEffect(() => {
+        getFriends();
+    }, [])
+
+    useEffect(() => {
+        const temp = [];
+        for (let i = 0; i < friends.length; i++) {
+            const friendUid = friends[i];
+                        
+            const object = {
+                userID: friendUid,
+                key: i,
+            };
+                        
+            temp.push(object);
+        }
+        setData(temp);
+      }, [friends])
+    
+    let counter = 0;
+
+    const friendHandler = () => {
+        const numOfFriends = friends.length;
+        const index = counter % numOfFriends
+        const friend = friends[index];
+        friendMapMarkerRefs.current.forEach((ref) => {
+            if (ref && ref.functionName) {
+              ref.functionName(friend);
+            }
+        });
+        counter = counter + 1;
+    }  
     const myMarkerPressed = (e) => {
         const markerLatitude = (e.nativeEvent.coordinate.latitude);
         const markerLongitude = (e.nativeEvent.coordinate.longitude);
@@ -55,6 +101,7 @@ export default function Nearby({navigation}) {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
         })
+        markerRef.current.showCallout();
     }
 
     const myButtonHandler = () => {
@@ -72,10 +119,7 @@ export default function Nearby({navigation}) {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
         })
-    }
-
-    const regionChangeHandler = (e) => {
-        console.log('changed');
+        markerRef.current.showCallout();
     }
 
 
@@ -91,11 +135,22 @@ export default function Nearby({navigation}) {
                     coordinate={{latitude: region.latitude, longitude: region.longitude}}
                     title = 'You'
                     onPress = {myMarkerPressed}
+                    ref = {markerRef}
                     >
-                    <MyMapMarker></MyMapMarker>       
+                    <MyMapMarker></MyMapMarker>
+                    <Callout onPress = {()=> console.log('fuck')}></Callout>
                 </Marker>
-            </MapView>
 
+                {data.map((item) => (
+                    <FriendMapMarker
+                    key={item.key}
+                    userID={item.userID}
+                    map={mapRef}
+                    ref={(ref) => (friendMapMarkerRefs.current[item.key] = ref)}
+                    />
+                ))}
+
+            </MapView>
             <View style = {styles.buttonsContainer}>
                 <CustomButton text = 'My Location' 
                             buttonColor = '#2F2E2F' 
@@ -113,7 +168,7 @@ export default function Nearby({navigation}) {
                             width = {100}
                             height = {40}
                             fontSize = {16}
-                            onPress = {() => console.log('pressed')}></CustomButton>
+                            onPress = {friendHandler}></CustomButton>
                 
             </View>
         </View>

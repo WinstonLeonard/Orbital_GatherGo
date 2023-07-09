@@ -3,6 +3,7 @@ import { StyleSheet, Image, Text, View, TouchableOpacity, ImageBackground } from
 import { authentication, db } from '../firebase/firebase-config';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
+import {Marker, Callout} from 'react-native-maps';
 
 
 export default function MyMapMarker() {
