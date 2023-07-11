@@ -10,8 +10,7 @@ import FriendBoxForPopUp from '../shared/FriendBoxForPopUp';
 export default function UpdateParticipants({navigation, route}) {
     
     //loading friendlist
-    const {eventID} = route.params;
-    const [myFriendList, setMyFriendList] = useState([]);
+    const {eventData} = route.params;
     const [friendData, setFriendData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [invitationList, setInvitationList] = useState([]);
@@ -20,33 +19,11 @@ export default function UpdateParticipants({navigation, route}) {
     const [participants, setParticipants] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-            //getting friends list
-            const myDocID = authentication.currentUser.uid;
-            const myDocRef = doc(db, "users", myDocID);
-            const myDocSnap = await getDoc(myDocRef);
-    
-            const myData = myDocSnap.data();
-            setMyFriendList(myData.friendList);
-            
-            //getting already invited
-            const docPromise = getDoc(doc(db, "events", eventID));
-
-            const [docSnapshot] = await Promise.all([docPromise]);
-
-            const eventData = docSnapshot.data();
-            setAlreadyInvited(eventData.invitationList);
-
-            //filtering not yet invited
-            const notInvited = myFriendList.filter((friendUid) => !alreadyInvited.includes(friendUid));
-            setNotYetInvited(notInvited);
-        }
-        fetchData();
-    },[]);
-
-    useEffect(() => {
         const fetchData = async () => {
             const temp = [];
+            setNotYetInvited(eventData.notYetInvited);
+
+            setAlreadyInvited(eventData.alreadyInvited);
 
             for (let i = 0; i < notYetInvited.length; i++) {
                 const friendUid = notYetInvited[i];
@@ -117,6 +94,7 @@ export default function UpdateParticipants({navigation, route}) {
     }
 
     const update = async () => {
+        //update user event invitiation list
         for (let i = 0; i < invitationList.length; i++) {
             const userID = invitationList[i];
             const myUserPromise = getDoc(doc(db, 'users', userID));
@@ -124,9 +102,8 @@ export default function UpdateParticipants({navigation, route}) {
 
             const userData = userDocSnapshot.data();
             const currentEventInvitationList = userData.eventInvitations;
-            const newEventsInvitationList = [...currentEventInvitationList, eventID]
+            const newEventsInvitationList = [...currentEventInvitationList, eventData.eventID]
             
-        
             const userRef = doc(db, 'users', userID);
 
             setDoc(userRef, {
@@ -134,15 +111,15 @@ export default function UpdateParticipants({navigation, route}) {
             }, { merge: true });
         }
 
-        const currentInvitedlist = [...alreadyInvited, invitationList];
-        console.log(alreadyInvited);
+        //update event invitation list
+        const currentInvitedlist = [...alreadyInvited, ...invitationList];
 
-        const eventRef = doc(db, 'events', eventID);
+        const eventRef = doc(db, 'events', eventData.eventID);
         setDoc(eventRef, {
             invitationList: currentInvitedlist,
         }, { merge: true });
 
-        navigation.navigate("EditEvent");
+        navigation.navigate('EditEvent', {eventID: eventData.eventID});
     }
     
     return (

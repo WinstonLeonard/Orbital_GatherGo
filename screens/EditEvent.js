@@ -29,6 +29,9 @@ export default function EditEvent({navigation, route}) {
     const [dateText, setDateText] = useState('Add Date');
     const [timeText, setTimeText] = useState('Add Time');
     const [isLoading, setIsLoading] = useState(true);
+    const [alreadyInvited, setAlreadyInvited] = useState([]);
+    const [notYetInvited, setNotYetInvited] = useState([]);
+    const [myFriendList, setMyFriendList] = useState([]);
 
     //fetching the data
     useEffect(() => {
@@ -49,6 +52,28 @@ export default function EditEvent({navigation, route}) {
         fetchData();
         setIsLoading(false);
     }, []);
+
+    //fetching event participants
+    useEffect(() => {
+        async function fetchFriendData() {
+            //getting friends list
+            const myDocID = authentication.currentUser.uid;
+            const myDocRef = doc(db, "users", myDocID);
+            const myDocSnap = await getDoc(myDocRef);
+            const myData = myDocSnap.data();
+            setMyFriendList(myData.friendList);
+            
+            //getting already invited
+            const docPromise = getDoc(doc(db, "events", eventID));
+
+            const [docSnapshot] = await Promise.all([docPromise]);
+
+            const eventData = docSnapshot.data();
+            setAlreadyInvited(eventData.invitationList);
+
+        }
+        fetchFriendData();
+    },[]);
 
     if (isLoading) {
         return (
@@ -111,7 +136,14 @@ export default function EditEvent({navigation, route}) {
     }
 
     const updateParticipants = () => {
-        navigation.navigate('UpdateParticipants', {eventID: eventID})
+        const eventData = {
+            eventID: eventID,
+            notYetInvited: myFriendList.filter((friendUid) => !alreadyInvited.includes(friendUid)),
+            alreadyInvited: alreadyInvited,
+        }
+        console.log(notYetInvited);
+        console.log(alreadyInvited);
+        navigation.navigate('UpdateParticipants', {eventData: eventData})
     }
 
     return (
