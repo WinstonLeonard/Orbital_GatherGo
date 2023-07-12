@@ -5,7 +5,9 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function EditEvent({navigation, route}) {
     
@@ -34,7 +36,8 @@ export default function EditEvent({navigation, route}) {
     const [myFriendList, setMyFriendList] = useState([]);
 
     //fetching the data
-    useEffect(() => {
+    useFocusEffect(
+    React.useCallback(() => {
         const fetchData = async () => {
             const docPromise = getDoc(doc(db, "events", eventID));
 
@@ -51,10 +54,11 @@ export default function EditEvent({navigation, route}) {
         };
         fetchData();
         setIsLoading(false);
-    }, []);
+    }, []));
 
     //fetching event participants
-    useEffect(() => {
+    useFocusEffect(
+    React.useCallback(() => {
         async function fetchFriendData() {
             //getting friends list
             const myDocID = authentication.currentUser.uid;
@@ -73,7 +77,7 @@ export default function EditEvent({navigation, route}) {
 
         }
         fetchFriendData();
-    },[]);
+    },[]));
 
     if (isLoading) {
         return (
