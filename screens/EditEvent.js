@@ -94,8 +94,11 @@ export default function EditEvent({navigation, route}) {
         setDate(currentDate);
         
         let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear() ;
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        let hours = tempDate.getHours().toString().padStart(2, '0'); // Add leading zero to hours
+        let minutes = tempDate.getMinutes().toString().padStart(2, '0'); // Add leading zero to minutes
+        let fTime = hours + ':' + minutes;
+        
         setDateText(fDate);
         setTimeText(fTime);
     }
@@ -145,8 +148,6 @@ export default function EditEvent({navigation, route}) {
             notYetInvited: myFriendList.filter((friendUid) => !alreadyInvited.includes(friendUid)),
             alreadyInvited: alreadyInvited,
         }
-        console.log(notYetInvited);
-        console.log(alreadyInvited);
         navigation.navigate('UpdateParticipants', {eventData: eventData})
     }
 

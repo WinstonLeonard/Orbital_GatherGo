@@ -60,8 +60,11 @@ export default function CreateEvent({navigation}) {
         setDate(currentDate);
         
         let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear() ;
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        let hours = tempDate.getHours().toString().padStart(2, '0'); // Add leading zero to hours
+        let minutes = tempDate.getMinutes().toString().padStart(2, '0'); // Add leading zero to minutes
+        let fTime = hours + ':' + minutes;
+        
         setDateText(fDate);
         setTimeText(fTime);
     }

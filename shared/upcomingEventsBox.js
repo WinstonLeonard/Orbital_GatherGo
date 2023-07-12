@@ -28,7 +28,6 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     }
 
     const editHandler = () => {
-        console.log(eventID);
         navigation.navigate('EditEvent', {eventID: eventID});
     }
 

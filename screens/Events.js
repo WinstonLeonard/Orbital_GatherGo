@@ -204,7 +204,18 @@ export default function Events({navigation}) {
             </View>
             <View style = {styles.eventsContainer}> 
                 <FlatList
-                data = {data}
+                data={data.sort((a, b) => {
+                    const dateComparison = a.date.localeCompare(b.date);
+                
+                    if (dateComparison !== 0) {
+                      return dateComparison;
+                    } else {
+                      const timeA = new Date(`1970-01-01T${a.time}`);
+                      const timeB = new Date(`1970-01-01T${b.time}`);
+                      
+                      return timeA - timeB;
+                    }
+                })}
                 renderItem= {({item}) => (
                     <UpcomingEventsBox
                         name = {item.name}
@@ -239,7 +250,18 @@ export default function Events({navigation}) {
                 </View>
                 <View style = {styles.eventsContainer}> 
                     <FlatList
-                    data = {data}
+                    data={data.sort((a, b) => {
+                        const dateComparison = a.date.localeCompare(b.date);
+                    
+                        if (dateComparison !== 0) {
+                          return dateComparison;
+                        } else {
+                          const timeA = new Date(`1970-01-01T${a.time}`);
+                          const timeB = new Date(`1970-01-01T${b.time}`);
+                          
+                          return timeA - timeB;
+                        }
+                    })}
                     renderItem= {({item}) => (
                         <OtherEventsBox
                             name = {item.name}
