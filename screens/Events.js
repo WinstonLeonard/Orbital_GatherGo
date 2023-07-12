@@ -7,6 +7,8 @@ import UpcomingEventsBox from '../shared/upcomingEventsBox';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 import OtherEventsBox from '../shared/OtherEventsBox';
+import { StatusBar } from "expo-status-bar";
+
 
 
 export default function Events({navigation}) {
@@ -304,6 +306,7 @@ export default function Events({navigation}) {
     if (myEventsPressed) {
         return (
             <View style = {styles.container}>
+                <StatusBar style="auto"/>
             <View style = {styles.header}>
                 <Text style = {styles.title}>Events</Text>
             </View>
@@ -339,6 +342,7 @@ export default function Events({navigation}) {
     } else {
         return(            
             <View style = {styles.container}>
+                <StatusBar style="auto"/>
                 <View style = {styles.header}>
                     <Text style = {styles.title}>Events</Text>
                 </View>

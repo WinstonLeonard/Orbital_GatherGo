@@ -10,6 +10,9 @@ import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import MyMapMarker from '../shared/MyMapMarker';
 import CustomButton from '../shared/button';
 import FriendMapMarker from '../shared/FriendMapMarker';
+//import { PROVIDER_GOOGLE } from 'react-native-maps';
+import { StatusBar } from "expo-status-bar";
+
 
 
 export default function Nearby({navigation}) {
@@ -129,6 +132,7 @@ export default function Nearby({navigation}) {
                 ref= {mapRef} 
                 style={styles.map}
                 region = {region}
+                //provider= {PROVIDER_GOOGLE}
                 //onRegionChange={regionChangeHandler}
                 >
                 <Marker

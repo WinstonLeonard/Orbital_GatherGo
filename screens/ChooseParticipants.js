@@ -5,6 +5,8 @@ import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../shared/button';
 import { collection, getDoc, doc, setDoc } from 'firebase/firestore';
 import uuid from 'uuid-random';
+import { StatusBar } from "expo-status-bar";
+
 
 export default function ChooseParticipants({navigation, route}) {
     
@@ -159,6 +161,7 @@ export default function ChooseParticipants({navigation, route}) {
     
             <ScrollView
                 contentContainerStyle = {styles.container}>
+                <StatusBar style="auto"/>
 
             
             <View style = {styles.inputContainer}> 

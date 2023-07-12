@@ -6,6 +6,8 @@ import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase
 import GroupChat from '../shared/groupChat';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
+import { StatusBar } from "expo-status-bar";
+
 
 export default function Inbox({navigation}) {
 
@@ -77,7 +79,7 @@ export default function Inbox({navigation}) {
     return (
 
         <View style = {styles.container}>
-            
+            <StatusBar style="auto"/>
             <View style = {styles.headerContainer}> 
                 <Text style = {styles.headerText}>Inbox</Text>
                 <View style = {styles.envelopContainer}>

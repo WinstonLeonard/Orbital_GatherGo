@@ -6,6 +6,8 @@ import CustomButton from '../shared/button';
 import { onAuthStateChanged } from "firebase/auth";
 import { useFocusEffect } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import { StatusBar } from "expo-status-bar";
+
 
 export default function  Home({navigation}) {
 
@@ -78,6 +80,7 @@ export default function  Home({navigation}) {
 
     return (
         <ImageBackground source={image} resizeMode = 'cover' style={styles.image}>
+            <StatusBar style="auto"/>
             <View style = {styles.container}> 
                     <Text style = {styles.title}> Hello, </Text>
                     <Text style = {styles.title}> {username} </Text>

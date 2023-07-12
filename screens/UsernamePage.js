@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Ale
 import CustomButton from '../shared/button';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc, query, where, getDocs, } from "firebase/firestore";
+import { StatusBar } from "expo-status-bar";
 
 
 export default function UsernamePage({navigation}) {
@@ -54,7 +55,7 @@ export default function UsernamePage({navigation}) {
             keyboardVerticalOffset = {-400}
             behavior = "padding">
         <View style = {styles.container}>
-
+        <StatusBar style="auto"/>
 
             <Text style = {styles.header}> Choose a username </Text>
 

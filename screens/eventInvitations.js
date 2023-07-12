@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, FlatList, KeyboardAvoidingView, ActivityIndicat
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import EventRequestBox from '../shared/eventRequestBox';
+import { StatusBar } from "expo-status-bar";
 
 
 export default function EventInvitations({navigation}) {
@@ -132,6 +133,7 @@ export default function EventInvitations({navigation}) {
 
     return( 
         <View style = {styles.container}>
+            <StatusBar style="auto"/>
             <Text style = {styles.title}>Event Invitations</Text>
             
             <View style = {styles.inputContainer}> 

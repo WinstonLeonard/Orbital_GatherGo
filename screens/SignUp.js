@@ -6,6 +6,7 @@ import { authentication } from '../firebase/firebase-config';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+import { StatusBar } from "expo-status-bar";
 
 
 
@@ -54,6 +55,7 @@ export default function SignUp({navigation}) {
               behavior = "padding">
             <ScrollView
                 contentContainerStyle = {styles.container}>
+                <StatusBar style="auto"/>
             <View style = {styles.imageContainer}>
             <Image source = {require('../assets/pictures/GatherGoWhiteBG.png')}
                    style = {{

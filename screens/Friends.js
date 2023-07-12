@@ -5,6 +5,8 @@ import { storage } from '../firebase/firebase-config';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
+import { StatusBar } from "expo-status-bar";
+
 
 
 import FriendBox from '../shared/friendBox';
@@ -81,7 +83,7 @@ export default function Friends({navigation}) {
 
     return (
       <View style={styles.container}>
-        
+        <StatusBar style="auto"/>
         <View style = {styles.headerContainer}>
 
             <Text style = {styles.title}> Friends </Text>
