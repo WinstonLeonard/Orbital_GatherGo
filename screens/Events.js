@@ -317,21 +317,36 @@ export default function Events({navigation}) {
                     <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
                 </TouchableOpacity>
             </View>
-            <View style = {styles.eventsContainer}> 
+            <View style={styles.eventsContainer}> 
+                {data.length === 0 ? (
+                <Text style={styles.noEventsText}>No Events Hosted</Text>
+                ) : (
                 <FlatList
-                data = {data}
-                renderItem= {({item}) => (
+                    data={data.sort((a, b) => {
+                    const dateComparison = a.date.localeCompare(b.date);
+                    if (dateComparison !== 0) {
+                        return dateComparison;
+                    } else {
+                        const timeA = new Date(`1970-01-01T${a.time}`);
+                        const timeB = new Date(`1970-01-01T${b.time}`);
+                        return timeA - timeB;
+                    }
+                    })}
+                    renderItem={({item}) => (
                     <UpcomingEventsBox
-                        name = {item.name}
-                        category = {item.category}
-                        location = {item.location}
-                        date = {item.date}
-                        time = {item.time}
-                        eventID = {item.eventID}
+                        name={item.name}
+                        category={item.category}
+                        location={item.location}
+                        date={item.date}
+                        time={item.time}
+                        eventID={item.eventID}
+                        navigation={navigation}
                         deleteFunction={deleteMyEvent}
                     />    
-            )}/>
-            </View >
+                    )}
+                />
+                )}
+            </View>
 
             <View style = {styles.buttonContainer}>
                 <ToggleMyEvents></ToggleMyEvents>
@@ -354,9 +369,23 @@ export default function Events({navigation}) {
                     </TouchableOpacity>
                 </View>
                 <View style = {styles.eventsContainer}> 
+                    {data.length === 0 ? (
+                    <Text style={styles.noEventsText}>No Upcoming Events</Text>
+                    ) : (
                     <FlatList
-                    data = {data}
-                    renderItem= {({item}) => (
+                        data={data.sort((a, b) => {
+                        const dateComparison = a.date.localeCompare(b.date);
+                    
+                        if (dateComparison !== 0) {
+                          return dateComparison;
+                        } else {
+                          const timeA = new Date(`1970-01-01T${a.time}`);
+                          const timeB = new Date(`1970-01-01T${b.time}`);
+                          
+                          return timeA - timeB;
+                        }
+                        })}
+                        renderItem= {({item}) => (
                         <OtherEventsBox
                             name = {item.name}
                             category = {item.category}
@@ -367,6 +396,7 @@ export default function Events({navigation}) {
                             deleteFunction = {deleteOtherEvent}
                         />    
                 )}/>
+                )}
                 </View >
     
                 <View style = {styles.buttonContainer}>
@@ -458,6 +488,15 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 16,
+      },
+      noEventsText: {
+        fontFamily: "Nunito-Sans-Bold",
+        alignSelf: 'center',
+        color: '#2F2E2F',
+        fontSize: 18,
+        marginTop: 40,
+        color: 'grey'
+        //textAlign: 'center',
       },
 })
 

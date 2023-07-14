@@ -1,39 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { authentication, db } from '../firebase/firebase-config';
+import { StyleSheet, Text, View, ActivityIndicator, KeyboardAvoidingView, ScrollView, FlatList } from 'react-native';
+import { authentication, db, storage } from '../firebase/firebase-config';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../shared/button';
 import { collection, getDoc, doc, setDoc } from 'firebase/firestore';
-import uuid from 'uuid-random';
-import { StatusBar } from "expo-status-bar";
+import { ref, getDownloadURL  } from "firebase/storage";
+import FriendBoxForPopUp from '../shared/FriendBoxForPopUp';
 
-
-export default function ChooseParticipants({navigation, route}) {
+export default function UpdateParticipants({navigation, route}) {
     
     //loading friendlist
-    const [myFriendList, setMyFriendList] = useState([]);
+    const {eventData} = route.params;
     const [friendData, setFriendData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [invitationList, setInvitationList] = useState([]);
+    const [alreadyInvited, setAlreadyInvited] = useState([]);
+    const [notYetInvited, setNotYetInvited] = useState([]);
+    const [participants, setParticipants] = useState([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            const myDocID = authentication.currentUser.uid;
-            const myDocRef = doc(db, "users", myDocID);
-            const myDocSnap = await getDoc(myDocRef);
-    
-            const myData = myDocSnap.data();
-            setMyFriendList(myData.friendList);
-        }
-        fetchData();
-    },[]);
-    
     useEffect(() => {
         const fetchData = async () => {
             const temp = [];
-    
-            for (let i = 0; i < myFriendList.length; i++) {
-                const friendUid = myFriendList[i];
+            setNotYetInvited(eventData.notYetInvited);
+
+            setAlreadyInvited(eventData.alreadyInvited);
+
+            for (let i = 0; i < notYetInvited.length; i++) {
+                const friendUid = notYetInvited[i];
 
                 const docPromise = getDoc(doc(db, "users", friendUid));
     
@@ -49,13 +42,48 @@ export default function ChooseParticipants({navigation, route}) {
                 
                 temp.push(object);
             }
-    
+            
             setFriendData(temp);
             setIsLoading(false);
         };
+        fetchData();
+    }, [notYetInvited]);
+
+    //displaying already invited
+    useEffect(() => {
+        const fetchData = async () => {
+            const temp = [];
+    
+            for (let i = 0; i < alreadyInvited.length; i++) {
+                const friendUid = alreadyInvited[i];
+                const storageRef = ref(storage, 'Profile Pictures');
+                const fileName = friendUid;
+                const fileRef = ref(storageRef, fileName);
+    
+                const urlPromise = getDownloadURL(fileRef);
+                const docPromise = getDoc(doc(db, "users", friendUid));
+    
+                const [url, docSnapshot] = await Promise.all([urlPromise, docPromise]);
+    
+                const friendData = docSnapshot.data();
+                const friendUsername = friendData.username;
+                const friendName = friendData.name;
+                
+                const object = {
+                    username: friendUsername,
+                    name: friendName,
+                    image: url,
+                    key: i,
+                };
+                
+                temp.push(object);
+            }
+    
+            setParticipants(temp);
+        };
     
         fetchData();
-    }, [myFriendList]);
+    }, [alreadyInvited]);
 
     if (isLoading) {
         return (
@@ -65,71 +93,16 @@ export default function ChooseParticipants({navigation, route}) {
         );
     }
 
-    const updateMyEvents = async (eventID) => {
-        const myID = authentication.currentUser.uid;
-        const myPromise = getDoc(doc(db, 'users', myID));
-        const [myDocSnapshot] = await Promise.all([myPromise]);
-        
-        const myData = myDocSnapshot.data();
-        const currentMyEvents = myData.myEvents;
-        const newMyEvents = [...currentMyEvents, eventID];
-
-        const myRef = doc(db, 'users', myID);
-        setDoc(myRef, {
-            myEvents: newMyEvents,
-        }, { merge: true });
-    }
-
-    const updateMyUpcomingEvents = async (eventID) => {
-        const myID = authentication.currentUser.uid;
-        const myPromise = getDoc(doc(db, 'users', myID));
-        const [myDocSnapshot] = await Promise.all([myPromise]);
-        
-        const myData = myDocSnapshot.data();
-        const currentupcomingEvents = myData.upcomingEvents;
-        const newupcomingEvents = [...currentupcomingEvents, eventID];
-
-        const myRef = doc(db, 'users', myID);
-        setDoc(myRef, {
-            upcomingEvents: newupcomingEvents,
-        }, { merge: true });
-    }
-
-    const next = async () => {
-        const {eventData} = route.params;
-        const generatedUUID = uuid();
-        const eventID = generatedUUID;
-        const collectionRef = collection(db, 'events');
-        const hostID = authentication.currentUser.uid;
-        const newDocumentRef = doc(collectionRef, generatedUUID); 
-
-        setDoc(newDocumentRef, {
-            name: eventData.name,
-            category: eventData.category,
-            location: eventData.location,
-            date: eventData.date,
-            time: eventData.time,
-            hostID: hostID,
-            eventID: eventID,
-            description: eventData.description,
-            invitationList: [],
-            participants: [],
-          })
-          .catch((error) => {
-            console.log('Error creating event:', error);
-          });
-
-        //sending invitations by adding eventID to eventInvitations property of users
+    const update = async () => {
+        //update user event invitiation list
         for (let i = 0; i < invitationList.length; i++) {
-            
             const userID = invitationList[i];
             const myUserPromise = getDoc(doc(db, 'users', userID));
             const [userDocSnapshot] = await Promise.all([myUserPromise]);
 
             const userData = userDocSnapshot.data();
             const currentEventInvitationList = userData.eventInvitations;
-            const newEventsInvitationList = [...currentEventInvitationList, eventID]
-            
+            const newEventsInvitationList = [...currentEventInvitationList, eventData.eventID]
             
             const userRef = doc(db, 'users', userID);
 
@@ -138,17 +111,15 @@ export default function ChooseParticipants({navigation, route}) {
             }, { merge: true });
         }
 
-        //setting events invited list
-        const eventRef = doc(db, 'events', eventID);
+        //update event invitation list
+        const currentInvitedlist = [...alreadyInvited, ...invitationList];
+
+        const eventRef = doc(db, 'events', eventData.eventID);
         setDoc(eventRef, {
-            invitationList: invitationList,
+            invitationList: currentInvitedlist,
         }, { merge: true });
 
-        //adding eventID to myEvents property
-        updateMyEvents(eventID);
-        updateMyUpcomingEvents(eventID);
-        
-        navigation.navigate("Home");
+        navigation.navigate('EditEvent', {eventID: eventData.eventID});
     }
     
     return (
@@ -160,11 +131,10 @@ export default function ChooseParticipants({navigation, route}) {
     
             <ScrollView
                 contentContainerStyle = {styles.container}>
-                <StatusBar style="auto"/>
 
             
             <View style = {styles.inputContainer}> 
-                <Text style = {styles.title}>Choose Participants</Text>
+                <Text style = {styles.title}>Update Participants</Text>
                 
                 <MultipleSelectList
                     arrowicon={
@@ -183,17 +153,31 @@ export default function ChooseParticipants({navigation, route}) {
                     alignItems= 'center'
                     save="key"/>
 
+                <Text style = {styles.text}>Already Invited</Text>
+                <View style={styles.line} /> 
+                
+                <FlatList
+                  scrollEnabled = {false} 
+                  data = {participants}
+                  renderItem= {({item}) => (
+                      <FriendBoxForPopUp
+                          image = {item.image}
+                          username = {item.username}
+                          name = {item.name}    
+                      />
+                  )}/>
+
             </View>
 
             <View style = {styles.buttonContainer}>
-            <CustomButton text = 'Send Invitation' 
-                            buttonColor = '#39A5BD'
+            <CustomButton text = 'Update' 
+                            buttonColor = '#2F2E2F' 
                             textColor = 'white'
                             cornerRadius= {10} 
                             width = {320}
                             height = {45}
                             fontSize= {18}
-                            onPress = {next}
+                            onPress = {update}
                             ></CustomButton>
             </View>
 
@@ -260,5 +244,26 @@ const styles = StyleSheet.create({
     buttonContainer: {
         position: 'absolute',
         bottom: 80,
+    },
+    text: {
+        fontFamily: "Nunito-Sans-Bold",
+        textAlign: 'left',
+        color: '#2F2E2F',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop: 60,
+        marginBottom: 10,
+        marginLeft: 5,
+        alignSelf: 'flex-start'
+    },
+    line: {
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 3,
+        marginBottom: 10,
+        backgroundColor: '#39A5BD',
+        elevation: 3, // Adjust the elevation value as needed
     },
 })
