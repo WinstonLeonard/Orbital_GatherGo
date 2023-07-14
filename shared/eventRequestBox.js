@@ -42,16 +42,19 @@ export default function EventRequestBox({ name, category, location, date, time, 
 
 
     const styles = StyleSheet.create({
+        container: {
+            marginLeft: 22,
+        },
         friendContainer: {
             flexDirection: 'row',
             alignSelf: 'flex-start',
             marginLeft: 10,
             marginTop: 10,
-            width: 370,
+            width: 330,
             height: 110,
             alignContent: 'center',
             backgroundColor: '#DEF5FF',
-            borderRadius: 10,
+            borderRadius: 15,
             // borderColor: 'black',
             // borderWidth: 2,
         }, 
@@ -90,7 +93,7 @@ export default function EventRequestBox({ name, category, location, date, time, 
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            left: 240,
+            left: 200,
             top: 25,
         },
         buttonStyle: {
@@ -105,7 +108,7 @@ export default function EventRequestBox({ name, category, location, date, time, 
     })
     
     return (
-        <TouchableOpacity onPress = {openModal}>
+        <TouchableOpacity onPress = {openModal} style = {styles.container}>
         <EventRequestPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} acceptHandler = {newAcceptHandler} rejectHandler = {newRejectHandler}/>
         <View style = {styles.friendContainer}>
 

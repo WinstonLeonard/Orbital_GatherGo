@@ -178,4 +178,7 @@ const styles = StyleSheet.create({
         marginBottom: 250,
 
     },
+    inputContainer: {
+        flex: 1,
+    }
 })

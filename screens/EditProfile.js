@@ -55,6 +55,12 @@ export default function EditProfile({navigation}) {
     }
 
     useEffect(() => {
+        navigation.setOptions({
+          headerTintColor: 'white', // Set your desired color here
+        });
+    }, []);
+
+    useEffect(() => {
         async function getProfilePic() {
             const storageRef = ref(storage, 'Profile Pictures');
             const fileName = authentication.currentUser.uid;
@@ -265,7 +271,8 @@ export default function EditProfile({navigation}) {
                     <Text> </Text>
                 }
                 inputStyles = {styles.selectListInput}
-                boxStyles= {styles.selectListBox}
+                boxStyles = {styles.selectListBox}
+                dropdownStyles = {styles.dropdown}
                 maxHeight = {130}
                 search = {false} 
                 setSelected={(val) => setGender(val)} 
@@ -275,15 +282,17 @@ export default function EditProfile({navigation}) {
                 save="value"/>
             {/* </View> */}
         </View>
-
+        
+        <View style = {styles.buttonContainer}>
         <CustomButton text = 'Update' 
                           buttonColor = 'black' 
                           textColor = 'white'
                           cornerRadius= {10} 
-                          width = {285}
+                          width = {330}
                           height = {40}
                           fontSize = {16}
                           onPress = {update}></CustomButton>
+        </View>
 
         </ScrollView>
         </KeyboardAvoidingView>
@@ -348,11 +357,10 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: 330,
         height: 40,
-        borderWidth: 1,
-        borderColor: '#A9A9A9',
         borderRadius: 10,
         alignItems: 'flex-start',
         justifyContent: 'center',
+        backgroundColor: '#EDF2FB',
     },
     textInput: {
         fontFamily: 'Popins',
@@ -379,9 +387,37 @@ const styles = StyleSheet.create({
     selectListBox: {
         width: 330,
         height: 40,
-        borderColor: '#A9A9A9',
         //alignItems: 'flex-start',
         justifyContent: 'flex-start',
         fontFamily: 'Popins',
+        backgroundColor: '#EDF2FB',
+        borderColor: '#EDF2FB',
+    },
+    dropdown: {
+        textAlign: 'left',
+        fontFamily: "Nunito-Sans-Bold",
+        backgroundColor: 'white',
+        borderColor: 'white',
+        borderRadius: 10,
+        marginTop: 15,
+        marginBottom: 10,
+        ...Platform.select({
+            android: {
+                elevation: 4,
+            },
+            ios: {
+                shadowOpacity: 0.3, 
+                shadowRadius: 5,
+            }
+        }),
+        shadowOffset: {
+            width: 2, 
+            height: 4,
+        },
+        paddingHorizontal: 10,
+    },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 60,
     },
   });

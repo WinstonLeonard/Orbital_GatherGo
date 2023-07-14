@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         //borderColor: 'black',
-        borderWidth: 2.5,
+        //borderWidth: 2.5,
         //borderRadius: 1000, 
     },
     nameContainer: {
