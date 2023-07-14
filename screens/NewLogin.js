@@ -4,6 +4,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../shared/button';
 import { authentication } from '../firebase/firebase-config';
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { StatusBar } from "expo-status-bar";
+
 
 
 export default function NewLogin({navigation}) {
@@ -45,6 +47,7 @@ export default function NewLogin({navigation}) {
           
           <ScrollView
                 contentContainerStyle = {styles.container}>
+                <StatusBar style="auto"/>
             
             <View style = {styles.imageContainer}>
             <Image source = {require('../assets/pictures/GatherGoWhiteBG.png')}

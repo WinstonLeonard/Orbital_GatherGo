@@ -9,6 +9,8 @@ import CustomButton from '../shared/button';
 import { SelectList } from 'react-native-dropdown-select-list'
 import moment from 'moment';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { StatusBar } from "expo-status-bar";
+
 
 
 
@@ -207,6 +209,7 @@ export default function EditProfile({navigation}) {
         keyboardVerticalOffset = {-600}
         behavior = "padding">
       <ScrollView contentContainerStyle = {styles.container}>
+      <StatusBar style="auto"/>
         <View style = {styles.twoColorContainer}>
             <ImageBackground source= {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsplit%20background.png?alt=media&token=9b5d486d-4e2c-43d6-b72f-cd4110d9dbea'}}
                              resizeMode = 'cover' 

@@ -6,6 +6,7 @@ import { authentication, db } from '../firebase/firebase-config';
 import { LogBox } from 'react-native';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { storage } from '../firebase/firebase-config';
+import { StatusBar } from "expo-status-bar";
 
 
 
@@ -94,7 +95,7 @@ export default function Uploadpfp({navigation}) {
             keyboardVerticalOffset = {-400}
             behavior = "padding">
         <View style = {styles.container}>
-
+        <StatusBar style="auto"/>
 
             <Text style = {styles.header}> Upload a profile picture </Text>
 

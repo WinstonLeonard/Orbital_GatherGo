@@ -41,7 +41,12 @@
       "package": "com.winstonleonard.FirebaseAuth",
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDYkTil3rT3c7HzA2_-2gd71zzUeQY2av0"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

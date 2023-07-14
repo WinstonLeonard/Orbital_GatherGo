@@ -108,8 +108,16 @@ export default function EventRequestBox({ name, category, location, date, time, 
     })
     
     return (
-        <TouchableOpacity onPress = {openModal} style = {styles.container}>
-        <EventRequestPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} acceptHandler = {newAcceptHandler} rejectHandler = {newRejectHandler}/>
+        <TouchableOpacity onPress = {openModal}>
+            {
+                modalVisible == true ?
+                <>
+                <EventRequestPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} acceptHandler = {newAcceptHandler} rejectHandler = {newRejectHandler}/>
+                </>
+                : null
+            }
+        {/* <EventRequestPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} acceptHandler = {newAcceptHandler} rejectHandler = {newRejectHandler}/> */}
+
         <View style = {styles.friendContainer}>
 
         <View style = {styles.pfpContainer}>

@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image } fro
 import CustomButton from '../shared/button';
 import { authentication } from '../firebase/firebase-config';
 import { onAuthStateChanged } from "firebase/auth";
+import { StatusBar } from "expo-status-bar";
+
 
 export default function Welcome({navigation}) {
     const pressHandler = () => {
@@ -24,7 +26,7 @@ export default function Welcome({navigation}) {
     
     return (
         <View style = {styles.container}>
-
+            <StatusBar style="auto"/>
             <Text style = {styles.titleFont}> Ready to start gathering? </Text>
 
             <View style = {styles.imageContainer}>

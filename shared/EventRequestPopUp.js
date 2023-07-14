@@ -29,6 +29,10 @@ export default function EventRequestPopUp({ modalVisible, closeModal, eventID, a
         }
     }
 
+    useEffect(()=> {
+      console.log('pop up loaded');
+    }, []);
+
     useEffect(() => {
         async function fetchEventData() {
           if (eventID == 'GLOBAL') {

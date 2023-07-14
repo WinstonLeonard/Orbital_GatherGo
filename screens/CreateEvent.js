@@ -5,7 +5,9 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from "expo-status-bar";
+
 
 //import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
@@ -94,6 +96,7 @@ export default function CreateEvent({navigation}) {
     
             <ScrollView
                 contentContainerStyle = {styles.container}>
+                <StatusBar style="auto"/>
 
             
             <View style = {styles.formContainer}> 

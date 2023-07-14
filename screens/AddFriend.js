@@ -7,6 +7,7 @@ import { storage } from '../firebase/firebase-config';
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import FriendRequestBox from '../shared/friendRequestBox';
 import { reauthenticateWithCredential } from 'firebase/auth';
+import { StatusBar } from "expo-status-bar";
 
 
 
@@ -209,6 +210,7 @@ export default function AddFriend({navigation}) {
             keyboardVerticalOffset = {-400}
             behavior = "padding">
         <View style = {styles.container}>
+        <StatusBar style="auto"/>
 
 
             <Text style = {styles.header}> Add friends by their username </Text>

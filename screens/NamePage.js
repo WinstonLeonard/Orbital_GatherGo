@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, Ale
 import CustomButton from '../shared/button';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, addDoc, doc, setDoc} from "firebase/firestore"; 
+import { StatusBar } from "expo-status-bar";
+
 
 export default function NamePage({navigation}) {
 
@@ -58,7 +60,7 @@ export default function NamePage({navigation}) {
             keyboardVerticalOffset = {-400}
             behavior = "padding">
         <View style = {styles.container}>
-
+        <StatusBar style="auto"/>
 
             <Text style = {styles.header}> What's your name? </Text>
 

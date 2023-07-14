@@ -8,6 +8,8 @@ import { ref, getDownloadURL  } from "firebase/storage";
 import { Avatar, Bubble, SystemMessage, Message, MessageText, Time } from 'react-native-gifted-chat';
 import moment from 'moment';
 import EventPopUp from './EventPopup';
+import { StatusBar } from "expo-status-bar";
+
 
 export default function GroupChat({eventID, navigation}) {
   const [messages, setMessages] = useState([]);
@@ -279,6 +281,7 @@ useEffect(() => {
 
     return (
       <View style={styles.container}>
+        <StatusBar style="auto"/>
         <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
         <View style = {styles.headerContainer}>
           

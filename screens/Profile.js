@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons'; 
 import { signOut } from "firebase/auth";
+import { StatusBar } from "expo-status-bar";
 
 
 
@@ -62,7 +63,7 @@ export default function Profile({navigation}) {
     return (
 
         <View style = {styles.container}>
-
+            <StatusBar style="auto"/>
             <View style = {styles.titleContainer}> 
                 <Text style = {styles.title}> My Profile</Text>
             </View>
