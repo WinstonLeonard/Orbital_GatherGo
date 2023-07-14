@@ -5,7 +5,7 @@ import { authentication, db } from '../firebase/firebase-config';
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import GroupChat from '../shared/groupChat';
 import { useFocusEffect } from '@react-navigation/native';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Inbox({navigation}) {
 
@@ -21,7 +21,6 @@ export default function Inbox({navigation}) {
 
     const incomingInvitationHandler = () => {
         navigation.navigate('EventInvitations');
-        console.log(upcomingEvents);
     }
     
 

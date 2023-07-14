@@ -3,7 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, Scrol
 import EventPopUp from './EventPopup';
 import DeleteMyEventPopUp from './DeleteMyEventPopUp';
 
-export default function UpcomingEventsBox({ name, category, location, date, time, eventID, navigation}) {
+
+export default function UpcomingEventsBox({ name, category, location, date, time, eventID, navigation, deleteFunction}) {
+
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
 
@@ -104,7 +106,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
         return (
             <TouchableOpacity onPress = {openModal}>
             <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
-            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} deleteFunction = {deleteFunction} />
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
@@ -145,7 +147,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
     } else {
         return (
             <TouchableOpacity onPress = {openModal}>
-            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <DeleteMyEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} deleteFunction = {deleteFunction} />
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>

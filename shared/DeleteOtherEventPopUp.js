@@ -7,7 +7,12 @@ import { storage } from '../firebase/firebase-config';
 import FriendBoxForPopUp from './FriendBoxForPopUp';
 import CustomButton from './button';
 
-export default function DeleteOtherEventPopUp({ modalVisible, closeModal, eventID, acceptHandler, rejectHandler }) {
+export default function DeleteOtherEventPopUp({ modalVisible, closeModal, eventID, deleteFunction }) {
+
+  const deleteHandler = () => {
+    deleteFunction(eventID);
+    closeModal();
+  }
 
     return (
         <Modal visible={modalVisible} onRequestClose={closeModal} transparent = {true} animationType='fade'>
@@ -53,7 +58,7 @@ export default function DeleteOtherEventPopUp({ modalVisible, closeModal, eventI
                           width = {130}
                           height = {45}
                           fontSize = {16}
-                          onPress = {closeModal}></CustomButton>
+                          onPress = {deleteHandler}></CustomButton>
 
             </View>
 

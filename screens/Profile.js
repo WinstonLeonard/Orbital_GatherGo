@@ -7,6 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons'; 
+import { signOut } from "firebase/auth";
 
 
 
@@ -20,6 +21,14 @@ export default function Profile({navigation}) {
 
     const friendsHandler = () => {
         navigation.navigate('Friends');
+    }
+
+    const logoutHandler = () => {
+        signOut(authentication).then(() => {
+            //signed out
+        }).catch((error) => {
+
+        });
     }
 
     useEffect(() => {
@@ -103,7 +112,7 @@ export default function Profile({navigation}) {
             </View>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {logoutHandler}>
             <View style = {styles.button}>
             <View style = {styles.iconContainer}>
             <Entypo name="log-out" size={32} color="black" />

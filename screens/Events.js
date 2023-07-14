@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
 import CustomButton from '../shared/button';
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { authentication, db } from '../firebase/firebase-config';
 import UpcomingEventsBox from '../shared/upcomingEventsBox';
 import { useFocusEffect } from '@react-navigation/native';
@@ -23,6 +23,118 @@ export default function Events({navigation}) {
     const [filteredMyEvents, setFilteredMyEvents] = useState([]);
     const [filteredOtherEvents, setFilteredOtherEvents] = useState([]);
     const [isSearchActive, setIsSearchActive] = useState(false);
+
+    function deleteMyEvent(eventID, host, eventParticipants, pendingInvites) {
+        //Deletes the event from the creator's myEvents array and upcomingEvents array inside firestore
+        async function deleteEventFromHost() {
+            const docRef = doc(db, "users", host);
+            const docSnap = await getDoc(docRef);
+        
+            const data = docSnap.data();
+            const hostMyEvents = data.myEvents;
+            const hostUpcomingEvents = data.upcomingEvents;
+        
+            const updatedHostMyEvents = hostMyEvents.filter(item => item != eventID);
+            const updatedHostUpcomingEvents = hostUpcomingEvents.filter(item => item != eventID);
+
+            setDoc(docRef, {
+              myEvents: updatedHostMyEvents,
+            }, { merge: true });
+        
+            setDoc(docRef, {
+              upcomingEvents: updatedHostUpcomingEvents,
+            }, { merge: true });
+
+            setMyEvents(updatedHostMyEvents);
+        }
+
+        //deletes the event from all the participants' upcomingEvents inside firestore
+        async function deleteEventFromParticipants() {
+            console.log(eventParticipants);
+            for (let i = 0; i < eventParticipants.length; i++) {
+                const participant = eventParticipants[i];
+                const docRef = doc(db, "users", participant);
+                const docSnap = await getDoc(docRef);
+        
+                const data = docSnap.data();
+                const participantUpcomingEvents = data.upcomingEvents;
+                const updatedParticipantUpcomingEvents = participantUpcomingEvents.filter(item => item != eventID);
+                
+                setDoc(docRef, {
+                    upcomingEvents: updatedParticipantUpcomingEvents,
+                }, { merge: true });
+            }
+        }
+
+        //deletes the event from a user's eventInvitations if they have not accepted it yet. 
+        async function deleteEventFromPendingInvites() {
+            console.log(pendingInvites);
+            for (let i = 0; i < pendingInvites.length; i++) {
+                const pendingInvitee = pendingInvites[i];
+                const docRef = doc(db, "users", pendingInvitee);
+                const docSnap = await getDoc(docRef)
+
+                const data = docSnap.data();
+                const pendingEventInvitations = data.eventInvitations;
+                const updatedPendingEventInvitations = pendingEventInvitations.filter(item => item != eventID);
+
+                setDoc(docRef, {
+                    eventInvitations: updatedPendingEventInvitations,
+                }, { merge: true });
+            }
+        }
+
+        // event itself is deleted inside firestore
+        async function deleteEventItself() {
+            const docRef = doc(collection(db, "events"), eventID);
+            deleteDoc(docRef)
+            .then(() => {
+                console.log(eventID + " successfully deleted!");
+            })
+        }
+
+        deleteEventFromHost();
+        deleteEventFromParticipants();
+        deleteEventFromPendingInvites();
+        deleteEventItself();
+    }
+
+    function deleteOtherEvent(eventID) {
+        //Deletes the event from the user's upcoming events
+        async function deleteFromUpcomingEvents() {
+            const user = authentication.currentUser.uid;
+            const docRef = doc(db, "users", user);
+            const docSnap = await getDoc(docRef)
+
+            const data = docSnap.data();
+            const userUpcomingEvents = data.upcomingEvents;
+            const userMyEvents = data.myEvents;
+            const updatedUserUpcomingEvents = userUpcomingEvents.filter(item => item != eventID);
+            const otherEvents = updatedUserUpcomingEvents.filter(item => !userMyEvents.includes(item));
+            setOtherEvents(otherEvents);
+            setDoc(docRef, {
+                upcomingEvents: updatedUserUpcomingEvents,
+            }, { merge: true });
+        }
+        //Deletes the user from the event's participants in firestore    
+        async function deleteUserFromParticipants() {
+            const user = authentication.currentUser.uid;
+            const docRef = doc(db, "events", eventID);
+            const docSnap = await getDoc(docRef);
+
+            const data = docSnap.data();
+            const eventParticipants = data.participants;
+            const eventInvitationList = data.invitationList;
+            const updatedEventParticipants = eventParticipants.filter(item => item != user);
+            const updatedEventInvitationList = eventInvitationList.filter(item => item != user);
+            setDoc(docRef, {
+                participants: updatedEventParticipants,
+                invitationList: updatedEventInvitationList,
+            }, { merge: true });
+        }
+        deleteFromUpcomingEvents();
+        deleteUserFromParticipants();
+    } 
 
     const ToggleMyEvents = () => {
         const handlePressIn = () => {
@@ -226,6 +338,7 @@ export default function Events({navigation}) {
                         time={item.time}
                         eventID={item.eventID}
                         navigation={navigation}
+                        deleteFunction={deleteMyEvent}
                     />    
                     )}
                 />
@@ -276,6 +389,7 @@ export default function Events({navigation}) {
                             date = {item.date}
                             time = {item.time}
                             eventID = {item.eventID}
+                            deleteFunction = {deleteOtherEvent}
                         />    
                 )}/>
                 )}

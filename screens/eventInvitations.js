@@ -130,13 +130,7 @@ export default function EventInvitations({navigation}) {
         );
     }
 
-    return(
-        <KeyboardAvoidingView 
-        style = {styles.keyboardAvoidContainer}
-        enableOnAndroid = {true}
-        keyboardVerticalOffset = {-400}
-        behavior = "padding">
-            
+    return( 
         <View style = {styles.container}>
             <Text style = {styles.title}>Event Invitations</Text>
             
@@ -160,17 +154,12 @@ export default function EventInvitations({navigation}) {
             
             </View>
         </View>
-
-        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
-    keyboardAvoidContainer: {
-        flex: 1,
-    },
     container: {
-        flexGrow: 1,
+        flex: 1,
         alignItems: 'flex-start',
         backgroundColor: 'white',
     },

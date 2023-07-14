@@ -3,7 +3,7 @@ import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import EventPopUp from './EventPopup';
 import DeleteOtherEventPopUp from './DeleteOtherEventPopUp';
 
-export default function OtherEventsBox({ name, category, location, date, time, eventID}) {
+export default function OtherEventsBox({ name, category, location, date, time, eventID, deleteFunction}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
 
@@ -104,7 +104,7 @@ export default function OtherEventsBox({ name, category, location, date, time, e
     if (modalVisible) {
         return (
             <TouchableOpacity onPress = {openModal}>
-            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} deleteFunction = {deleteFunction} />
             <EventPopUp modalVisible={modalVisible} closeModal={closeModal} eventID = {eventID} />
             <View style = {styles.friendContainer}>
     
@@ -137,7 +137,7 @@ export default function OtherEventsBox({ name, category, location, date, time, e
     } else {
         return (
             <TouchableOpacity onPress = {openModal}>
-            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} />
+            <DeleteOtherEventPopUp modalVisible={deleteEventModalVisible} closeModal = {closeDeleteEventModal} eventID={eventID} deleteFunction = {deleteFunction}/>
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
