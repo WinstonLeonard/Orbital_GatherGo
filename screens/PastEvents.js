@@ -11,7 +11,7 @@ import { StatusBar } from "expo-status-bar";
 
 
 
-export default function Events({navigation}) {
+export default function PastEvents({navigation}) {
 
     const [data, setData] = useState([]);
     const [myEventsPressed, setMyEventsPressed] = useState(true);
@@ -244,14 +244,14 @@ export default function Events({navigation}) {
                     time : eventTime,
                     eventID: eventID,
                 };
-
+                
                 const currentDate = new Date();
                 const dateString = object.date;
                 const timeString = object.time;
                 const [day, month, year] = dateString.split('/');
                 const [hours, minutes] = timeString.split(':');
                 const dateObject = new Date(year, month - 1, day, hours, minutes);
-                if (dateObject > currentDate) {
+                if (dateObject <= currentDate) {
                     temp.push(object);
                 }
             }
@@ -293,7 +293,7 @@ export default function Events({navigation}) {
                 const [day, month, year] = dateString.split('/');
                 const [hours, minutes] = timeString.split(':');
                 const dateObject = new Date(year, month - 1, day, hours, minutes);
-                if (dateObject > currentDate) {
+                if (dateObject <= currentDate) {
                     temp.push(object);
                 }
             }
@@ -340,11 +340,22 @@ export default function Events({navigation}) {
             </View>
             <View style={styles.eventsContainer}> 
                 {data.length === 0 ? (
-                <Text style={styles.noEventsText}>No Events Hosted</Text>
+                <Text style={styles.noEventsText}>No Records of Events Hosted</Text>
                 ) : (
                 <FlatList
                     data={
                     data
+                    // .filter(item => {
+                    //     const currentDate = new Date();
+                    //     const dateString = item.date;
+                    //     const timeString = item.time;
+                    //     const [day, month, year] = dateString.split('/');
+                    //     const [hours, minutes] = timeString.split(':');
+                    //     const dateObject = new Date(year, month - 1, day, hours, minutes);
+                    //     if (dateObject > currentDate) {
+                    //         return item;
+                    //     }
+                    // })
                     .sort((a, b) => {
                     const dateComparison = a.date.localeCompare(b.date);
                     if (dateComparison !== 0) {
@@ -393,11 +404,22 @@ export default function Events({navigation}) {
                 </View>
                 <View style = {styles.eventsContainer}> 
                     {data.length === 0 ? (
-                    <Text style={styles.noEventsText}>No Upcoming Events</Text>
+                    <Text style={styles.noEventsText}>No Records of Upcoming Events</Text>
                     ) : (
                     <FlatList
                         data={
-                        data   
+                        data
+                        // .filter(item => {
+                        //     const currentDate = new Date();
+                        //     const dateString = item.date;
+                        //     const timeString = item.time;
+                        //     const [day, month, year] = dateString.split('/');
+                        //     const [hours, minutes] = timeString.split(':');
+                        //     const dateObject = new Date(year, month - 1, day, hours, minutes);
+                        //     if (dateObject > currentDate) {
+                        //         return item;
+                        //     }
+                        // })    
                         .sort((a, b) => {
                         const dateComparison = a.date.localeCompare(b.date);
                     
@@ -452,7 +474,8 @@ const styles = StyleSheet.create({
     },
     eventsContainer: {
         width: '100%',
-        height: 480,
+        height: 530,
+        //backgroundColor: 'red',
     },
     input: {
         alignItems: 'center',

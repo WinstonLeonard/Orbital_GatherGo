@@ -20,6 +20,7 @@ import EventInvitations from '../screens/eventInvitations.js';
 import EditEvent from '../screens/EditEvent.js';
 import UpdateParticipants from '../screens/UpdateParticipants.js';
 import Nearby from '../screens/Nearby.js';
+import PastEvents from '../screens/PastEvents.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -139,6 +140,12 @@ export default function HomeStack () {
            <Stack.Screen     
                 name = "Nearby"
                 component = {Nearby}
+                options = {{
+                headerShown: false}}></Stack.Screen>
+
+            <Stack.Screen     
+                name = "PastEvents"
+                component = {PastEvents}
                 options = {{
                 headerShown: false}}></Stack.Screen>
 

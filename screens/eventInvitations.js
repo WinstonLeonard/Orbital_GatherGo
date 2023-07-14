@@ -162,7 +162,7 @@ export default function EventInvitations({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'flex-start',
+        alignItems: 'center',
         backgroundColor: 'white',
     },
     title: {
@@ -182,5 +182,6 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         flex: 1,
+        alignItems: 'center',
     }
 })
