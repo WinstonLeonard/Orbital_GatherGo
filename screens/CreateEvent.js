@@ -189,7 +189,7 @@ export default function CreateEvent({navigation}) {
 
             <View style = {styles.buttonContainer}>
             <CustomButton text = 'Choose Participants' 
-                            buttonColor = '#2F2E2F' 
+                buttonColor = '#39A5BD' 
                             textColor = 'white'
                             cornerRadius= {10} 
                             width = {320}

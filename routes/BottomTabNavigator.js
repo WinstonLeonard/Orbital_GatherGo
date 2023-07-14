@@ -125,7 +125,7 @@ function BottomTabNavigator({navigation}) {
         backgroundColor: '#39A5BD',
         ...Platform.select({
             android: {
-                bottom: 50,
+                bottom: 50wkwk,
             },
             ios: {
                 bottom: 80,

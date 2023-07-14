@@ -184,7 +184,7 @@ export default function ChooseParticipants({navigation, route}) {
 
             <View style = {styles.buttonContainer}>
             <CustomButton text = 'Send Invitation' 
-                            buttonColor = '#2F2E2F' 
+                            buttonColor = '#39A5BD'
                             textColor = 'white'
                             cornerRadius= {10} 
                             width = {320}
