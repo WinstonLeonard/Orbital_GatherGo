@@ -345,27 +345,26 @@ export default function PastEvents({navigation}) {
                 <FlatList
                     data={
                     data
-                    // .filter(item => {
-                    //     const currentDate = new Date();
-                    //     const dateString = item.date;
-                    //     const timeString = item.time;
-                    //     const [day, month, year] = dateString.split('/');
-                    //     const [hours, minutes] = timeString.split(':');
-                    //     const dateObject = new Date(year, month - 1, day, hours, minutes);
-                    //     if (dateObject > currentDate) {
-                    //         return item;
-                    //     }
-                    // })
                     .sort((a, b) => {
-                    const dateComparison = a.date.localeCompare(b.date);
-                    if (dateComparison !== 0) {
-                        return dateComparison;
-                    } else {
-                        const timeA = new Date(`1970-01-01T${a.time}`);
-                        const timeB = new Date(`1970-01-01T${b.time}`);
-                        return timeA - timeB;
-                    }
-                    })}
+                        function formatDate(stringDate, stringTime) {
+                            const dateString = stringDate;
+                            const timeString = stringTime;
+                            const [day, month, year] = dateString.split('/');
+                            const [hours, minutes] = timeString.split(':');
+                            const dateObject = new Date(year, month - 1, day, hours, minutes);
+                            return dateObject;
+                        }
+                        const dateA = formatDate(a.date, a.time);
+                        const dateB = formatDate(b.date, b.time);
+
+                        if (dateA < dateB) {
+                            return -1
+                        } else if (dateB > dateA) {
+                            return 1;
+                        } else if (dateA == dateB) {
+                            return 0;
+                        }
+                        })}
                     renderItem={({item}) => (
                     <UpcomingEventsBox
                         name={item.name}
@@ -408,30 +407,27 @@ export default function PastEvents({navigation}) {
                     ) : (
                     <FlatList
                         data={
-                        data
-                        // .filter(item => {
-                        //     const currentDate = new Date();
-                        //     const dateString = item.date;
-                        //     const timeString = item.time;
-                        //     const [day, month, year] = dateString.split('/');
-                        //     const [hours, minutes] = timeString.split(':');
-                        //     const dateObject = new Date(year, month - 1, day, hours, minutes);
-                        //     if (dateObject > currentDate) {
-                        //         return item;
-                        //     }
-                        // })    
+                        data   
                         .sort((a, b) => {
-                        const dateComparison = a.date.localeCompare(b.date);
-                    
-                        if (dateComparison !== 0) {
-                          return dateComparison;
-                        } else {
-                          const timeA = new Date(`1970-01-01T${a.time}`);
-                          const timeB = new Date(`1970-01-01T${b.time}`);
-                          
-                          return timeA - timeB;
-                        }
-                        })}
+                            function formatDate(stringDate, stringTime) {
+                                const dateString = stringDate;
+                                const timeString = stringTime;
+                                const [day, month, year] = dateString.split('/');
+                                const [hours, minutes] = timeString.split(':');
+                                const dateObject = new Date(year, month - 1, day, hours, minutes);
+                                return dateObject;
+                            }
+                            const dateA = formatDate(a.date, a.time);
+                            const dateB = formatDate(b.date, b.time);
+    
+                            if (dateA < dateB) {
+                                return -1
+                            } else if (dateB > dateA) {
+                                return 1;
+                            } else if (dateA == dateB) {
+                                return 0;
+                            }
+                            })}
                         renderItem= {({item}) => (
                         <OtherEventsBox
                             name = {item.name}
