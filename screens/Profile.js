@@ -24,6 +24,10 @@ export default function Profile({navigation}) {
         navigation.navigate('Friends');
     }
 
+    const pastEventsHandler = () => {
+        navigation.navigate('PastEvents');
+    }
+
     const logoutHandler = () => {
         signOut(authentication).then(() => {
             //signed out
@@ -102,7 +106,7 @@ export default function Profile({navigation}) {
             </View>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {pastEventsHandler}>
             <View style = {styles.button}>
             <View style = {styles.iconContainer}>
             <Image source = {require('../assets/pictures/history.png')}

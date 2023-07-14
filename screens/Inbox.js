@@ -21,6 +21,8 @@ export default function Inbox({navigation}) {
 
     const [isSearchActive, setIsSearchActive] = useState(false);
 
+    const [refreshKey, setRefreshKey] = useState(0);
+    
     const incomingInvitationHandler = () => {
         navigation.navigate('EventInvitations');
     }
@@ -35,6 +37,7 @@ export default function Inbox({navigation}) {
 
     useFocusEffect(
         React.useCallback(() => {
+            setRefreshKey(prevKey => prevKey + 1);
             async function fetchUpcomingEvents() {
                 const myDocID = authentication.currentUser.uid;
                 const myDocRef = doc(db, "users", myDocID);
@@ -103,13 +106,12 @@ export default function Inbox({navigation}) {
                 eventID = {'GLOBAL'} />
 
             <FlatList
-            //data = {upcomingEvents}
-            //data = {filteredEvents}
             data = {data}
             renderItem= {({item}) => (
                 <GroupChatContainer
+                    key={refreshKey}
                     navigation = {navigation}
-                    eventID = {item.eventID}   
+                    eventID = {item.eventID}  
                 />
             )}
             />

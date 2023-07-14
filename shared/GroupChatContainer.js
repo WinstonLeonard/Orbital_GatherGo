@@ -35,7 +35,7 @@ export default function GroupChatContainer({navigation, eventID}) {
                
         }
         getUsername();
-      }, []);
+      }, [eventID]);
 
     useEffect(() => {
         async function fetchEventData() {
@@ -57,7 +57,7 @@ export default function GroupChatContainer({navigation, eventID}) {
             }
         };
         fetchEventData();
-    }, []);
+    }, [eventID]);
 
     useLayoutEffect(() => {
         // const eventID = 'eventID';
@@ -79,7 +79,7 @@ export default function GroupChatContainer({navigation, eventID}) {
         });
       
         unsubscribe;
-      }, []);
+      }, [eventID]);
 
       useEffect(() => {
         if (!lastMessage) {

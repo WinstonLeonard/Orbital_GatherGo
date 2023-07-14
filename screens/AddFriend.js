@@ -197,6 +197,7 @@ export default function AddFriend({navigation}) {
     if (isLoading) {
         return (
           <View style={styles.loadingContainer}>
+            <StatusBar style="auto"/>
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         );
