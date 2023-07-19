@@ -94,7 +94,7 @@ export default function EventRequestBox({ name, category, location, date, time, 
             alignItems: 'center',
             justifyContent: 'flex-end',
             left: 200,
-            top: 25,
+            top: 35,
         },
         buttonStyle: {
             width: 50,
