@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { authentication, db } from '../firebase/firebase-config';
 import { collection, doc, getDoc, setDoc, getDocs, writeBatch } from 'firebase/firestore';
@@ -7,13 +7,19 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useFocusEffect } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { StatusBar } from "expo-status-bar";
+import HomeUpcomingEvents from '../shared/HomeUpcomingEvents';
+import { LogBox } from 'react-native';
 
 
 export default function  Home({navigation}) {
+    LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
 
     const image = require("../assets/pictures/HomescreenBackground.png")
 
     const [username, setUsername] = useState('')
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const flatListRef = useRef(null);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const nearbyHandler = () => {
         navigation.navigate('Nearby');
@@ -43,10 +49,54 @@ export default function  Home({navigation}) {
         const data = docSnap.data();
         setUsername(data.username);     
     }
+
+    async function getUpcomingEvents() {
+        setRefreshKey(prevKey => prevKey + 1);
+        const docID = authentication.currentUser.uid;
+        const docRef = doc(db, "users", docID);
+        const docSnap = await getDoc(docRef);
+
+        const data = docSnap.data();
+        const upcomingEvents = data.upcomingEvents;
+        const upcomingEventsInAWeek = [];
+
+        for (let i = 0; i < upcomingEvents.length; i++) {
+            const currentDate = new Date();
+            const eventID = upcomingEvents[i];
+            const eventRef = doc(db, "events", eventID);
+            const eventDocSnap = await getDoc(eventRef);
+
+            const eventData = eventDocSnap.data();
+            const eventDate = eventData.date;
+            const eventTime = eventData.time;
+
+            function formatDate(stringDate, stringTime) {
+                const dateString = stringDate;
+                const timeString = stringTime;
+                const [day, month, year] = dateString.split('/');
+                const [hours, minutes] = timeString.split(':');
+                const dateObject = new Date(year, month - 1, day, hours, minutes);
+                return dateObject;
+            }
+
+            const dateObject = formatDate(eventDate, eventTime);
+            const timeDifference = dateObject - currentDate;
+            if (dateObject >= currentDate && timeDifference <= 604800000) {
+                const object = {
+                    key: i,
+                    eventID: eventID,
+                    date: dateObject
+                }
+                upcomingEventsInAWeek.push(object);
+            }
+
+        }
+        setUpcomingEvents(upcomingEventsInAWeek);
+    }
     
     useEffect(() => {
         getUsername();
-      }, []);
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -71,12 +121,19 @@ export default function  Home({navigation}) {
                     location: geoPoint,
                     lastOnline : currentTime,
                 }, { merge: true });
-                };
+            };
+            getUpcomingEvents();
             getTimeAndLocation();
         }, [])
     );
 
-
+    function emptyData() {
+        return (
+            <View style = {styles.noEventsContainer}>
+                <Text style = {styles.noEventsText}>No Upcoming Events...</Text>
+            </View>
+        )
+    }
 
     return (
         <ImageBackground source={image} resizeMode = 'cover' style={styles.image}>
@@ -107,14 +164,35 @@ export default function  Home({navigation}) {
             </View>
 
             <View style = {styles.UpcomingEvents}> 
-                    <Text style = {styles.title}> Up-coming Events: </Text>
+                    <Text style = {styles.title}> Events In The Next 7 Days: </Text>
             </View>
 
-            <TouchableOpacity style = {styles.users} onPress={() => console.log("Button pressed")}>
-                <Text style = {styles.dummy}>Evan's Birthday🎉 (filler content) </Text>
-                <Text style = {styles.dummy}>📍Bread Street Kitchen                       12.00 pm</Text>
-                <Text style = {styles.dummy}>🗓️ 5 August, 2023</Text>
-            </TouchableOpacity> 
+            <View style = {styles.eventsContainer}>
+            <FlatList
+                ref = {flatListRef}
+                data = {upcomingEvents
+                        .sort((a,b) => {
+                            if (a.date < b.date) {
+                                return -1;
+                            } else if (b.date > a.date) {
+                                return 1;
+                            } else if (a.date === b.date) {
+                                return 0;
+                            }
+                        })}
+                horizontal = {true}
+                decelerationRate="fast"
+                snapToInterval={310}
+                renderItem= {({item}) => (
+                    <HomeUpcomingEvents
+                        key={refreshKey}
+                        eventID = {item.eventID}
+                    />
+            )}
+                ListEmptyComponent = {emptyData}
+                />
+            </View>
+            
         </ImageBackground>
     )
 
@@ -131,7 +209,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 28,
+        fontSize: 24,
     },
     image: {
         flex: 1,
@@ -161,5 +239,25 @@ const styles = StyleSheet.create({
     dummy: {
         marginTop: 20,
         marginLeft: 10,
+    },
+    eventsContainer: {
+        width: 310,
+        height: 140,
+        //backgroundColor: '#AEE9F6',
+        borderRadius: 15,
+        justifyContent: 'center',
+    },
+    noEventsContainer: {
+        width: 310,
+        height: 140,
+        backgroundColor: '#AEE9F6',
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noEventsText: {
+        fontFamily: 'Nunito-Sans-Bold',
+        color: 'grey',
+        fontSize: 20,
     }
 })
