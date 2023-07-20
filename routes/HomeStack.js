@@ -21,6 +21,7 @@ import EditEvent from '../screens/EditEvent.js';
 import UpdateParticipants from '../screens/UpdateParticipants.js';
 import Nearby from '../screens/Nearby.js';
 import PastEvents from '../screens/PastEvents.js';
+import ForgotPassword from '../screens/ForgotPassword.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -146,6 +147,12 @@ export default function HomeStack () {
             <Stack.Screen     
                 name = "PastEvents"
                 component = {PastEvents}
+                options = {{
+                headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen     
+                name = "ForgotPassword"
+                component = {ForgotPassword}
                 options = {{
                 headerShown: false}}></Stack.Screen>
 

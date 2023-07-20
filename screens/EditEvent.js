@@ -7,6 +7,8 @@ import { authentication, db } from '../firebase/firebase-config';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import { StatusBar } from "expo-status-bar";
+
 
 
 export default function EditEvent({navigation, route}) {
@@ -157,6 +159,7 @@ export default function EditEvent({navigation, route}) {
         enableOnAndroid = {true}
         keyboardVerticalOffset = {-400}
         behavior = "padding">
+            <StatusBar style="auto"/>
     
             <ScrollView
                 contentContainerStyle = {styles.container}>
