@@ -6,6 +6,8 @@ import CustomButton from '../shared/button';
 import { collection, getDoc, doc, setDoc } from 'firebase/firestore';
 import { ref, getDownloadURL  } from "firebase/storage";
 import FriendBoxForPopUp from '../shared/FriendBoxForPopUp';
+import { StatusBar } from "expo-status-bar";
+
 
 export default function UpdateParticipants({navigation, route}) {
     
@@ -128,6 +130,7 @@ export default function UpdateParticipants({navigation, route}) {
         enableOnAndroid = {true}
         keyboardVerticalOffset = {-400}
         behavior = "padding">
+            <StatusBar style="auto"/>
     
             <ScrollView
                 contentContainerStyle = {styles.container}>
