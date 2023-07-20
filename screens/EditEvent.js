@@ -180,7 +180,7 @@ export default function EditEvent({navigation, route}) {
                     search = {false} 
                     setSelected={(val) => setCategory(val)} 
                     data={choices}
-                    placeholder='Event Category' 
+                    placeholder= {category} 
                     fontFamily='Nunito-Sans-Bold'
                     alignItems= 'center'
                     save="value"/>
