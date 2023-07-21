@@ -27,6 +27,10 @@ export default function  Home({navigation}) {
     const nearbyHandler = () => {
         navigation.navigate('Nearby');
     }
+
+    const expensesHandler = () => {
+        navigation.navigate('Expenses');
+    }
     
     onAuthStateChanged(authentication, (user) => {
         if (user) {
@@ -159,7 +163,7 @@ export default function  Home({navigation}) {
                 </TouchableOpacity> 
 
                 <TouchableOpacity
-                        onPress={() => console.log("Button pressed")}
+                        onPress={expensesHandler}
                     >
                     <Image
                     source={require('../assets/pictures/expenses.png')}

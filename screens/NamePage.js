@@ -42,6 +42,14 @@ export default function NamePage({navigation}) {
                 myEvents: [],
             }, { merge: true });
 
+            setDoc(userRef, {
+                debt: {},
+            }, { merge: true });
+
+            setDoc(userRef, {
+                splitBillsHosted: [],
+            }, { merge: true });
+
             const geoPoint = { latitude: 33.812511, 
                                longitude: -117.918976};
 

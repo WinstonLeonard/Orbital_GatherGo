@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
         //backgroundColor: 'red',
     },
     iconStyle: {
-        width: 45,
-        height: 45,
+        width: 35,
+        height: 35,
         borderColor: 'black',
     },
     friendContainer: {
