@@ -27,7 +27,6 @@ export default function HomeUpcomingEvents({eventID}) {
     
     async function getEventDetails() {
         const docID = eventID;
-        console.log(eventID);
         const docRef = doc(db, "events", docID);
         const docSnap = await getDoc(docRef);
 

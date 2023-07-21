@@ -9,12 +9,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons'; 
 import { signOut } from "firebase/auth";
 import { StatusBar } from "expo-status-bar";
-
+import { useData } from '../shared/DataContext';
+import NotifIcon from '../shared/NotifIcon';
 
 
 export default function Profile({navigation}) {
     const [image, setImage] = useState('https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Profile%20Pictures%2FLoading_icon.gif?alt=media&token=87d91cbe-47e8-45fb-a25c-f69cfa3f9654');
     const [username, setUsername] = useState('');
+    const {setFriendRequestCount} = useData();
+    const {friendRequestCount} = useData();
     
     const editProfileHandler = () => {
         navigation.navigate('EditProfile');
@@ -36,18 +39,16 @@ export default function Profile({navigation}) {
         });
     }
 
-    useEffect(() => {
-        async function getUsername() {
-            const docID = authentication.currentUser.uid;
-            const docRef = doc(db, "users", docID);
-            const docSnap = await getDoc(docRef);
 
-            const data = docSnap.data();
-            setUsername(data.username);
-               
-        }
-        getUsername();
-      }, []);
+    async function getUsername() {
+        const docID = authentication.currentUser.uid;
+        const docRef = doc(db, "users", docID);
+        const docSnap = await getDoc(docRef);
+
+        const data = docSnap.data();
+        setUsername(data.username);
+        setFriendRequestCount(data.friendRequestList.length);  
+    }
 
       useFocusEffect(
         React.useCallback(() => {
@@ -61,6 +62,7 @@ export default function Profile({navigation}) {
             });
           }
           getProfilePic();
+          getUsername();
         }, [])
       );
 
@@ -101,6 +103,7 @@ export default function Profile({navigation}) {
             <Image source = {require('../assets/pictures/user-friends.png')}
                        style = {styles.iconStyle}
                        resizeMode='contain'/>
+            <NotifIcon number = {friendRequestCount} textTop = {-2} textLeft = {0} top = {24} left = {24}/>
             </View>
                 <Text style = {styles.buttonText}> Friends </Text>
             </View>

@@ -7,6 +7,8 @@ import GroupChat from '../shared/groupChat';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from "expo-status-bar";
+import { useData } from '../shared/DataContext';
+import NotifIcon from '../shared/NotifIcon';
 
 
 export default function Inbox({navigation}) {
@@ -22,6 +24,10 @@ export default function Inbox({navigation}) {
     const [isSearchActive, setIsSearchActive] = useState(false);
 
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const { setNotificationCount } = useData();
+
+    const { notificationCount } = useData();
     
     const incomingInvitationHandler = () => {
         navigation.navigate('EventInvitations');
@@ -43,6 +49,7 @@ export default function Inbox({navigation}) {
                 const myDocRef = doc(db, "users", myDocID);
                 const myDocSnap = await getDoc(myDocRef);  
                 const myData = myDocSnap.data();
+                setNotificationCount(myData.eventInvitations.length);
                 const events = myData.upcomingEvents;
                 const temp = [];
                 for (let i = 0; i < events.length; i++) {
@@ -90,6 +97,7 @@ export default function Inbox({navigation}) {
                     <Image source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fenvelope.png?alt=media&token=16c56aa8-83ec-4734-8136-9e6800f1a2d2'}}
                             style  = {styles.envelopStyle}
                             resizeMode= 'contain'/>
+                    <NotifIcon number = {notificationCount} textTop ={-2} textLeft = {0.7} left = {25} top = {0}></NotifIcon>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -151,6 +159,8 @@ const styles = StyleSheet.create({
         //backgroundColor: 'red',
         width: 45,
         height: 45,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     envelopStyle: {
         width: 45,
