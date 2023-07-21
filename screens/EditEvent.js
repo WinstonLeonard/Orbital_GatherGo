@@ -32,12 +32,10 @@ export default function EditEvent({navigation, route}) {
     const [timeText, setTimeText] = useState('Add Time');
     const [isLoading, setIsLoading] = useState(true);
     const [alreadyInvited, setAlreadyInvited] = useState([]);
-    const [notYetInvited, setNotYetInvited] = useState([]);
     const [myFriendList, setMyFriendList] = useState([]);
 
     //fetching the data
-    useFocusEffect(
-    React.useCallback(() => {
+    useEffect(() => {
         const fetchData = async () => {
             const docPromise = getDoc(doc(db, "events", eventID));
 
@@ -54,7 +52,7 @@ export default function EditEvent({navigation, route}) {
         };
         fetchData();
         setIsLoading(false);
-    }, []));
+    }, []);
 
     //fetching event participants
     useFocusEffect(

@@ -21,6 +21,9 @@ import EditEvent from '../screens/EditEvent.js';
 import UpdateParticipants from '../screens/UpdateParticipants.js';
 import Nearby from '../screens/Nearby.js';
 import PastEvents from '../screens/PastEvents.js';
+import Expenses from '../screens/Expenses.js';
+import CreateSplitBill from '../screens/CreateSpillBill.js';
+import Debt from '../screens/Debt.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -146,6 +149,25 @@ export default function HomeStack () {
             <Stack.Screen     
                 name = "PastEvents"
                 component = {PastEvents}
+                options = {{
+                headerShown: false}}></Stack.Screen>
+
+            <Stack.Screen     
+                name = "Expenses"
+                component = {Expenses}
+                options = {{
+                headerShown: false}}></Stack.Screen>
+
+            <Stack.Screen           
+                name = "CreateSplitBill"
+                component = {CreateSplitBill}
+                options = {{
+                headerShown: false}}></Stack.Screen>
+
+
+            <Stack.Screen           
+                name = "Debt"
+                component = {Debt}
                 options = {{
                 headerShown: false}}></Stack.Screen>
 
