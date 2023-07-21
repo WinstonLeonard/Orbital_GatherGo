@@ -6,7 +6,8 @@ import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import { StatusBar } from "expo-status-bar";
-
+import { useData } from '../shared/DataContext';
+import NotifIcon from '../shared/NotifIcon';
 
 
 import FriendBox from '../shared/friendBox';
@@ -16,6 +17,8 @@ export default function Friends({navigation}) {
     const [myFriendList, setMyFriendList] = useState([]);
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const {friendRequestCount} = useData();
+    const {setFriendRequestCount} = useData();
 
 
     const addFriendHandler = () => {
@@ -31,6 +34,7 @@ export default function Friends({navigation}) {
         
                 const myData = myDocSnap.data();
                 setMyFriendList(myData.friendList);
+                setFriendRequestCount(myData.friendRequestList.length);
             }
         fetchData();
         console.log('friends');
@@ -92,6 +96,8 @@ export default function Friends({navigation}) {
                 <Image source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fadd%20friend%20icon.png?alt=media&token=0748399e-90f2-464b-b415-26ac5dc2cdb0'}}
                     style = {styles.iconStyle}
                     resizeMode='contain' />
+
+                <NotifIcon number = {friendRequestCount} textTop = {-2} textLeft = {0} top = {28} left = {25}/>
                 </TouchableOpacity> 
             </View>
         </View>

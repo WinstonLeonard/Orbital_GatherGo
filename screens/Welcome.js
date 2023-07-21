@@ -8,7 +8,7 @@ import { StatusBar } from "expo-status-bar";
 
 export default function Welcome({navigation}) {
     const pressHandler = () => {
-        //navigation.navigate('NewLogin')
+        navigation.navigate('NewLogin');
         onAuthStateChanged(authentication, (user) => {
             if (user) {
               // User is signed in, see docs for a list of available properties

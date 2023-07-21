@@ -14,6 +14,9 @@ export default function NewLogin({navigation}) {
     const [inputValue, setInputValue] = useState('')
     const[passwordInputValue, setPasswordInputValue] = useState('')
 
+    const forgotPasswordHandler = () => {
+        navigation.navigate('ForgotPassword');
+    }
     
     const handleLogin = () => {
         signInWithEmailAndPassword(authentication, email, password)
@@ -128,7 +131,7 @@ export default function NewLogin({navigation}) {
                           width = {120}
                           height = {35}
                           fontSize = {12}
-                          onPress = {() => console.log("forgot password button pressed")}></CustomButton>
+                          onPress = {forgotPasswordHandler}></CustomButton>
             </View>
 
           </ScrollView>

@@ -97,6 +97,15 @@ export default function EventInvitations({navigation}) {
 
                     setMyEventInvitations(newEventsInvitations);
                     console.log(eventName + ' Accepted');
+
+                    //rejecting an event removes the user from the event's invitation list.
+                    const eventInvitationList = eventData.invitationList;
+                    const newInvitationList = eventInvitationList.filter(item => item != myDocID);
+                    const eventRef = doc(db, 'events', eventID);
+                    
+                    setDoc(eventRef, {
+                        invitationList: newInvitationList,
+                    }, { merge: true });
                 }
                 
                 const object = {

@@ -24,6 +24,7 @@ import PastEvents from '../screens/PastEvents.js';
 import Expenses from '../screens/Expenses.js';
 import CreateSplitBill from '../screens/CreateSpillBill.js';
 import Debt from '../screens/Debt.js';
+import ForgotPassword from '../screens/ForgotPassword.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -151,6 +152,12 @@ export default function HomeStack () {
                 component = {PastEvents}
                 options = {{
                 headerShown: false}}></Stack.Screen>
+            
+            <Stack.Screen     
+                name = "ForgotPassword"
+                component = {ForgotPassword}
+                options = {{
+                headerShown: false}}></Stack.Screen>
 
             <Stack.Screen     
                 name = "Expenses"
@@ -163,7 +170,6 @@ export default function HomeStack () {
                 component = {CreateSplitBill}
                 options = {{
                 headerShown: false}}></Stack.Screen>
-
 
             <Stack.Screen           
                 name = "Debt"
