@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { TouchableOpacity, Image, View, StyleSheet, Animated, Dimensions } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -9,6 +9,8 @@ import Events from '../screens/Events';
 import CreateEvent from '../screens/CreateEvent';
 import Inbox from '../screens/Inbox';
 import Profile from '../screens/Profile';
+import NotifIcon from '../shared/NotifIcon';
+import { useData } from '../shared/DataContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +19,9 @@ function BottomTabNavigator({navigation}) {
     const pressHandler = () => navigation.navigate('CreateEvent')
     
     const tabOffsetValue = useRef(new Animated.Value(0)).current;
+    const { notificationCount } = useData();
+    const {friendRequestCount} = useData();
+
     return (
     <>
     <Tab.Navigator
@@ -88,8 +93,9 @@ function BottomTabNavigator({navigation}) {
         <Tab.Screen name="InboxScreen" component={Inbox} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-                <View>
+                <View style = {styles.iconContainer}>
                    <MaterialIcons name="email" size={24} color= {focused ? "#39A5BD" : "black"} />
+                   <NotifIcon number = {notificationCount} textTop = {-2} textLeft = {0} top = {1} left = {20}/>
                 </View>
             ),
         }}
@@ -105,8 +111,9 @@ function BottomTabNavigator({navigation}) {
          <Tab.Screen name="ProfileScreen" component={Profile} options = {{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-                <View>
+                <View styles = {styles.iconContainer}>
                     <Ionicons name="person" size={24} color= {focused ? "#39A5BD" : "black"} />
+                    <NotifIcon number = {friendRequestCount} textTop = {-2} textLeft = {0} top = {-5.5} left = {13}/>
                 </View>
             ),
         }}listeners = {(navigation, route) => ({
@@ -159,7 +166,13 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.5,
         elevation: 5
-    }
+    },
+    iconContainer: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 export default BottomTabNavigator;

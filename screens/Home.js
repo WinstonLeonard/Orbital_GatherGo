@@ -9,6 +9,7 @@ import * as Location from 'expo-location';
 import { StatusBar } from "expo-status-bar";
 import HomeUpcomingEvents from '../shared/HomeUpcomingEvents';
 import { LogBox } from 'react-native';
+import { useData } from '../shared/DataContext';
 
 
 export default function  Home({navigation}) {
@@ -20,6 +21,8 @@ export default function  Home({navigation}) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const flatListRef = useRef(null);
     const [refreshKey, setRefreshKey] = useState(0);
+    const { setNotificationCount } = useData();
+    const {setFriendRequestCount} = useData();
 
     const nearbyHandler = () => {
         navigation.navigate('Nearby');
@@ -47,7 +50,7 @@ export default function  Home({navigation}) {
         const docSnap = await getDoc(docRef);
 
         const data = docSnap.data();
-        setUsername(data.username);     
+        setUsername(data.username);  
     }
 
     async function getUpcomingEvents() {
@@ -57,6 +60,8 @@ export default function  Home({navigation}) {
         const docSnap = await getDoc(docRef);
 
         const data = docSnap.data();
+        setNotificationCount(data.eventInvitations.length);
+        setFriendRequestCount(data.friendRequestList.length);   
         const upcomingEvents = data.upcomingEvents;
         const upcomingEventsInAWeek = [];
 
