@@ -17,7 +17,7 @@ export default function CreateSplitBill({navigation, route}) {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [description, setDescription] = useState('');
-    const [inputHeight, setInputHeight] = useState(50); 
+    const [inputHeight, setInputHeight] = useState(50);
 
     useEffect(() => {
         async function fetchEventData() {
@@ -228,7 +228,7 @@ export default function CreateSplitBill({navigation, route}) {
                             onPress = {next}
                             ></CustomButton>
             </View>
-
+        
         </KeyboardAvoidingView>
 )
 }
@@ -266,13 +266,14 @@ const styles = StyleSheet.create({
     buttonContainer: {
         width: '100%',
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: 15,
         // backgroundColor:'red',
     },
     participantsContainer: {
         alignItems: 'flex-start',
-        height: 450,
-        // backgroundColor: 'red'
+        height: 420,
+        //backgroundColor: 'red'
     },
     inputDescription: {
         textAlign: 'left',
