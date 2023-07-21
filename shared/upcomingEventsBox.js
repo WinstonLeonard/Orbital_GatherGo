@@ -70,7 +70,7 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             borderWidth: 0,
         },
         nameContainer: {
-            //backgroundColor: 'red',
+            // backgroundColor: 'red',
             textAlign: 'left',
             justifyContent: 'center',
             width: 175,
@@ -80,6 +80,10 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             fontFamily: 'Nunito-Sans-Bold',
             fontSize: 18,
             textAlign: 'left',
+            lineHeight: 20, 
+            backgroundColor: 'red',
+            paddingHorizontal: 10,
+            marginTop: 2,
         },
         nameStyle: {
             fontFamily: 'Nunito-Sans',
@@ -100,6 +104,13 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             height: 43,
             marginBottom: 5,
         },
+        firstLine: {
+            fontFamily: 'Nunito-Sans-Bold',
+            fontSize: 18,
+            lineHeight: 20,
+            marginLeft: 3,
+            marginTop: 2,
+        },
     })
     
     if (modalVisible) {
@@ -116,7 +127,11 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             </View>
     
             <View style = {styles.nameContainer}>
-                <Text style = {styles.usernameStyle}> {name} </Text>
+                {name.split('\n').map((line, index) => (
+                <Text key={index} style={index === 0 ? styles.firstLine : styles.usernameStyle}>
+                    {line}
+                </Text>
+                ))}
                 <Text style = {styles.nameStyle}> {location} </Text>
                 <Text style = {styles.nameStyle}> {date} </Text>
                 <Text style = {styles.nameStyle}> {time} </Text>
@@ -157,7 +172,11 @@ export default function UpcomingEventsBox({ name, category, location, date, time
             </View>
     
             <View style = {styles.nameContainer}>
-                <Text style = {styles.usernameStyle}> {name} </Text>
+                {name.split('\n').map((line, index) => (
+                <Text key={index} style={index === 0 ? styles.firstLine : styles.usernameStyle}>
+                    {line}
+                </Text>
+                ))}
                 <Text style = {styles.nameStyle}> {location} </Text>
                 <Text style = {styles.nameStyle}> {date} </Text>
                 <Text style = {styles.nameStyle}> {time} </Text>

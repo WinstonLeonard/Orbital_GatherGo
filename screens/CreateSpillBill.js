@@ -102,6 +102,7 @@ export default function CreateSplitBill({navigation, route}) {
                 const eventName = eventData.name;
                 const eventDate = eventData.date;
                 const eventCategory = eventData.category;
+                const billTotal = Object.values(userValues).reduce((total, moneyOwed) => total + parseFloat(moneyOwed || 0), 0);
 
                 // creates Split Bill
                 setDoc(newDocumentRef, {
@@ -113,6 +114,8 @@ export default function CreateSplitBill({navigation, route}) {
                     splitBillID: splitBillID,
                     bill: userValues,
                     description: description,
+                    received: 0,
+                    billTotal: billTotal,
                 })
                 .then(() => {
                     console.log('Split bill created successfully.');
@@ -121,13 +124,12 @@ export default function CreateSplitBill({navigation, route}) {
                     console.log('Error creating split bill:', error);
                 });
 
-                //add to users debt field
+                //add to users debt field and also find the total for the bill
                 try {
                     for (const userID in userValues) {
                         const moneyOwed = userValues[userID] || 0;
                         console.log(userID);
                         console.log(moneyOwed);
-
                         const userRef = doc(db, 'users', userID);
                         
                         setDoc(userRef, { 

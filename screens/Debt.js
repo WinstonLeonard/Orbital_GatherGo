@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { authentication, db } from '../firebase/firebase-config'
-import { collection, query, where, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { updateDoc, collection, query, where, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import DebtBox from '../shared/DebtBox';
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +11,7 @@ import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 
 export default function Debt({navigation}) {
 
-    const [debt, setMyDebt] = useState([]);
+    const [debt, setDebt] = useState([]);
     const [debtObject, setDebtObject] = useState([]);
 
     //retrieve data
@@ -25,11 +25,12 @@ export default function Debt({navigation}) {
                 const myData = myDocSnap.data();
                 const mySplitBills = myData.debt;
 
-                setMyDebt(mySplitBills);
+                setDebt(mySplitBills);
             }
             fetchData();
         },[])
     );
+
 
     //making object for flatlist
     useEffect(() => {
@@ -72,17 +73,48 @@ export default function Debt({navigation}) {
         fetchData();
     }, [debt]);
 
+    const paidHandler = async (splitBillID) => {
+        const myDocID = authentication.currentUser.uid;
+        const myDocRef = doc(db, "users", myDocID);
+        const myDocSnap = await getDoc(myDocRef);
+        
+        const myData = myDocSnap.data();
+        const mySplitBills = myData.debt;
+        
+        // Remove the split bill ID from mySplitBills
+        delete mySplitBills[splitBillID];
 
-    const openModal = () => {
-          setModalVisible(true);
-    }
-    
-    const closeModal = () => {
-        setModalVisible(false);
-    }
+        // Update the debt field in Firestore using updateDoc
+        updateDoc(myDocRef, { debt: mySplitBills })
+            .then(() => {
+            console.log("Debt field updated successfully.");
+            })
+            .catch((error) => {
+            console.error("Error updating debt field:", error);
+            });
+        
+        //add to the bill's received and sets your debt in the split bill to 0 
+        const docPromise = getDoc(doc(db, "splitbill", splitBillID));
+        const [docSnapshot] = await Promise.all([docPromise]);
 
-    const test = () => {
-        console.log();
+        const billData = docSnapshot.data();
+        const bill = billData.bill;
+        const received = parseInt(billData.received);
+        
+        const myID = authentication.currentUser.uid;
+        const newReceived = received + parseInt(bill[myID]);
+        bill[myID] = 0;
+
+        const docRef = doc(db, "splitbill", splitBillID);
+        updateDoc(docRef, { bill: bill, received: newReceived })
+            .then(() => {
+            console.log("Bill and received fields updated successfully.");
+            })
+            .catch((error) => {
+            console.error("Error updating bill and received fields:", error);
+            });
+
+        setDebt(mySplitBills);
     }
     
     return (
@@ -109,7 +141,7 @@ export default function Debt({navigation}) {
                     <DebtBox
                         eventName = {item.eventName}
                         hostName = {item.hostName}
-                        hostID = {item.hostID}
+                        paidHandler = {paidHandler}
                         image = {item.image}
                         moneyOwed = {item.moneyOwed}
                         splitBillID = {item.splitBillID}
