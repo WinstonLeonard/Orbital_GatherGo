@@ -115,7 +115,13 @@ export default function HostedSplitBillsBox({ name, date, category, splitBillID,
                     null
                 }
 
-            <SplitBillDetailsPopUp modalVisible={modalVisible} closeModal={closeModal} splitBillID = {splitBillID} />
+            {
+                modalVisible ?
+                <SplitBillDetailsPopUp modalVisible={modalVisible} closeModal={closeModal} splitBillID = {splitBillID} />
+                :
+                null
+            }
+            
 
             <View style = {styles.friendContainer}>
     

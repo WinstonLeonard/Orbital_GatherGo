@@ -63,6 +63,7 @@ export default function Expenses({navigation}) {
                 temp.push(object);
             }
             setMySplitBillsObject(temp);
+            console.log('data changed');
             setData(temp);
             setIsSearchActive(false);
         };
@@ -177,11 +178,9 @@ export default function Expenses({navigation}) {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.billssContainer}> 
-                {data.length === 0 ? (
-                <Text style={styles.noBillsText}>No Split Bills</Text>
-                ) : (
+            <View style={styles.billssContainer}>  
                 <FlatList
+                    ListEmptyComponent={<Text style={styles.noBillsText}>No Split Bills</Text>}
                     data={
                     data
                     .sort((a, b) => {
@@ -212,7 +211,7 @@ export default function Expenses({navigation}) {
                     />    
                     )}
                 />
-                )}
+                
             </View>
 
             <View style={styles.acontainer}>
