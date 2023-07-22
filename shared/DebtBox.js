@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, ScrollView, TextInput } from 'react-native';
+import { authentication, db } from '../firebase/firebase-config'
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 
-export default function DebtBox({ eventName, hostName, hostID, image, moneyOwed, splitBillID}) {
+export default function DebtBox({ eventName, hostName, paidHandler, image, moneyOwed, splitBillID}) {
 
     const [currentMoneyOwed, setCurrentMoneyOwed] = useState('');
 
     useEffect(() => {
         setCurrentMoneyOwed(moneyOwed);
     }, []);
-
 
     const images = {
         categories: {
@@ -66,7 +67,7 @@ export default function DebtBox({ eventName, hostName, hostID, image, moneyOwed,
         deleteContainer: {
             width: 43,
             alignSelf: 'center',
-            marginLeft: 60,
+            marginLeft: 55,
         },
         deleteStyle: {
             width: 43,
@@ -79,19 +80,22 @@ export default function DebtBox({ eventName, hostName, hostID, image, moneyOwed,
         },
         input: {
             backgroundColor: '#B1EBF8',
-            width: 55,
+            width: 50,
             height: 45,
             marginTop: 22.5,
             left: 225,
             borderRadius: 10,
             position: 'absolute',
-            textAlign: 'left',
+            textAlign: 'center',
             fontFamily: "Nunito-Sans-Bold",
-            paddingHorizontal: 10,
-            paddingVertical: 10,
+            paddingHorizontal: 8,
+            paddingVertical: 12,
         },
     })
     
+    const markAsPaid = () => {
+        paidHandler(splitBillID);
+    }
         return (
             <View style = {styles.friendContainer}>
     
@@ -106,14 +110,10 @@ export default function DebtBox({ eventName, hostName, hostID, image, moneyOwed,
                 <Text style = {styles.nameStyle}> {eventName} </Text>
             </View>
             
-            <TextInput
-                style = {styles.input}
-                value = {currentMoneyOwed}
-                onChangeText = {text => setCurrentMoneyOwed(text)}
-             ></TextInput>
+            <Text style = {styles.input} >{currentMoneyOwed}</Text>
 
             <View style = {styles.deleteContainer}>
-                <TouchableOpacity onPress = {console.log(image)}>
+                <TouchableOpacity onPress = {markAsPaid}>
                 <Image
                     source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Faccept.png?alt=media&token=f9725c52-26e8-44b3-b2a5-62428c785e65'}}
                     style = {styles.editStyle}
