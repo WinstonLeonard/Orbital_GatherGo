@@ -1,8 +1,18 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, ScrollView } from 'react-native';
 import SplitBillDetailsPopUp from './SplitBillDetailsPopUp';
+import DeleteBillPopUp from './DeleteBillPopUp';
 
-export default function HostedSplitBillsBox({ name, date, category, splitBillID}) {
+export default function HostedSplitBillsBox({ name, date, category, splitBillID, deleteFunction}) {
+    const [deleteBillModalVisible, setDeleteBillModalVisible] = useState(false);
+
+    const openDeleteEventModal = () => {
+        setDeleteBillModalVisible(true);
+    }
+
+    const closeDeleteEventModal = () => {
+        setDeleteBillModalVisible(false);
+    }
 
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
@@ -97,8 +107,22 @@ export default function HostedSplitBillsBox({ name, date, category, splitBillID}
     })
     
         return (
-            <TouchableOpacity  onPress = {openModal}>
+            <TouchableOpacity>
+                {
+                    deleteBillModalVisible ?
+                    <DeleteBillPopUp
+                        modalVisible={deleteBillModalVisible}
+                        closeModal = {closeDeleteEventModal}
+                        billID = {splitBillID}
+                        deleteFunction={deleteFunction}
+                        >
+                    </DeleteBillPopUp>
+                    :
+                    null
+                }
+
             <SplitBillDetailsPopUp modalVisible={modalVisible} closeModal={closeModal} splitBillID = {splitBillID} />
+
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
@@ -117,15 +141,7 @@ export default function HostedSplitBillsBox({ name, date, category, splitBillID}
             </View>
     
             <View style = {styles.deleteContainer}>
-                <TouchableOpacity onPress = {console.log('edit')}>
-                <Image
-                    source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fedit%20icon%20v2.png?alt=media&token=b372cd7f-e32e-426d-a7c6-607fb1723940'}}
-                    style = {styles.editStyle}
-                    resizeMode = 'contain'
-                    />
-                </TouchableOpacity>
-    
-                <TouchableOpacity onPress = {console.log('delete')}>
+                <TouchableOpacity onPress = {openDeleteEventModal}>
                 <Image
                     source = {{uri: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fdelete%20icon.png?alt=media&token=ddededdd-6a60-45db-b3b6-fa40c59b4019'}}
                     style = {styles.deleteStyle}

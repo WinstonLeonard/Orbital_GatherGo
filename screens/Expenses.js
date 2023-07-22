@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import SplitBillPopUp from '../shared/SplitBillPopUp';
 import { authentication, db } from '../firebase/firebase-config'
-import { collection, query, where, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { updateDoc, collection, where, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import HostedSplitBillsBox from '../shared/HostedSplitBillsBox';
 import { StatusBar } from 'expo-status-bar';
@@ -15,6 +15,11 @@ export default function Expenses({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [mySplitBills, setMySplitBills] = useState([]);
     const [mySplitBillsObject, setMySplitBillsObject] = useState([]);
+    const [isSearchActive, setIsSearchActive] = useState(false);
+    const [filteredBills, setFilteredBills] = useState([]);
+    const [searchBill, setSearchBill] = useState('');
+
+    const [data, setData] = useState([]);
 
     //retrieve data
     useFocusEffect(
@@ -55,10 +60,11 @@ export default function Expenses({navigation}) {
                     category : eventCategory,
                     splitBillID : splitBillID,
                 };
-
                 temp.push(object);
             }
             setMySplitBillsObject(temp);
+            setData(temp);
+            setIsSearchActive(false);
         };
         fetchData();
     }, [mySplitBills]);
@@ -72,12 +78,83 @@ export default function Expenses({navigation}) {
         setModalVisible(false);
     }
 
-    const test = () => {
-        console.log(mySplitBillsObject)
+    const search = () => {
+        setIsSearchActive(true);
+        const filteredBills = mySplitBillsObject.filter((object) => object.name.includes(searchBill));
+        setFilteredBills(filteredBills);
     }
+
+    useEffect(() => {
+        if (isSearchActive) {
+            setData(filteredBills);
+        } else {
+            setData(mySplitBillsObject);
+        }
+    }, [isSearchActive, filteredBills, mySplitBills]);
+
+    useEffect(() => {
+        if (searchBill === '') {
+            setData(mySplitBillsObject);
+            setIsSearchActive(false);
+        }
+    }, [searchBill]);
 
     const debtHandler = () => {
         navigation.navigate('Debt');
+    }
+
+    function deleteBill(billID, billHost, billPeople) {
+        //delete the bill from the user's (host's) splitBillsHosted array in firestore
+        async function deleteBillFromHost() {
+            const docRef = doc(db, "users", billHost);
+            const docSnap = await getDoc(docRef);
+        
+            const data = docSnap.data();
+            const hostSplitBillsHosted = data.splitBillsHosted;
+            const updatedHostSplitBillHosted = hostSplitBillsHosted.filter(bill => bill != billID);
+            console.log(hostSplitBillsHosted);
+            console.log(updatedHostSplitBillHosted);
+
+            setDoc(docRef, {
+                splitBillsHosted: updatedHostSplitBillHosted,
+            }, { merge: true });
+            
+            setMySplitBills(updatedHostSplitBillHosted);
+        }
+        //for all users who owe money for the deleted bill, delete the bill from each of the user's debt field in firestore
+
+        async function deleteBillFromAllOwers() {
+            for (let i = 0; i < billPeople.length; i++) {
+                const person = billPeople[i];
+                const docRef = doc(db, "users", person);
+                const docSnap = await getDoc(docRef);
+
+                const data = docSnap.data();
+                const debt = data.debt;
+
+                delete debt[billID];
+
+                console.log(debt);
+                
+                updateDoc(docRef, {
+                    debt: debt,
+                }, { merge: true });
+
+            }
+        }
+        //delete the bill itself from the 'splitbill' firestore collection
+        async function deleteBillItself() {
+            const docRef = doc(collection(db, "splitbill"), billID);
+            deleteDoc(docRef)
+            .then(() => {
+                console.log(billID+ " successfully deleted!");
+            })
+        }
+
+
+        deleteBillFromHost();
+        deleteBillFromAllOwers();
+        deleteBillItself();
     }
     
     return (
@@ -94,19 +171,19 @@ export default function Expenses({navigation}) {
             </View>
 
             <View style = {styles.input}>
-                <TextInput placeholder= 'Search' style = {styles.textInput} />
-                <TouchableOpacity onPress = {test}>
+                <TextInput placeholder= 'Search' style = {styles.textInput} value = {searchBill} onChangeText={text => setSearchBill(text)}/>
+                <TouchableOpacity onPress = {search}>
                     <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
                 </TouchableOpacity>
             </View>
 
             <View style={styles.billssContainer}> 
-                {mySplitBillsObject.length === 0 ? (
+                {data.length === 0 ? (
                 <Text style={styles.noBillsText}>No Split Bills</Text>
                 ) : (
                 <FlatList
                     data={
-                    mySplitBillsObject
+                    data
                     .sort((a, b) => {
                         function formatDate(stringDate) {
                             const dateString = stringDate;
@@ -131,6 +208,7 @@ export default function Expenses({navigation}) {
                         date={item.date}
                         category={item.category}
                         splitBillID={item.splitBillID}
+                        deleteFunction = {deleteBill}
                     />    
                     )}
                 />
