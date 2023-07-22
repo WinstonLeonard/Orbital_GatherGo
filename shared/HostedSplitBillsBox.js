@@ -101,7 +101,7 @@ export default function HostedSplitBillsBox({ name, date, category, splitBillID,
     })
     
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {openModal}>
                 {
                     deleteBillModalVisible ?
                     <DeleteBillPopUp
