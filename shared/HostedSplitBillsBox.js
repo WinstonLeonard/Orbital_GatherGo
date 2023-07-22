@@ -6,6 +6,14 @@ import DeleteBillPopUp from './DeleteBillPopUp';
 export default function HostedSplitBillsBox({ name, date, category, splitBillID, deleteFunction}) {
     const [deleteBillModalVisible, setDeleteBillModalVisible] = useState(false);
 
+    const openDeleteEventModal = () => {
+        setDeleteBillModalVisible(true);
+    }
+
+    const closeDeleteEventModal = () => {
+        setDeleteBillModalVisible(false);
+    }
+
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
 
@@ -16,13 +24,7 @@ export default function HostedSplitBillsBox({ name, date, category, splitBillID,
     const closeModal = () => {
         setModalVisible(false);
     }
-    const openDeleteEventModal = () => {
-        setDeleteEventModalVisible(true);
-    }
-
-    const closeDeleteEventModal = () => {
-        setDeleteEventModalVisible(false);
-    }
+  
     const images = {
         categories: {
             'Sports' :"https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd",
