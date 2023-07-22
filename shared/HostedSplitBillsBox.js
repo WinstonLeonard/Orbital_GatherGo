@@ -6,14 +6,6 @@ import DeleteBillPopUp from './DeleteBillPopUp';
 export default function HostedSplitBillsBox({ name, date, category, splitBillID, deleteFunction}) {
     const [deleteBillModalVisible, setDeleteBillModalVisible] = useState(false);
 
-    const openDeleteEventModal = () => {
-        setDeleteBillModalVisible(true);
-    }
-
-    const closeDeleteEventModal = () => {
-        setDeleteBillModalVisible(false);
-    }
-
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
 
