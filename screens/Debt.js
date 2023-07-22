@@ -13,6 +13,10 @@ export default function Debt({navigation}) {
 
     const [debt, setDebt] = useState([]);
     const [debtObject, setDebtObject] = useState([]);
+    const [isSearchActive, setIsSearchActive] = useState(false);
+    const [filteredDebt, setFilteredDebt] = useState([]);
+    const [searchDebt, setSearchDebt] = useState('');
+    const [data, setData] = useState([]);
 
     //retrieve data
     useFocusEffect(
@@ -69,9 +73,32 @@ export default function Debt({navigation}) {
                 temp.push(object);
             }
             setDebtObject(temp);
+            setData(temp);
+            setIsSearchActive(false);
         };
         fetchData();
     }, [debt]);
+
+    const search = () => {
+        setIsSearchActive(true);
+        const filteredDebts = debtObject.filter((object) => object.hostName.includes(searchDebt));
+        setFilteredDebt(filteredDebts);
+    }
+
+    useEffect(() => {
+        if (isSearchActive) {
+            setData(filteredDebt);
+        } else {
+            setData(debtObject);
+        }
+    }, [isSearchActive, filteredDebt, debt]);
+
+    useEffect(() => {
+        if (searchDebt === '') {
+            setData(debtObject);
+            setIsSearchActive(false);
+        }
+    }, [searchDebt]);
 
     const paidHandler = async (splitBillID) => {
         const myDocID = authentication.currentUser.uid;
@@ -125,18 +152,18 @@ export default function Debt({navigation}) {
             </View>
 
             <View style = {styles.input}>
-                <TextInput placeholder= 'Search' style = {styles.textInput} />
-                <TouchableOpacity onPress = {console.log('button pressed')}>
+                <TextInput placeholder= 'Search' style = {styles.textInput} value = {searchDebt} onChangeText={text => setSearchDebt(text)}/>
+                <TouchableOpacity onPress = {search}>
                     <FontAwesome name="search" size={24} color="black" style = {styles.icon} />
                 </TouchableOpacity>
             </View>
 
             <View style={styles.billssContainer}> 
-                {debtObject.length === 0 ? (
-                <Text style={styles.noBillsText}>No debt</Text>
+                {data.length === 0 ? (
+                <Text style={styles.noBillsText}>No Debt</Text>
                 ) : (
                 <FlatList
-                    data={debtObject}
+                    data={data}
                     renderItem={({item}) => (
                     <DebtBox
                         eventName = {item.eventName}
@@ -163,12 +190,13 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         flexDirection: 'row',
-        marginLeft: 35,
+        marginLeft: -10,
         marginRight: 35,
         marginTop: 53,
         alignItems: 'center',
         marginBottom: 20,
         // justifyContent: 'center',
+        // backgroundColor: 'red',
     },
     headerText: {
         fontSize: 24,

@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     textAlign: 'center',
-    fontSize: 23,
+    fontSize: 20,
     fontFamily: 'Nunito-Sans-Bold',
     marginTop: 25,
   },
