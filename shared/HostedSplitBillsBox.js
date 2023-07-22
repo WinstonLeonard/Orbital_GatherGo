@@ -1,8 +1,26 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Image, ScrollView } from 'react-native';
+import SplitBillDetailsPopUp from './SplitBillDetailsPopUp';
 
-export default function HostedSplitBillsBox({ name, date, category, eventID}) {
+export default function HostedSplitBillsBox({ name, date, category, splitBillID}) {
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [deleteEventModalVisible, setDeleteEventModalVisible] = useState(false);
+
+    const openModal = () => {
+        setModalVisible(true);
+    }
+
+    const closeModal = () => {
+        setModalVisible(false);
+    }
+    const openDeleteEventModal = () => {
+        setDeleteEventModalVisible(true);
+    }
+
+    const closeDeleteEventModal = () => {
+        setDeleteEventModalVisible(false);
+    }
     const images = {
         categories: {
             'Sports' :"https://firebasestorage.googleapis.com/v0/b/fir-auth-c7176.appspot.com/o/Icons%2Fsports%20icon.png?alt=media&token=674f46a5-331b-44b6-b3a4-37c659ac83cd",
@@ -39,11 +57,11 @@ export default function HostedSplitBillsBox({ name, date, category, eventID}) {
             borderWidth: 0,
         },
         nameContainer: {
-            //backgroundColor: 'red',
+            // backgroundColor: 'red',
             textAlign: 'left',
             justifyContent: 'center',
             width: 175,
-            marginLeft: 10,
+            marginLeft: 5,
         },
         usernameStyle: {
             fontFamily: 'Nunito-Sans-Bold',
@@ -69,10 +87,18 @@ export default function HostedSplitBillsBox({ name, date, category, eventID}) {
             height: 43,
             marginBottom: 5,
         },
+        firstLine: {
+            fontFamily: 'Nunito-Sans-Bold',
+            fontSize: 18,
+            lineHeight: 20,
+            marginLeft: 3,
+            marginTop: 2,
+        },
     })
     
         return (
-            <TouchableOpacity>
+            <TouchableOpacity  onPress = {openModal}>
+            <SplitBillDetailsPopUp modalVisible={modalVisible} closeModal={closeModal} splitBillID = {splitBillID} />
             <View style = {styles.friendContainer}>
     
             <View style = {styles.pfpContainer}>
@@ -82,7 +108,11 @@ export default function HostedSplitBillsBox({ name, date, category, eventID}) {
             </View>
     
             <View style = {styles.nameContainer}>
-                <Text style = {styles.usernameStyle}> {name} </Text>
+                {name.split('\n').map((line, index) => (
+                <Text key={index} style={index === 0 ? styles.firstLine : styles.usernameStyle}>
+                    {line}
+                </Text>
+                ))}
                 <Text style = {styles.nameStyle}> {date} </Text>
             </View>
     
