@@ -259,14 +259,14 @@ const styles = StyleSheet.create({
     noEventsContainer: {
         width: 310,
         height: 140,
-        backgroundColor: '#AEE9F6',
+        backgroundColor: '#8CDFF0',
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
     },
     noEventsText: {
         fontFamily: 'Nunito-Sans-Bold',
-        color: 'grey',
+        color: '#39A5BD',
         fontSize: 20,
     }
 })

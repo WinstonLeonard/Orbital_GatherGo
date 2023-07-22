@@ -99,6 +99,13 @@ export default function OtherEventsBox({ name, category, location, date, time, e
             height: 43,
             marginBottom: 5,
         },
+        firstLine: {
+            fontFamily: 'Nunito-Sans-Bold',
+            fontSize: 18,
+            lineHeight: 20,
+            marginLeft: 3,
+            marginTop: 2,
+        },
     })
     
     if (modalVisible) {
@@ -115,7 +122,11 @@ export default function OtherEventsBox({ name, category, location, date, time, e
             </View>
     
             <View style = {styles.nameContainer}>
-                <Text style = {styles.usernameStyle}> {name} </Text>
+                {name.split('\n').map((line, index) => (
+                <Text key={index} style={index === 0 ? styles.firstLine : styles.usernameStyle}>
+                    {line}
+                </Text>
+                ))}
                 <Text style = {styles.nameStyle}> {location} </Text>
                 <Text style = {styles.nameStyle}> {date} </Text>
                 <Text style = {styles.nameStyle}> {time} </Text>

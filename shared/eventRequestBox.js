@@ -72,7 +72,8 @@ export default function EventRequestBox({ name, category, location, date, time, 
             borderWidth: 0,
         },
         nameContainer: {
-            //backgroundColor: 'red',
+            // backgroundColor: 'red',
+            width: 175,
             textAlign: 'left',
             justifyContent: 'center',
             marginLeft: 10,
@@ -104,6 +105,13 @@ export default function EventRequestBox({ name, category, location, date, time, 
             borderRadius: 1000,
             marginLeft: 10, 
         },
+        firstLine: {
+            fontFamily: 'Nunito-Sans-Bold',
+            fontSize: 18,
+            lineHeight: 20,
+            marginLeft: 3,
+            marginTop: 2,
+        },
     
     })
     
@@ -127,7 +135,11 @@ export default function EventRequestBox({ name, category, location, date, time, 
         </View>
 
         <View style = {styles.nameContainer}>
-            <Text style = {styles.usernameStyle}> {name} </Text>
+            {name.split('\n').map((line, index) => (
+                <Text key={index} style={index === 0 ? styles.firstLine : styles.usernameStyle}>
+                    {line}
+                </Text>
+                ))}
             <Text style = {styles.nameStyle}> {location} </Text>
             <Text style = {styles.nameStyle}> {date} </Text>
             <Text style = {styles.nameStyle}> {time} </Text>
