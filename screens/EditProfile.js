@@ -336,13 +336,13 @@ const styles = StyleSheet.create({
     },
     twoColorContainer: {
         alignSelf: 'flex-start',
-        width: 390,
+        width: '100%',
         height: 200,
         marginBottom: 5,
         //backgroundColor: 'red',
     },
     twoColorStyle: {
-        width: 390,
+        width: '100%',
         height: 200,
     },
     fieldContainer: {
