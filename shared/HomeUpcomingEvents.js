@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     users: {
         width: 310,
         height: 140,
-        backgroundColor: '#AEE9F6',
+        backgroundColor: '#8CDFF0',
         borderRadius: 15,
         justifyContent: 'center',
     },
